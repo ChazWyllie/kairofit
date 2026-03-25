@@ -1,0 +1,30 @@
+# KairoFit CODEOWNERS
+#
+# Security-critical paths require review from a code owner before merge.
+# These are the areas where a mistake has the highest blast radius.
+
+# Database migrations - any schema change can break data integrity
+/supabase/migrations/ @owner
+
+# AI system prompts - changes affect every user's program quality and voice
+/src/lib/ai/kiro-voice.ts @owner
+/src/lib/ai/safety-filter.ts @owner
+
+# Stripe webhook handler - financial transactions
+/src/app/api/webhooks/ @owner
+
+# Security documentation
+/docs/security/ @owner
+
+# RLS policies are embedded in migrations (covered above)
+# Encryption utilities
+/src/lib/utils/rate-limit.ts @owner
+
+# Auth middleware - changes could open all routes
+/src/middleware.ts @owner
+
+# Health data handling - highest regulatory weight under FTC HBNR
+# When the encryption utility from skills/health-data-encryption/SKILL.md is
+# implemented as a source file, add its path here immediately.
+/src/lib/utils/contraindications.ts @owner
+/supabase/functions/ @owner

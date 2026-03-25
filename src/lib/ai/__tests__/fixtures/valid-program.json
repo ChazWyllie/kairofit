@@ -1,0 +1,201 @@
+{
+  "name": "Upper/Lower - Intermediate Hypertrophy",
+  "description": "4-day Upper/Lower split targeting hypertrophy for intermediate lifters. Each muscle group trained twice weekly at 10-14 working sets.",
+  "ai_rationale": "Upper/Lower is the most efficient 4-day structure for intermediate hypertrophy. It trains each muscle group twice per week - the minimum effective frequency - while keeping sessions focused and under 60 minutes. Your experience level supports double progression across all main lifts.",
+  "weeks_duration": 8,
+  "progression_scheme": "double_progression",
+  "projected_weeks_to_goal": 10,
+  "projected_outcome_description": "At 4 days/week with consistent double progression, expect 10-15% strength increases on main lifts in 8-10 weeks.",
+  "days": [
+    {
+      "day_number": 1,
+      "name": "Upper A",
+      "focus_muscles": ["chest", "back", "shoulders"],
+      "session_type": "hypertrophy",
+      "estimated_duration_minutes": 55,
+      "exercises": [
+        {
+          "exercise_name": "Barbell Bench Press",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 12,
+          "rest_seconds": 120,
+          "rpe_target": 8,
+          "rationale": "Primary horizontal push compound. Leads the session while CNS is fresh.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Dumbbell Row",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 12,
+          "rest_seconds": 90,
+          "rpe_target": 8,
+          "rationale": "Primary horizontal pull. Balances the pushing volume and builds back thickness.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Dumbbell Shoulder Press",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 15,
+          "rest_seconds": 90,
+          "rpe_target": 8,
+          "rationale": "Vertical push secondary. Builds shoulder width and strength.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Lat Pulldown",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 15,
+          "rest_seconds": 90,
+          "rpe_target": 8,
+          "rationale": "Vertical pull. Complements the row with a different pulling angle.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        }
+      ]
+    },
+    {
+      "day_number": 2,
+      "name": "Lower A",
+      "focus_muscles": ["quads", "hamstrings", "glutes"],
+      "session_type": "hypertrophy",
+      "estimated_duration_minutes": 55,
+      "exercises": [
+        {
+          "exercise_name": "Barbell Squat",
+          "sets": 3,
+          "reps_min": 6,
+          "reps_max": 10,
+          "rest_seconds": 180,
+          "rpe_target": 8,
+          "rationale": "Primary squat pattern compound. Quad dominant, leads the session.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Romanian Deadlift",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 12,
+          "rest_seconds": 120,
+          "rpe_target": 8,
+          "rationale": "Hip dominant accessory. Targets hamstrings and glutes to complement the quad-focused squat.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Leg Press",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 15,
+          "rest_seconds": 90,
+          "rpe_target": 7,
+          "rationale": "Additional quad volume at higher rep range to accumulate total weekly sets.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        }
+      ]
+    },
+    {
+      "day_number": 3,
+      "name": "Upper B",
+      "focus_muscles": ["chest", "back", "biceps", "triceps"],
+      "session_type": "hypertrophy",
+      "estimated_duration_minutes": 55,
+      "exercises": [
+        {
+          "exercise_name": "Incline Dumbbell Press",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 15,
+          "rest_seconds": 120,
+          "rpe_target": 8,
+          "rationale": "Upper chest emphasis. Different angle from flat bench provides complementary stimulus.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Cable Row",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 15,
+          "rest_seconds": 90,
+          "rpe_target": 8,
+          "rationale": "Horizontal pull with constant tension via cable. Accumulates back volume for the week.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Dumbbell Curl",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 15,
+          "rest_seconds": 60,
+          "rpe_target": 8,
+          "rationale": "Bicep isolation. Supination at peak provides full range of motion stimulus.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Tricep Pushdown",
+          "sets": 3,
+          "reps_min": 12,
+          "reps_max": 15,
+          "rest_seconds": 60,
+          "rpe_target": 8,
+          "rationale": "Tricep isolation. Complements the pressing volume with direct elbow extension work.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        }
+      ]
+    },
+    {
+      "day_number": 4,
+      "name": "Lower B",
+      "focus_muscles": ["quads", "hamstrings", "glutes", "calves"],
+      "session_type": "hypertrophy",
+      "estimated_duration_minutes": 50,
+      "exercises": [
+        {
+          "exercise_name": "Bulgarian Split Squat",
+          "sets": 3,
+          "reps_min": 8,
+          "reps_max": 12,
+          "rest_seconds": 120,
+          "rpe_target": 8,
+          "rationale": "Unilateral quad and glute emphasis. High stimulus per set, addresses any leg symmetry imbalances.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Hip Thrust",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 15,
+          "rest_seconds": 90,
+          "rpe_target": 8,
+          "rationale": "Hip extension dominant. Targets glutes through full hip extension range for maximum stimulus.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        },
+        {
+          "exercise_name": "Lying Leg Curl",
+          "sets": 3,
+          "reps_min": 10,
+          "reps_max": 15,
+          "rest_seconds": 60,
+          "rpe_target": 8,
+          "rationale": "Hamstring isolation. Complements the hip hinge from Day 2 with knee flexion stimulus.",
+          "progression_scheme": "double_progression",
+          "modification_note": null
+        }
+      ]
+    }
+  ]
+}

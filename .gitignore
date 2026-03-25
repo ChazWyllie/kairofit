@@ -1,0 +1,45 @@
+# Environment - NEVER commit these
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+
+# Misc
+.DS_Store
+*.pem
+*.key
+Thumbs.db
+
+# Debug logs
+npm-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+
+# Auto-generated types - regenerate with npm run db:types
+# This file is generated from the database schema.
+# Run npm run db:types after npm run db:push to regenerate.
+src/types/supabase.generated.ts

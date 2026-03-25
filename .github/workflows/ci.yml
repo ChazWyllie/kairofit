@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Type check, lint, and voice lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: TypeScript check
+        run: npm run typecheck
+      - name: ESLint
+        run: npm run lint
+      - name: Kiro voice lint
+        run: npm run lint:kiro
+      - name: Prettier format check
+        run: npm run format:check
+      - name: Security audit
+        run: npm audit --audit-level=high
+
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+  build:
+    name: Build check
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build
+        run: npm run build
+        env:
+          # All env vars that are imported at build time must be present
+          # Real values live in Vercel environment settings
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
+          NEXT_PUBLIC_PAYWALL_ENABLED: "false"
+          NEXT_PUBLIC_SOCIAL_ENABLED: "false"
+          NEXT_PUBLIC_NUTRITION_ENABLED: "false"
+          NEXT_PUBLIC_WEARABLES_ENABLED: "false"
+          NEXT_PUBLIC_POSTHOG_KEY: placeholder_posthog
+          NEXT_PUBLIC_APP_URL: https://kairofit.com
+          # Server-side vars needed if imported at build time
+          ANTHROPIC_API_KEY: placeholder_anthropic
+          UPSTASH_REDIS_REST_URL: https://placeholder.upstash.io
+          UPSTASH_REDIS_REST_TOKEN: placeholder_token
+
+  e2e:
+    name: End-to-end tests
+    runs-on: ubuntu-latest
+    needs: build
+    # Runs on all PRs targeting main and on pushes to main.
+    # KNOWN LIMITATION: PLAYWRIGHT_BASE_URL points to a shared staging environment.
+    # Two concurrent PRs will test against the same instance, which can produce
+    # flaky results if both PRs affect the same flows.
+    # Future improvement: switch to per-PR Vercel preview URLs via the Vercel GitHub integration.
+    if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          # E2E tests run against a staging environment
+          # Set PLAYWRIGHT_BASE_URL in repository secrets
+          PLAYWRIGHT_BASE_URL: ${{ secrets.STAGING_URL }}
