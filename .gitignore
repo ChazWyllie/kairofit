@@ -39,7 +39,5 @@ next-env.d.ts
 supabase/.temp/
 supabase/.branches/
 
-# Auto-generated types - regenerate with npm run db:types
-# This file is generated from the database schema.
-# Run npm run db:types after npm run db:push to regenerate.
-src/types/supabase.generated.ts
+# Auto-generated types - regenerate with npm run db:types after schema changes.
+# Committed so CI can typecheck without a live Supabase connection.
