@@ -15,10 +15,10 @@ description: >
 
 KairoFit has two paths that must stay in sync:
 
-| Path | Purpose |
-|------|---------|
-| `g:\My Drive\Projects\kairofit` | Source of truth for file edits (Google Drive) |
-| `C:\Projects\kairofit` | Git and npm commands - node_modules lives here |
+| Path                            | Purpose                                        |
+| ------------------------------- | ---------------------------------------------- |
+| `g:\My Drive\Projects\kairofit` | Source of truth for file edits (Google Drive)  |
+| `C:\Projects\kairofit`          | Git and npm commands - node_modules lives here |
 
 **Rule**: All `git` and `npm` commands run from `C:\Projects\kairofit`.
 Write new files to both paths. When files differ, `C:\Projects\kairofit` is authoritative
@@ -38,6 +38,7 @@ refactor/short-description   # restructure without behavior change
 ```
 
 Examples:
+
 ```
 feat/auth-infrastructure
 feat/program-generation
@@ -46,6 +47,7 @@ chore/rename-master-to-main
 ```
 
 Create from `main` (or `master` until renamed):
+
 ```bash
 cd "C:\Projects\kairofit"
 git checkout main
@@ -67,6 +69,7 @@ refactor: extract saveProgramToDb into queries/programs.ts
 ```
 
 Rules:
+
 - Lowercase after the colon
 - Imperative mood ("add", "fix", "rename" - not "added", "fixes", "renaming")
 - Under 72 characters for the subject line
@@ -74,6 +77,7 @@ Rules:
 - No em dashes anywhere
 
 For multi-line messages (when the why is non-obvious):
+
 ```bash
 git commit -m "$(cat <<'EOF'
 feat: add createAccountAction with OTP magic link
@@ -92,18 +96,19 @@ EOF
 ## PR size guidelines
 
 Each PR should do exactly one thing. As a solo developer the value is:
+
 1. CI runs automatically on every PR before merge
 2. Clean history - each PR maps to one logical change
 3. Easy rollback - revert one PR without touching others
 
 Natural boundaries for the auth + onboarding-to-DB plan:
 
-| PR | Branch | Contains |
-|----|--------|----------|
-| 1 | `feat/auth-infrastructure` | Zustand persist, auth callback route, `createAccountAction` |
-| 2 | `feat/program-generation` | `saveOnboardingProfileAction`, `generateProgramAction`, DB queries |
-| 3 | `feat/onboarding-wiring` | Wire email-gate + program-building screens to actions |
-| 4 | `feat/dashboard` | Minimal dashboard page + login OTP form |
+| PR  | Branch                     | Contains                                                           |
+| --- | -------------------------- | ------------------------------------------------------------------ |
+| 1   | `feat/auth-infrastructure` | Zustand persist, auth callback route, `createAccountAction`        |
+| 2   | `feat/program-generation`  | `saveOnboardingProfileAction`, `generateProgramAction`, DB queries |
+| 3   | `feat/onboarding-wiring`   | Wire email-gate + program-building screens to actions              |
+| 4   | `feat/dashboard`           | Minimal dashboard page + login OTP form                            |
 
 PRs 1 and 2 are independent and can be opened simultaneously.
 PR 3 should not be merged until 1 and 2 are merged (it imports their actions).
@@ -115,24 +120,26 @@ PR 4 is independent of 1-3.
 
 The pipeline in `.github/workflows/ci.yml` runs these checks in order:
 
-| Step | Command | What it catches |
-|------|---------|----------------|
-| TypeScript | `npm run typecheck` | Type errors, missing imports |
-| ESLint | `npm run lint` | Code quality rules |
-| Kiro voice lint | `npm run lint:kiro` | Em dashes, banned phrases in output strings |
-| Prettier | `npm run format:check` | Formatting inconsistencies |
-| Security audit | `npm audit --audit-level=high` | High/critical CVEs in deps |
-| Unit tests | `npm test` | Logic correctness |
-| Build | `npm run build` | Next.js compilation with placeholder env vars |
-| E2E | `npm run test:e2e` | Full flow (runs only on PRs targeting `main`) |
+| Step            | Command                        | What it catches                               |
+| --------------- | ------------------------------ | --------------------------------------------- |
+| TypeScript      | `npm run typecheck`            | Type errors, missing imports                  |
+| ESLint          | `npm run lint`                 | Code quality rules                            |
+| Kiro voice lint | `npm run lint:kiro`            | Em dashes, banned phrases in output strings   |
+| Prettier        | `npm run format:check`         | Formatting inconsistencies                    |
+| Security audit  | `npm audit --audit-level=high` | High/critical CVEs in deps                    |
+| Unit tests      | `npm test`                     | Logic correctness                             |
+| Build           | `npm run build`                | Next.js compilation with placeholder env vars |
+| E2E             | `npm run test:e2e`             | Full flow (runs only on PRs targeting `main`) |
 
 All steps must be green before merging. Run them locally before pushing:
+
 ```bash
 cd "C:\Projects\kairofit"
 npm run typecheck && npm run lint && npm run lint:kiro && npm test
 ```
 
 **Note**: CI targets `main` branch. If the default branch is `master`, rename it:
+
 ```bash
 git branch -m master main
 git push origin -u main
@@ -229,6 +236,7 @@ git worktree add ..\kairofit-dashboard feat/dashboard
 
 Each worktree shares git history but has its own working tree and node_modules-independent
 state. Remove when done:
+
 ```bash
 git worktree remove ..\kairofit-auth
 ```

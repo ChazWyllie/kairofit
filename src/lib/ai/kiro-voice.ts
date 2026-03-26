@@ -11,7 +11,12 @@
  */
 
 // Archetype types and logic - always import from archetypes.ts
-export { ARCHETYPES, assignArchetype, getLoadingFact, getProjectionText } from '@/lib/onboarding/archetypes'
+export {
+  ARCHETYPES,
+  assignArchetype,
+  getLoadingFact,
+  getProjectionText,
+} from '@/lib/onboarding/archetypes'
 export type { KairoArchetype, ArchetypeDefinition } from '@/types'
 
 // ============================================================

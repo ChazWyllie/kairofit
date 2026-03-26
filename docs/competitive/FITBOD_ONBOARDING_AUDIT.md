@@ -182,66 +182,81 @@ KairoFit gates at screen 16, immediately after the archetype reveal (screen 15).
 ## The 15 Gaps KairoFit Exploits
 
 ### Gap 1 - No Body Composition Data
+
 FitBod never asks height, weight, or body fat.
 KairoFit uses this for projected transformation timeline:
 "At 4 days/week, expect visible strength gains in 8-10 weeks."
 
 ### Gap 2 - No Injury Screening
+
 Zero questions about injuries, chronic pain, or limitations.
 KairoFit screens for 6 injury zones and auto-excludes contraindicated exercises.
 This is a trust, safety, and retention differentiator for users 30+.
 
 ### Gap 3 - HDYHAU Attribution Mid-Quiz
+
 Marketing data collection inserted after just 4 screens. Breaks the user-centric tone.
 KairoFit moves this to post-signup settings.
 
 ### Gap 4 - Binary Agree/Disagree is Low-Resolution
+
 Binary choices produce 4-5 archetypes. A 1-5 scale enables 8+ archetypes.
 KairoFit uses a 5-point scale for richer psychographic segmentation.
 
 ### Gap 5 - No Nutrition Bridge
+
 Zero mention of nutrition. KairoFit scaffolds macro targets (post-MVP).
 
 ### Gap 6 - Fake Loading Screen Wastes Engagement
+
 4 seconds of animation. No personalized content.
 KairoFit shows: research fact + projected timeline + live program preview simultaneously.
 
 ### Gap 7 - Email Gate at Screen 31
+
 13 screens after the emotional peak (archetype reveal at screen 18).
 Every drop-off between 18-31 is a lost lead.
 KairoFit gates immediately after the archetype reveal. Screen 16 of 22.
 
 ### Gap 8 - Anonymous Testimonials
+
 Usernames only. No photos, no platform attribution.
 KairoFit uses verified App Store rating counts and highlighted specific metrics.
 
 ### Gap 9 - No Preferred Workout Time
+
 No question about morning vs evening preference.
 Affects notification timing, warm-up recommendations, and user perception of personalization.
 
 ### Gap 10 - No "Why Now?" Urgency Question
+
 What triggered this decision today?
 KairoFit captures this and uses it to frame the program with urgency and specificity.
 
 ### Gap 11 - No Desired Timeline
+
 FitBod never shows a projected results timeline.
 KairoFit shows a timeline chart during program generation.
 
 ### Gap 12 - No Step Count in Progress Bar
+
 4-segment bar with no indication of total screens.
 Users get quiz fatigue around screen 15 with no end in sight.
 KairoFit shows "Step X of 22" throughout.
 
 ### Gap 13 - Three Inconsistent Navigation Bars
+
 Main site, exercises section, and blog all have different navbars.
 KairoFit has one global navigation component everywhere.
 
 ### Gap 14 - No Intermediate Level
+
 Workout generator only has Beginner and Advanced.
 The majority of users are intermediate.
 KairoFit uses 5 levels with behavioral descriptions.
 
 ### Gap 15 - Equipment Single-Select
+
 Cannot pick dumbbells AND barbells together.
 Real gyms and home setups mix equipment.
 KairoFit always multi-selects equipment with "Squat rack" as a separate option.

@@ -5,6 +5,7 @@
 All 23 onboarding quiz screens are complete. TypeScript passes with 0 errors.
 
 Screens built:
+
 - Step 10: `body-composition` - height + weight + optional body fat (dual_field)
 - Step 11: `why-now` - 6 motivation options (single_select auto_advance)
 - Steps 12-15: `psych-1` through `psych-4` - 5-point Likert scale (single_select auto_advance)
@@ -34,12 +35,13 @@ Fix: add `persist` middleware to `src/stores/onboarding.store.ts`.
 ```typescript
 // src/stores/onboarding.store.ts
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'  // add this
+import { persist } from 'zustand/middleware' // add this
 
 export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
-  persist(                                     // wrap with persist
+  persist(
+    // wrap with persist
     (set) => ({ ...initialState, ...actions }),
-    { name: 'kairofit-onboarding' }            // localStorage key
+    { name: 'kairofit-onboarding' } // localStorage key
   )
 )
 ```
@@ -79,6 +81,7 @@ export async function GET(request: NextRequest) {
 Uses `next-safe-action` v7 (same pattern as `src/actions/workout.actions.ts`).
 
 **`createAccountAction`** - sends OTP magic link:
+
 - Input: `{ email: string }` validated with `onboardingEmailSchema` (already in schemas.ts)
 - Rate limit with `RATE_LIMIT_KEYS.AUTH`
 - `supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: origin + '/auth/callback' } })`
@@ -86,12 +89,14 @@ Uses `next-safe-action` v7 (same pattern as `src/actions/workout.actions.ts`).
 - DB trigger `handle_new_user()` auto-creates blank profiles row on first sign-in
 
 **`saveOnboardingProfileAction`** - saves all phase 1-5 data to profiles table:
+
 - Input: full onboarding state fields (goal, experience_level, archetype, equipment, injuries, etc.)
 - Requires auth - `supabase.auth.getUser()`
 - `UPDATE profiles SET ... WHERE id = user.id`
 - Set `onboarding_completed_at = NOW()`
 
 **`generateProgramAction`** - runs AI generation and saves program:
+
 - No input (reads profile from DB)
 - Requires auth
 - Rate limit with `RATE_LIMIT_KEYS.AI_GENERATE`
@@ -166,6 +171,7 @@ useEffect(() => {
 #### `src/app/(auth)/login/page.tsx` - wire OTP form
 
 Replace stub with working magic link form:
+
 - Email input
 - Submit calls `createAccountAction({ email })`
 - Show "Check your email" confirmation state
@@ -203,16 +209,16 @@ missing-module error that looks like a setup failure but isn't.
 
 ## Key files reference
 
-| File | Status | Purpose |
-|------|--------|---------|
-| `src/lib/ai/workout-generator.ts` | Complete | AI program generation with full resilience chain |
-| `src/lib/ai/workout-validator.ts` | Complete | Post-generation constraint enforcement |
-| `src/lib/utils/progressive-overload.ts` | Complete | Deterministic overload calculations |
-| `src/lib/db/supabase.ts` | Complete | Browser + server Supabase clients |
-| `src/middleware.ts` | Complete | Auth route protection |
-| `src/stores/onboarding.store.ts` | Complete (needs persist) | All onboarding quiz state |
-| `src/actions/workout.actions.ts` | Complete | Log set, start/complete sessions |
-| `src/actions/onboarding.actions.ts` | TODO | Create account, save profile, generate program |
-| `src/app/onboarding/` | Complete | All 23 screens |
-| `src/app/(app)/dashboard/` | TODO | Home screen after login |
-| `supabase/migrations/001_initial_schema.sql` | Complete | Full DB schema + RLS + triggers |
+| File                                         | Status                   | Purpose                                          |
+| -------------------------------------------- | ------------------------ | ------------------------------------------------ |
+| `src/lib/ai/workout-generator.ts`            | Complete                 | AI program generation with full resilience chain |
+| `src/lib/ai/workout-validator.ts`            | Complete                 | Post-generation constraint enforcement           |
+| `src/lib/utils/progressive-overload.ts`      | Complete                 | Deterministic overload calculations              |
+| `src/lib/db/supabase.ts`                     | Complete                 | Browser + server Supabase clients                |
+| `src/middleware.ts`                          | Complete                 | Auth route protection                            |
+| `src/stores/onboarding.store.ts`             | Complete (needs persist) | All onboarding quiz state                        |
+| `src/actions/workout.actions.ts`             | Complete                 | Log set, start/complete sessions                 |
+| `src/actions/onboarding.actions.ts`          | TODO                     | Create account, save profile, generate program   |
+| `src/app/onboarding/`                        | Complete                 | All 23 screens                                   |
+| `src/app/(app)/dashboard/`                   | TODO                     | Home screen after login                          |
+| `supabase/migrations/001_initial_schema.sql` | Complete                 | Full DB schema + RLS + triggers                  |

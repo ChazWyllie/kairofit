@@ -38,11 +38,11 @@ export const EVENTS = {
   ONBOARDING_STARTED: 'ONBOARDING_STARTED',
   ONBOARDING_STEP_COMPLETED: 'ONBOARDING_STEP_COMPLETED',
   ONBOARDING_STEP_SKIPPED: 'ONBOARDING_STEP_SKIPPED',
-  EMAIL_GATE_REACHED: 'EMAIL_GATE_REACHED',         // Screen 16
+  EMAIL_GATE_REACHED: 'EMAIL_GATE_REACHED', // Screen 16
   EMAIL_GATE_SUBMITTED: 'EMAIL_GATE_SUBMITTED',
-  EMAIL_GATE_ABANDONED: 'EMAIL_GATE_ABANDONED',     // Left before submitting
-  ARCHETYPE_REVEALED: 'ARCHETYPE_REVEALED',         // Screen 15
-  ONBOARDING_COMPLETED: 'ONBOARDING_COMPLETED',     // Screen 22 done
+  EMAIL_GATE_ABANDONED: 'EMAIL_GATE_ABANDONED', // Left before submitting
+  ARCHETYPE_REVEALED: 'ARCHETYPE_REVEALED', // Screen 15
+  ONBOARDING_COMPLETED: 'ONBOARDING_COMPLETED', // Screen 22 done
 
   // ============================================================
   // PROGRAM GENERATION
@@ -57,11 +57,11 @@ export const EVENTS = {
   // WORKOUT SESSIONS (most important retention signals)
   // ============================================================
   WORKOUT_STARTED: 'WORKOUT_STARTED',
-  FIRST_WORKOUT_STARTED: 'FIRST_WORKOUT_STARTED',    // Day 1 retention
+  FIRST_WORKOUT_STARTED: 'FIRST_WORKOUT_STARTED', // Day 1 retention
   SET_LOGGED: 'SET_LOGGED',
   WORKOUT_COMPLETED: 'WORKOUT_COMPLETED',
   FIRST_WORKOUT_COMPLETED: 'FIRST_WORKOUT_COMPLETED', // Day 1 completion
-  WORKOUT_ABANDONED: 'WORKOUT_ABANDONED',             // Started but did not finish
+  WORKOUT_ABANDONED: 'WORKOUT_ABANDONED', // Started but did not finish
 
   // ============================================================
   // KIRO AI INTERACTIONS
@@ -71,7 +71,7 @@ export const EVENTS = {
   AI_GENERATION_FAILED: 'AI_GENERATION_FAILED',
   KIRO_DEBRIEF_VIEWED: 'KIRO_DEBRIEF_VIEWED',
   KIRO_DEBRIEF_DISMISSED: 'KIRO_DEBRIEF_DISMISSED',
-  WORKOUT_RATED: 'WORKOUT_RATED',                    // 1-5 star rating
+  WORKOUT_RATED: 'WORKOUT_RATED', // 1-5 star rating
 
   // ============================================================
   // RETENTION SIGNALS
@@ -158,11 +158,11 @@ posthog.identify(userId, {
 
 ## Key Metrics to Monitor (from the research doc)
 
-| Metric | Target | PostHog Query |
-|---|---|---|
-| Day 1 retention | 35-45% | Users who opened app day after signup |
-| Day 7 retention | 20-30% | Users who opened app 7 days after signup |
-| Workout completion rate | >70% | WORKOUT_COMPLETED / WORKOUT_STARTED |
-| Exercise swap rate | <15% | EXERCISE_SWAPPED / total exercises shown |
-| Email gate conversion | >60% | EMAIL_GATE_SUBMITTED / EMAIL_GATE_REACHED |
-| Onboarding completion | >80% | ONBOARDING_COMPLETED / ONBOARDING_STARTED |
+| Metric                  | Target | PostHog Query                             |
+| ----------------------- | ------ | ----------------------------------------- |
+| Day 1 retention         | 35-45% | Users who opened app day after signup     |
+| Day 7 retention         | 20-30% | Users who opened app 7 days after signup  |
+| Workout completion rate | >70%   | WORKOUT_COMPLETED / WORKOUT_STARTED       |
+| Exercise swap rate      | <15%   | EXERCISE_SWAPPED / total exercises shown  |
+| Email gate conversion   | >60%   | EMAIL_GATE_SUBMITTED / EMAIL_GATE_REACHED |
+| Onboarding completion   | >80%   | ONBOARDING_COMPLETED / ONBOARDING_STARTED |

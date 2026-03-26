@@ -26,29 +26,25 @@ export default function ArchetypeRevealPage() {
   }
 
   return (
-    <OnboardingLayout
-      step={16}
-      totalSteps={TOTAL_STEPS}
-      showBack={false}
-    >
-      <div className="flex flex-col gap-6 mt-4">
+    <OnboardingLayout step={16} totalSteps={TOTAL_STEPS} showBack={false}>
+      <div className="mt-4 flex flex-col gap-6">
         <div className="text-center">
-          <div className="text-6xl mb-3">{def.emoji}</div>
-          <h2 className="text-2xl font-semibold text-[#6366F1] mb-2">{def.name}</h2>
-          <p className="text-lg text-[#F5F5F4] font-medium mb-4">{def.headline}</p>
-          <p className="text-[#A1A19E] leading-relaxed">{def.description}</p>
+          <div className="mb-3 text-6xl">{def.emoji}</div>
+          <h2 className="mb-2 text-2xl font-semibold text-[#6366F1]">{def.name}</h2>
+          <p className="mb-4 text-lg font-medium text-[#F5F5F4]">{def.headline}</p>
+          <p className="leading-relaxed text-[#A1A19E]">{def.description}</p>
         </div>
 
-        <div className="rounded-lg bg-[#111113] border border-[#1A1A1F] px-5 py-4">
-          <p className="text-sm text-[#6B6B68] font-medium uppercase tracking-wide mb-2">
+        <div className="rounded-lg border border-[#1A1A1F] bg-[#111113] px-5 py-4">
+          <p className="mb-2 text-sm font-medium uppercase tracking-wide text-[#6B6B68]">
             Your program focus
           </p>
-          <p className="text-[#F5F5F4] text-sm leading-relaxed">{def.program_emphasis}</p>
+          <p className="text-sm leading-relaxed text-[#F5F5F4]">{def.program_emphasis}</p>
         </div>
 
         <button
           onClick={handleContinue}
-          className="w-full py-3 rounded-lg bg-[#6366F1] text-white font-medium transition-opacity"
+          className="w-full rounded-lg bg-[#6366F1] py-3 font-medium text-white transition-opacity"
         >
           This is me - build my program
         </button>

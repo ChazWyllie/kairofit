@@ -20,7 +20,13 @@ import { zodToJsonSchema } from 'zod-to-json-schema'
 import { z } from 'zod'
 import { KIRO_BASE_SYSTEM_PROMPT } from './kiro-voice'
 import { validateWorkoutProgram } from './workout-validator'
-import { canRequest, recordSuccess, recordFailure, classifyEquipmentBucket, CIRCUITS } from './circuit-breaker'
+import {
+  canRequest,
+  recordSuccess,
+  recordFailure,
+  classifyEquipmentBucket,
+  CIRCUITS,
+} from './circuit-breaker'
 import { recommendSplit } from '@/lib/utils/progressive-overload'
 import { getExcludedExercises } from '@/lib/utils/contraindications'
 import { createServerClient } from '@/lib/db/supabase'
@@ -75,7 +81,7 @@ const _rawSchema = zodToJsonSchema(GeneratedProgramSchema, {
   name: 'workout_program',
   $refStrategy: 'none',
 }) as Record<string, unknown>
-delete _rawSchema['$schema']  // strip $schema - Anthropic may reject it
+delete _rawSchema['$schema'] // strip $schema - Anthropic may reject it
 
 const PROGRAM_TOOL: Anthropic.Tool = {
   name: 'create_workout_program',
@@ -87,7 +93,12 @@ const PROGRAM_TOOL: Anthropic.Tool = {
 // MAIN GENERATION WITH RESILIENCE
 // ============================================================
 
-export type GenerationSource = 'ai_sonnet' | 'ai_haiku' | 'redis_cache' | 'supabase_fallback' | 'static_fallback'
+export type GenerationSource =
+  | 'ai_sonnet'
+  | 'ai_haiku'
+  | 'redis_cache'
+  | 'supabase_fallback'
+  | 'static_fallback'
 
 export interface GenerationResult {
   program: GeneratedProgram
@@ -101,7 +112,7 @@ export interface GenerationResult {
 export async function generateProgram(profile: UserProfile): Promise<GenerationResult> {
   const supabase = await createServerClient()
 
-  if (!await canRequest(CIRCUITS.PROGRAM_GENERATION)) {
+  if (!(await canRequest(CIRCUITS.PROGRAM_GENERATION))) {
     console.warn('Circuit open - going straight to fallback')
     return getFallbackProgram(profile, supabase)
   }
@@ -188,10 +199,12 @@ async function generateWithHaiku(profile: UserProfile): Promise<GeneratedProgram
   const response = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
     max_tokens: 3000,
-    messages: [{
-      role: 'user',
-      content: `${GENERATION_TASK_INSTRUCTIONS}\n\n${buildPrompt(profile, split, excluded)}`,
-    }],
+    messages: [
+      {
+        role: 'user',
+        content: `${GENERATION_TASK_INSTRUCTIONS}\n\n${buildPrompt(profile, split, excluded)}`,
+      },
+    ],
     tools: [PROGRAM_TOOL],
     tool_choice: { type: 'tool', name: 'create_workout_program' },
   })
@@ -224,7 +237,10 @@ async function getFallbackProgram(
     .single()
 
   if (data?.program_json) {
-    return { program: data.program_json as unknown as GeneratedProgram, source: 'supabase_fallback' }
+    return {
+      program: data.program_json as unknown as GeneratedProgram,
+      source: 'supabase_fallback',
+    }
   }
 
   return { program: buildStaticFallback(), source: 'static_fallback' }
@@ -300,7 +316,8 @@ function buildStaticFallback(): GeneratedProgram {
   return {
     name: 'KairoFit Program',
     description: 'Your program is being finalized.',
-    ai_rationale: 'AI service is temporarily unavailable. Your program will regenerate automatically.',
+    ai_rationale:
+      'AI service is temporarily unavailable. Your program will regenerate automatically.',
     weeks_duration: 8,
     progression_scheme: 'double_progression',
     projected_weeks_to_goal: null,

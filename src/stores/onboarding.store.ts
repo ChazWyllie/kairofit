@@ -65,7 +65,7 @@ interface OnboardingActions {
   // Email gate
   setEmail: (email: string) => void
   setAuthReady: (ready: boolean) => void
-  clearEmailAfterAuth: () => void  // Call after auth session is confirmed
+  clearEmailAfterAuth: () => void // Call after auth session is confirmed
 
   // Phase 5 setters
   setEquipment: (equipment: Equipment[]) => void
@@ -85,7 +85,7 @@ interface OnboardingActions {
 
 const initialState: OnboardingState = {
   current_step: 1,
-  total_steps: TOTAL_STEPS,  // number, not a literal type
+  total_steps: TOTAL_STEPS, // number, not a literal type
 
   goal: null,
   experience_level: null,
@@ -104,7 +104,7 @@ const initialState: OnboardingState = {
   body_fat_pct: null,
   why_now: null,
 
-  psych_scores: [3, 3, 3, 3],  // Default neutral
+  psych_scores: [3, 3, 3, 3], // Default neutral
   archetype: null,
 
   email: null,
@@ -126,13 +126,15 @@ const initialState: OnboardingState = {
 export const useOnboardingStore = create<OnboardingState & OnboardingActions>((set) => ({
   ...initialState,
 
-  nextStep: () => set((state) => ({
-    current_step: Math.min(state.current_step + 1, state.total_steps),
-  })),
+  nextStep: () =>
+    set((state) => ({
+      current_step: Math.min(state.current_step + 1, state.total_steps),
+    })),
 
-  prevStep: () => set((state) => ({
-    current_step: Math.max(state.current_step - 1, 1),
-  })),
+  prevStep: () =>
+    set((state) => ({
+      current_step: Math.max(state.current_step - 1, 1),
+    })),
 
   goToStep: (step) => set({ current_step: step }),
 
@@ -156,11 +158,12 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>((s
   setWhyNow: (why_now) => set({ why_now }),
 
   // Phase 3
-  setPsychScore: (index, score) => set((state) => {
-    const scores = [...state.psych_scores] as [number, number, number, number]
-    scores[index] = score
-    return { psych_scores: scores }
-  }),
+  setPsychScore: (index, score) =>
+    set((state) => {
+      const scores = [...state.psych_scores] as [number, number, number, number]
+      scores[index] = score
+      return { psych_scores: scores }
+    }),
   setArchetype: (archetype) => set({ archetype }),
 
   // Email gate

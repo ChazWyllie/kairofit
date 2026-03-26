@@ -18,38 +18,38 @@ import type { OnboardingState } from '@/types'
 // ============================================================
 
 export type ScreenType =
-  | 'question'           // User answers a question
-  | 'interstitial'       // Social proof or trust-building (no input)
-  | 'email_gate'         // Email capture
-  | 'loading'            // Program generation with live preview
-  | 'archetype_reveal'   // Shows the computed archetype
+  | 'question' // User answers a question
+  | 'interstitial' // Social proof or trust-building (no input)
+  | 'email_gate' // Email capture
+  | 'loading' // Program generation with live preview
+  | 'archetype_reveal' // Shows the computed archetype
 
 export type InteractionType =
-  | 'single_select'      // One option, auto-advances immediately
-  | 'multi_select'       // Multiple options, requires Continue button
-  | 'numeric_input'      // Number fields, requires Continue
-  | 'text_input'         // Free text, requires Continue
-  | 'dual_field'         // Two fields on one screen, requires Continue
-  | 'continue_only'      // No input, just a Continue button
+  | 'single_select' // One option, auto-advances immediately
+  | 'multi_select' // Multiple options, requires Continue button
+  | 'numeric_input' // Number fields, requires Continue
+  | 'text_input' // Free text, requires Continue
+  | 'dual_field' // Two fields on one screen, requires Continue
+  | 'continue_only' // No input, just a Continue button
 
 export interface OnboardingOption {
   value: string
   label: string
   emoji?: string
-  description?: string  // Shown below label for context
+  description?: string // Shown below label for context
 }
 
 export interface OnboardingScreen {
-  id: string                          // Unique slug, matches URL path segment
-  step: number                        // 1-22
+  id: string // Unique slug, matches URL path segment
+  step: number // 1-22
   phase: 1 | 2 | 3 | 4 | 5
   type: ScreenType
-  title?: string                      // Header text
-  question?: string                   // Primary question text
-  context?: string                    // Sub-copy below question
+  title?: string // Header text
+  question?: string // Primary question text
+  context?: string // Sub-copy below question
   interaction: InteractionType
   options?: OnboardingOption[]
-  store_key?: keyof OnboardingState   // Where to save the answer in Zustand
+  store_key?: keyof OnboardingState // Where to save the answer in Zustand
   // Set to true for single_select screens to advance without a Continue button
   auto_advance: boolean
   required: boolean
@@ -95,10 +95,26 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
     store_key: 'experience_level',
     options: [
       { value: '1', label: 'Just starting out', description: "I'm new to strength training" },
-      { value: '2', label: 'Getting comfortable', description: "I've trained on and off, not consistently" },
-      { value: '3', label: 'Intermediate', description: 'I train regularly and know the basics well' },
-      { value: '4', label: 'Experienced', description: "I've been training consistently for 2+ years" },
-      { value: '5', label: 'Advanced', description: 'I follow structured programs and track performance' },
+      {
+        value: '2',
+        label: 'Getting comfortable',
+        description: "I've trained on and off, not consistently",
+      },
+      {
+        value: '3',
+        label: 'Intermediate',
+        description: 'I train regularly and know the basics well',
+      },
+      {
+        value: '4',
+        label: 'Experienced',
+        description: "I've been training consistently for 2+ years",
+      },
+      {
+        value: '5',
+        label: 'Advanced',
+        description: 'I follow structured programs and track performance',
+      },
     ],
   },
   {
@@ -152,7 +168,7 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
       { value: 'motivation', label: 'Lack of motivation', emoji: '😴' },
       { value: 'busy', label: 'Too busy', emoji: '📅' },
       { value: 'injury', label: 'Injury concerns', emoji: '🩹' },
-      { value: 'no_results', label: "Not seeing results", emoji: '📊' },
+      { value: 'no_results', label: 'Not seeing results', emoji: '📊' },
       { value: 'returning', label: 'Getting back after a break', emoji: '🔄' },
     ],
   },
@@ -221,7 +237,8 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
     phase: 2,
     type: 'question',
     question: 'Help us personalize your program',
-    context: 'Used for load recommendations and your transformation timeline. All data is encrypted.',
+    context:
+      'Used for load recommendations and your transformation timeline. All data is encrypted.',
     interaction: 'dual_field',
     auto_advance: false,
     required: true,
@@ -241,7 +258,7 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
     options: [
       { value: 'fresh_start', label: 'I want a fresh start' },
       { value: 'upcoming_event', label: 'Upcoming event or deadline' },
-      { value: 'doctor', label: "My doctor suggested it" },
+      { value: 'doctor', label: 'My doctor suggested it' },
       { value: 'consistency', label: "I've struggled with consistency" },
       { value: 'returning', label: "I'm back after a break" },
       { value: 'ready', label: 'I just feel ready' },
@@ -307,7 +324,7 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
     step: 15,
     phase: 3,
     type: 'question',
-    question: "Understanding why an exercise is in my program motivates me to do it well.",
+    question: 'Understanding why an exercise is in my program motivates me to do it well.',
     interaction: 'single_select',
     auto_advance: true,
     required: true,
@@ -397,7 +414,7 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
       { value: 'ppl', label: 'Push / Pull / Legs' },
       { value: 'upper_lower', label: 'Upper / Lower' },
       { value: 'full_body', label: 'Full Body' },
-      { value: 'not_sure', label: "Not sure - let KairoFit decide" },
+      { value: 'not_sure', label: 'Not sure - let KairoFit decide' },
     ],
   },
   {
@@ -470,7 +487,7 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
     phase: 5,
     type: 'loading',
     interaction: 'continue_only',
-    auto_advance: true,  // Auto-advances when generation completes
+    auto_advance: true, // Auto-advances when generation completes
     required: false,
     // Split-screen layout:
     // Left: personalized research fact (from getLoadingFact() in archetypes.ts)
@@ -495,4 +512,4 @@ export function getScreenById(id: string): OnboardingScreen | undefined {
   return ONBOARDING_FLOW.find((screen) => screen.id === id)
 }
 
-export const TOTAL_STEPS = ONBOARDING_FLOW.length  // 23 (added training recency screen)
+export const TOTAL_STEPS = ONBOARDING_FLOW.length // 23 (added training recency screen)

@@ -33,19 +33,19 @@ export function KiroDebrief({ sessionId, onComplete: _onComplete }: KiroDebriefP
   // - Kiro's voice: no em dashes, specific numbers, second person
 
   return (
-    <div className="rounded-xl bg-[#111113] border border-[#1A1A1F] p-6">
-      <div className="flex items-center gap-3 mb-4">
+    <div className="rounded-xl border border-[#1A1A1F] bg-[#111113] p-6">
+      <div className="mb-4 flex items-center gap-3">
         {/* TODO: Kiro avatar or icon */}
-        <div className="w-8 h-8 rounded-full bg-[#6366F1] flex items-center justify-center">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#6366F1]">
           <span className="text-xs font-medium text-white">K</span>
         </div>
         <span className="text-sm font-medium text-[#F5F5F4]">Kiro&apos;s analysis</span>
       </div>
 
       {/* TODO: Replace with streaming text component */}
-      <div className="text-[#A1A19E] text-sm">
+      <div className="text-sm text-[#A1A19E]">
         <p>Analyzing your session...</p>
-        <p className="text-xs text-[#6B6B68] mt-2">Session ID: {sessionId}</p>
+        <p className="mt-2 text-xs text-[#6B6B68]">Session ID: {sessionId}</p>
       </div>
     </div>
   )

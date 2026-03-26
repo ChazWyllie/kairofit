@@ -16,6 +16,7 @@ RECOMMEND: Prioritize these as safer alternatives.
 Common causes: disc herniation, muscle strain, spondylolisthesis, chronic tightness
 
 EXCLUDE (never assign):
+
 - Good mornings (barbell or dumbbell)
 - Hyperextensions and back extensions (weighted)
 - Jefferson curls
@@ -23,6 +24,7 @@ EXCLUDE (never assign):
 - Loaded spinal flexion exercises
 
 CAUTION (assign with modification note):
+
 - Conventional deadlift: "Keep weight moderate, brace core throughout. Stop if you feel lower back strain."
 - Romanian deadlift: "Monitor lower back fatigue. Do not push through pain."
 - Barbell squat: "Reduce depth to just above parallel if needed. Ensure upright torso."
@@ -30,6 +32,7 @@ CAUTION (assign with modification note):
 - Leg press: "Do not go below 90 degrees. Keep lower back pressed against the pad."
 
 RECOMMEND:
+
 - Hip thrust, glute bridge
 - Goblet squat (more upright than barbell squat)
 - Single-leg exercises (split squat, step-up, lunge)
@@ -44,11 +47,13 @@ RECOMMEND:
 Common causes: patellar tendinitis, ACL/MCL history, osteoarthritis, chondromalacia
 
 EXCLUDE:
+
 - Leg extension machine full-range (extreme patellar stress at lockout)
 - Deep squats below parallel under load
 - Box jumps and plyometric landings without progression
 
 CAUTION:
+
 - Barbell squat: "Limit depth to 90 degrees. Ensure knees track over toes."
 - Walking lunge: "Keep front shin vertical. Do not let knee cave inward."
 - Bulgarian split squat: "Start with bodyweight only. Monitor knee discomfort closely."
@@ -56,6 +61,7 @@ CAUTION:
 - Step-up: "Use conservative box height. Drive through heel, not toe."
 
 RECOMMEND:
+
 - Hip thrust, glute bridge (minimal knee stress)
 - Lying leg curl, seated leg curl
 - Calf raises
@@ -69,12 +75,14 @@ RECOMMEND:
 Common causes: rotator cuff strain/tear, impingement, AC joint issues, labral damage
 
 EXCLUDE:
+
 - Upright rows (extreme internal rotation at impingement angle)
 - Behind-neck press
 - Behind-neck lat pulldown
 - Dips (extreme shoulder extension angle)
 
 CAUTION:
+
 - Overhead press: "Use neutral grip dumbbells if possible. Stop if pain occurs at top of range."
 - Barbell overhead press: "Consider landmine press or dumbbell press as alternative."
 - Lateral raises: "Use light weight. Do not raise above shoulder height."
@@ -83,6 +91,7 @@ CAUTION:
 - Front raises: "Keep weight very light. Do not raise above shoulder height."
 
 RECOMMEND:
+
 - Landmine press (natural shoulder path, neutral grip)
 - Cable flye
 - Lat pulldown (vs pull-up)
@@ -98,16 +107,19 @@ RECOMMEND:
 Common causes: tendinitis, carpal tunnel, TFCC injury, sprains
 
 EXCLUDE:
+
 - Loaded wrist curls
 - Behind-the-back barbell wrist curls
 
 CAUTION:
+
 - Barbell bench press: "Use wrist wraps if needed. Keep wrists neutral - not extended backward."
 - Barbell curl: "Keep wrists neutral. Do not hyperextend at top. Consider EZ bar or dumbbells."
 - Skull crusher: "Use EZ bar or neutral grip dumbbells. Avoid straight barbell."
 - Push-up: "Elevate on fists or push-up handles to keep wrists neutral."
 
 RECOMMEND:
+
 - All dumbbell exercises (allow natural wrist rotation)
 - Cable exercises (smooth resistance curve)
 - Neutral grip pressing variations
@@ -120,16 +132,19 @@ RECOMMEND:
 Common causes: hip impingement (FAI), labral tear, hip flexor strain, bursitis
 
 EXCLUDE:
+
 - Deep squats below parallel (may aggravate FAI)
 - Plyometric hip-dominant movements with heavy loading
 
 CAUTION:
+
 - Barbell squat: "Stay above parallel. Monitor for pinching sensation at the hip crease."
 - Hip thrust: "Use full range only if pain-free. Partial range is acceptable."
 - Leg press: "Do not bring knees too close to chest."
 - Bulgarian split squat: "Monitor hip flexor stretch. Do not overextend rear leg."
 
 RECOMMEND:
+
 - Step-up
 - Dumbbell deadlift variations (easier to adjust stance)
 - Lying leg curl
@@ -143,16 +158,19 @@ RECOMMEND:
 Common causes: cervical disc issues, muscle strain, whiplash, spondylosis
 
 EXCLUDE:
+
 - Behind-neck press
 - Behind-neck lat pulldown
 - Heavy neck isolation exercises
 
 CAUTION:
+
 - Barbell squat (bar on traps): "Use low bar, safety bar squat, or goblet squat to reduce cervical loading."
 - Barbell overhead press: "Keep neck neutral throughout. Do not crane forward."
 - Conventional deadlift: "Maintain neutral cervical spine. Do not look up aggressively."
 
 RECOMMEND:
+
 - Dumbbell or machine overhead press alternatives
 - Trap bar deadlift (more upright position)
 - All seated machine exercises (supported position)

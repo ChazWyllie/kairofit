@@ -39,6 +39,7 @@ without the encryption key. This satisfies FTC HBNR and GDPR Article 9 requireme
 Keys are stored in Supabase Vault, not in environment variables or code.
 
 One-time setup (run once in Supabase SQL editor):
+
 ```sql
 -- Create the health data encryption key in Vault
 SELECT vault.create_secret(
@@ -106,6 +107,7 @@ export const updateBodyCompositionAction = action
 ```
 
 Supporting Postgres function:
+
 ```sql
 CREATE OR REPLACE FUNCTION update_profile_health_data(
   p_user_id uuid,
@@ -136,7 +138,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 // Use a Postgres view with SECURITY DEFINER that decrypts for the row owner
 // Alternatively, use a Supabase RPC function
 const { data } = await supabase.rpc('get_profile_health_data', {
-  p_user_id: user.id
+  p_user_id: user.id,
 })
 
 // data returns: { height_cm: number, weight_kg: number, body_fat_pct: number | null }
@@ -144,6 +146,7 @@ const { data } = await supabase.rpc('get_profile_health_data', {
 ```
 
 Supporting function:
+
 ```sql
 CREATE OR REPLACE FUNCTION get_profile_health_data(p_user_id uuid)
 RETURNS TABLE(height_cm numeric, weight_kg numeric, body_fat_pct numeric) AS $$
@@ -182,6 +185,7 @@ but treat NULL as NULL explicitly to avoid ambiguity.
 ## Key Rotation
 
 When rotating the encryption key:
+
 1. Add a new key to Vault with a new name
 2. Write a migration that decrypts all values with the old key and re-encrypts with the new key
 3. This migration must run in a transaction or be idempotent

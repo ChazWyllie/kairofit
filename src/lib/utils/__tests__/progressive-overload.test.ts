@@ -30,12 +30,48 @@ describe('calculateLinearProgression', () => {
 
   it('increases upper body weight by 2.5 kg when all reps hit (metric)', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
-        reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '2', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 2,
-        reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '3', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 3,
-        reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
+      {
+        id: '1',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 1,
+        reps_completed: 8,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
+      {
+        id: '2',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 2,
+        reps_completed: 8,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
+      {
+        id: '3',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 3,
+        reps_completed: 8,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
     ]
     const result = calculateLinearProgression(sets, 8, false, 'metric')
     expect(result.action).toBe('increase_weight')
@@ -44,8 +80,20 @@ describe('calculateLinearProgression', () => {
 
   it('increases lower body weight by 5 kg when all reps hit (metric)', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
-        reps_completed: 5, weight_kg: 100, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
+      {
+        id: '1',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 1,
+        reps_completed: 5,
+        weight_kg: 100,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
     ]
     const result = calculateLinearProgression(sets, 5, true, 'metric')
     expect(result.action).toBe('increase_weight')
@@ -54,20 +102,56 @@ describe('calculateLinearProgression', () => {
 
   it('increases upper body weight by 5 lbs (not 2.5 kg) when in imperial', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
-        reps_completed: 8, weight_kg: 135, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
+      {
+        id: '1',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 1,
+        reps_completed: 8,
+        weight_kg: 135,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
     ]
     const result = calculateLinearProgression(sets, 8, false, 'imperial')
     expect(result.action).toBe('increase_weight')
-    expect(result.suggested_weight).toBe(140)  // 135 + 5 lbs, not 137.5
+    expect(result.suggested_weight).toBe(140) // 135 + 5 lbs, not 137.5
   })
 
   it('maintains weight when not all sets hit target reps', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
-        reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '2', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 2,
-        reps_completed: 6, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },  // missed
+      {
+        id: '1',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 1,
+        reps_completed: 8,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
+      {
+        id: '2',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 2,
+        reps_completed: 6,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      }, // missed
     ]
     const result = calculateLinearProgression(sets, 8, false)
     expect(result.action).toBe('maintain')
@@ -82,10 +166,34 @@ describe('calculateLinearProgression', () => {
 describe('calculateDoubleProgression', () => {
   it('suggests more reps when below reps_max', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
-        reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '2', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 2,
-        reps_completed: 9, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
+      {
+        id: '1',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 1,
+        reps_completed: 8,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
+      {
+        id: '2',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 2,
+        reps_completed: 9,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
     ]
     const result = calculateDoubleProgression(sets, 8, 12, false)
     expect(result.action).toBe('increase_reps')
@@ -96,12 +204,48 @@ describe('calculateDoubleProgression', () => {
 
   it('increases weight when all sets hit reps_max (metric upper)', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
-        reps_completed: 12, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '2', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 2,
-        reps_completed: 12, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '3', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 3,
-        reps_completed: 12, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
+      {
+        id: '1',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 1,
+        reps_completed: 12,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
+      {
+        id: '2',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 2,
+        reps_completed: 12,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
+      {
+        id: '3',
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: 3,
+        reps_completed: 12,
+        weight_kg: 60,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      },
     ]
     const result = calculateDoubleProgression(sets, 8, 12, false, 'metric')
     expect(result.action).toBe('increase_weight')
@@ -113,11 +257,22 @@ describe('calculateDoubleProgression', () => {
   })
 
   it('resets reps to reps_min after weight increase', () => {
-    const sets = Array(3).fill(null).map((_, i) => ({
-      id: String(i), session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u',
-      set_number: i + 1, reps_completed: 12, weight_kg: 80,
-      rpe: null, is_warmup: false, is_dropset: false, logged_at: '',
-    }))
+    const sets = Array(3)
+      .fill(null)
+      .map((_, i) => ({
+        id: String(i),
+        session_id: 's',
+        exercise_id: 'e',
+        program_exercise_id: null,
+        user_id: 'u',
+        set_number: i + 1,
+        reps_completed: 12,
+        weight_kg: 80,
+        rpe: null,
+        is_warmup: false,
+        is_dropset: false,
+        logged_at: '',
+      }))
     const result = calculateDoubleProgression(sets, 6, 12, false)
     expect(result.action).toBe('increase_weight')
     expect(result.suggested_reps).toBe(6)
@@ -202,8 +357,20 @@ describe('shouldDeload', () => {
 
   it('triggers performance deload when 2+ exercises show stagnation', () => {
     const stagnantData = [
-      { exercise_id: '1', exercise_name: 'Squat', sessions_below_baseline: 2, baseline_weight: 100, current_weight: 95 },
-      { exercise_id: '2', exercise_name: 'Bench', sessions_below_baseline: 2, baseline_weight: 80, current_weight: 77 },
+      {
+        exercise_id: '1',
+        exercise_name: 'Squat',
+        sessions_below_baseline: 2,
+        baseline_weight: 100,
+        current_weight: 95,
+      },
+      {
+        exercise_id: '2',
+        exercise_name: 'Bench',
+        sessions_below_baseline: 2,
+        baseline_weight: 80,
+        current_weight: 77,
+      },
     ]
     const result = shouldDeload(2, 3 as ExperienceLevel, stagnantData)
     expect(result.needed).toBe(true)
@@ -212,7 +379,13 @@ describe('shouldDeload', () => {
 
   it('does not trigger performance deload with only 1 stagnant exercise', () => {
     const data = [
-      { exercise_id: '1', exercise_name: 'Squat', sessions_below_baseline: 2, baseline_weight: 100, current_weight: 95 },
+      {
+        exercise_id: '1',
+        exercise_name: 'Squat',
+        sessions_below_baseline: 2,
+        baseline_weight: 100,
+        current_weight: 95,
+      },
     ]
     const result = shouldDeload(2, 3 as ExperienceLevel, data)
     expect(result.needed).toBe(false)
@@ -226,9 +399,18 @@ describe('shouldDeload', () => {
 describe('calculateRPEProgression', () => {
   function makeWorkingSet(rpe: number, weight_kg: number, reps_completed = 8): WorkoutSet {
     return {
-      id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u',
-      set_number: 1, reps_completed, weight_kg, rpe,
-      is_warmup: false, is_dropset: false, logged_at: '',
+      id: '1',
+      session_id: 's',
+      exercise_id: 'e',
+      program_exercise_id: null,
+      user_id: 'u',
+      set_number: 1,
+      reps_completed,
+      weight_kg,
+      rpe,
+      is_warmup: false,
+      is_dropset: false,
+      logged_at: '',
     }
   }
 
@@ -240,8 +422,8 @@ describe('calculateRPEProgression', () => {
 
   it('excludes warmup sets from RPE averaging', () => {
     const sets = [
-      { ...makeWorkingSet(10, 100), is_warmup: true },  // warmup - should be excluded
-      makeWorkingSet(8, 100),                            // working set
+      { ...makeWorkingSet(10, 100), is_warmup: true }, // warmup - should be excluded
+      makeWorkingSet(8, 100), // working set
     ]
     const result = calculateRPEProgression(sets, 8, 12)
     // Only the working set RPE (8) should count - in target zone
@@ -277,7 +459,7 @@ describe('calculateRPEProgression', () => {
   })
 
   it('rounds metric increase to nearest 2.5 kg', () => {
-    const sets = [makeWorkingSet(6, 100)]  // 100 * 2.5% = 2.5 kg
+    const sets = [makeWorkingSet(6, 100)] // 100 * 2.5% = 2.5 kg
     const result = calculateRPEProgression(sets, 8, 12, 'metric')
     expect(result.action).toBe('increase_weight')
     // 100 + 2.5 = 102.5
@@ -285,7 +467,7 @@ describe('calculateRPEProgression', () => {
   })
 
   it('rounds imperial increase to nearest 5 lbs, not 2.5 kg', () => {
-    const sets = [makeWorkingSet(6, 135)]  // 135 * 2.5% = 3.375 lbs -> rounds to 5
+    const sets = [makeWorkingSet(6, 135)] // 135 * 2.5% = 3.375 lbs -> rounds to 5
     const result = calculateRPEProgression(sets, 8, 12, 'imperial')
     expect(result.action).toBe('increase_weight')
     // Should be 135 + 5 = 140 (not 137.5 which would be metric rounding)

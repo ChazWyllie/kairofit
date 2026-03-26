@@ -16,7 +16,7 @@ import Dexie, { type Table } from 'dexie'
 // ============================================================
 
 export interface LocalWorkoutSet {
-  id: string                  // Client-generated UUID (stable across sync)
+  id: string // Client-generated UUID (stable across sync)
   session_id: string
   exercise_id: string
   user_id: string
@@ -26,14 +26,14 @@ export interface LocalWorkoutSet {
   rpe: number | null
   is_warmup: boolean
   is_dropset: boolean
-  logged_at: string           // ISO timestamp
+  logged_at: string // ISO timestamp
   sync_status: 'pending' | 'synced' | 'failed'
   sync_attempts: number
   last_sync_attempt: string | null
 }
 
 export interface LocalWorkoutSession {
-  id: string                  // Client-generated UUID
+  id: string // Client-generated UUID
   user_id: string
   program_day_id: string | null
   program_id: string | null
@@ -90,10 +90,7 @@ export async function getPendingSets(): Promise<LocalWorkoutSet[]> {
  * Mark sets as synced after successful Supabase write.
  */
 export async function markSetsAsSynced(setIds: string[]): Promise<void> {
-  await db.workout_sets
-    .where('id')
-    .anyOf(setIds)
-    .modify({ sync_status: 'synced' })
+  await db.workout_sets.where('id').anyOf(setIds).modify({ sync_status: 'synced' })
 }
 
 /**

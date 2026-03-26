@@ -27,10 +27,12 @@ export default defineConfig({
 
   // Start the dev server automatically for local runs
   // CI uses a pre-deployed staging URL via PLAYWRIGHT_BASE_URL env var
-  webServer: process.env.CI ? undefined : {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+        command: 'npm run dev',
+        url: 'http://localhost:3000',
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+      },
 })

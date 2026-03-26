@@ -33,7 +33,7 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: 'Start Workout',
         url: '/workout/start',
-        description: 'Begin today\'s workout session',
+        description: "Begin today's workout session",
       },
       {
         name: 'My Program',

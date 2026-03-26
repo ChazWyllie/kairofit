@@ -34,6 +34,7 @@ Prefixes excluded: `chore`, `docs`, `refactor`, `test`, `ci`
 ## Generating a Changelog Entry
 
 Run this to get commits since last release:
+
 ```bash
 git log v0.1.0..HEAD --oneline --no-merges
 ```
@@ -97,15 +98,18 @@ ALTER TABLE public.profiles ADD COLUMN last_seen_changelog_version text;
 ## v0.2.0 - March 2026
 
 ### New
+
 - Muscle recovery heatmap: see which muscle groups are ready to train and which need more rest
 - Shareable workout cards: generate an image of your completed workout for Instagram Stories
 - Weekly challenges: compete with friends for most volume, most consistent, or longest streak
 
 ### Improved
+
 - Program loading screen: now shows your personalized timeline and live preview as the program builds
 - Exercise cards: research rationale now expandable for every exercise
 
 ### Fixed
+
 - Rest timer now vibrates on completion
 - Program would sometimes show the same day twice in the weekly view
 ```

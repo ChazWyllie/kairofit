@@ -51,7 +51,7 @@ export default function EquipmentPage() {
       context="Your program will only include exercises you can actually do."
       onBack={() => router.push('/onboarding/email-gate')}
     >
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="mt-4 flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           {EQUIPMENT_OPTIONS.map((option) => {
             const isSelected = selected.has(option.value)
@@ -59,20 +59,20 @@ export default function EquipmentPage() {
               <button
                 key={option.value}
                 onClick={() => toggleOption(option.value)}
-                className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+                className={`w-full rounded-lg border px-4 py-3 text-left transition-colors ${
                   isSelected
-                    ? 'bg-[#1A1A1F] border-[#6366F1] text-[#F5F5F4]'
-                    : 'bg-[#111113] border-[#1A1A1F] text-[#F5F5F4] hover:border-[#6366F1]'
+                    ? 'border-[#6366F1] bg-[#1A1A1F] text-[#F5F5F4]'
+                    : 'border-[#1A1A1F] bg-[#111113] text-[#F5F5F4] hover:border-[#6366F1]'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                      isSelected ? 'bg-[#6366F1] border-[#6366F1]' : 'border-[#6B6B68]'
+                    className={`flex h-4 w-4 flex-shrink-0 items-center justify-center rounded border ${
+                      isSelected ? 'border-[#6366F1] bg-[#6366F1]' : 'border-[#6B6B68]'
                     }`}
                   >
                     {isSelected && (
-                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 12 12">
+                      <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 12 12">
                         <path
                           d="M2 6l3 3 5-5"
                           stroke="currentColor"
@@ -93,7 +93,7 @@ export default function EquipmentPage() {
         <button
           onClick={handleContinue}
           disabled={selected.size === 0}
-          className="w-full py-3 rounded-lg bg-[#6366F1] text-white font-medium disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+          className="w-full rounded-lg bg-[#6366F1] py-3 font-medium text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
         >
           Continue
         </button>

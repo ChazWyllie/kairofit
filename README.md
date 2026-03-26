@@ -10,16 +10,16 @@ No App Store account required.
 
 ## What Makes KairoFit Different
 
-| FitBod | KairoFit |
-|---|---|
-| No injury screening | Screen 8: injury zones auto-filter exercises |
-| No body composition | Height, weight used for timeline projection |
-| Fatigue rotation, not periodization | Real mesocycles with scheduled deloads |
-| Email gate at screen 31 | Email gate at screen 16, after archetype reveal |
-| Fake 4-second loading screen | Split-screen: research fact + timeline + live preview |
-| 3 experience levels | 5 levels with behavioral descriptions |
-| Black-box algorithm | Kiro explains every programming decision |
-| $15.99/month | Free at launch, $9.99/month behind a feature flag |
+| FitBod                              | KairoFit                                              |
+| ----------------------------------- | ----------------------------------------------------- |
+| No injury screening                 | Screen 8: injury zones auto-filter exercises          |
+| No body composition                 | Height, weight used for timeline projection           |
+| Fatigue rotation, not periodization | Real mesocycles with scheduled deloads                |
+| Email gate at screen 31             | Email gate at screen 16, after archetype reveal       |
+| Fake 4-second loading screen        | Split-screen: research fact + timeline + live preview |
+| 3 experience levels                 | 5 levels with behavioral descriptions                 |
+| Black-box algorithm                 | Kiro explains every programming decision              |
+| $15.99/month                        | Free at launch, $9.99/month behind a feature flag     |
 
 ---
 

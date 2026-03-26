@@ -7,7 +7,8 @@ import { OnboardingLayout } from '@/components/onboarding/OnboardingLayout'
 import { TOTAL_STEPS } from '@/lib/onboarding/flow-config'
 
 export default function BodyCompositionPage() {
-  const { height_cm, weight_kg, setHeightCm, setWeightKg, setBodyFatPct, nextStep } = useOnboardingStore()
+  const { height_cm, weight_kg, setHeightCm, setWeightKg, setBodyFatPct, nextStep } =
+    useOnboardingStore()
   const router = useRouter()
 
   const [height, setHeight] = useState(height_cm?.toString() ?? '')
@@ -41,7 +42,7 @@ export default function BodyCompositionPage() {
       context="Used for load recommendations and your transformation timeline. All data is encrypted."
       onBack={() => router.push('/onboarding/injuries')}
     >
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="mt-4 flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <label className="text-sm text-[#A1A19E]">Height (cm)</label>
           <input
@@ -49,7 +50,7 @@ export default function BodyCompositionPage() {
             value={height}
             onChange={(e) => setHeight(e.target.value)}
             placeholder="e.g. 175"
-            className="w-full px-4 py-3 rounded-lg bg-[#111113] border border-[#1A1A1F] text-[#F5F5F4] placeholder-[#6B6B68] focus:border-[#6366F1] focus:outline-none transition-colors"
+            className="w-full rounded-lg border border-[#1A1A1F] bg-[#111113] px-4 py-3 text-[#F5F5F4] placeholder-[#6B6B68] transition-colors focus:border-[#6366F1] focus:outline-none"
           />
         </div>
 
@@ -60,7 +61,7 @@ export default function BodyCompositionPage() {
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
             placeholder="e.g. 75"
-            className="w-full px-4 py-3 rounded-lg bg-[#111113] border border-[#1A1A1F] text-[#F5F5F4] placeholder-[#6B6B68] focus:border-[#6366F1] focus:outline-none transition-colors"
+            className="w-full rounded-lg border border-[#1A1A1F] bg-[#111113] px-4 py-3 text-[#F5F5F4] placeholder-[#6B6B68] transition-colors focus:border-[#6366F1] focus:outline-none"
           />
         </div>
 
@@ -73,14 +74,14 @@ export default function BodyCompositionPage() {
             value={bodyFat}
             onChange={(e) => setBodyFat(e.target.value)}
             placeholder="e.g. 20"
-            className="w-full px-4 py-3 rounded-lg bg-[#111113] border border-[#1A1A1F] text-[#F5F5F4] placeholder-[#6B6B68] focus:border-[#6366F1] focus:outline-none transition-colors"
+            className="w-full rounded-lg border border-[#1A1A1F] bg-[#111113] px-4 py-3 text-[#F5F5F4] placeholder-[#6B6B68] transition-colors focus:border-[#6366F1] focus:outline-none"
           />
         </div>
 
         <button
           onClick={handleContinue}
           disabled={!canContinue}
-          className="w-full py-3 rounded-lg bg-[#6366F1] text-white font-medium disabled:opacity-40 disabled:cursor-not-allowed transition-opacity mt-2"
+          className="mt-2 w-full rounded-lg bg-[#6366F1] py-3 font-medium text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
         >
           Continue
         </button>

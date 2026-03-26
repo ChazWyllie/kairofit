@@ -39,7 +39,7 @@ const RECOVERY_HOURS: Record<MuscleGroup, number> = {
   quads: 72,
   hamstrings: 72,
   glutes: 72,
-  lower_back: 96,  // Also has CNS component similar to deadlift
+  lower_back: 96, // Also has CNS component similar to deadlift
 }
 
 // ============================================================
@@ -61,7 +61,7 @@ export function calculateRecoveryPct(
   lastTrainedAt: Date | null,
   _setsTrainedInSession: number
 ): number {
-  if (!lastTrainedAt) return 100  // Never trained = fully recovered
+  if (!lastTrainedAt) return 100 // Never trained = fully recovered
 
   const hoursSinceTraining = (Date.now() - lastTrainedAt.getTime()) / (1000 * 60 * 60)
   const fullRecoveryHours = RECOVERY_HOURS[muscleGroup]
@@ -88,7 +88,7 @@ export function calculateRecoveryUpdates(
   return completedSessionMuscles.map(({ muscle }) => ({
     muscle_group: muscle,
     last_trained_at: completedAt.toISOString(),
-    estimated_recovery_pct: 0,  // Just trained = 0% recovery
+    estimated_recovery_pct: 0, // Just trained = 0% recovery
   }))
 }
 
@@ -99,10 +99,7 @@ export function calculateRecoveryUpdates(
  * Minimum threshold: 50% recovery before training again.
  * Hard minimum: do not train the same primary muscle within 48 hours regardless of threshold.
  */
-export function isMuscleReadyToTrain(
-  recovery: MuscleRecovery,
-  minimumPct: number = 50
-): boolean {
+export function isMuscleReadyToTrain(recovery: MuscleRecovery, minimumPct: number = 50): boolean {
   if (recovery.last_trained_at) {
     const hoursSince =
       (Date.now() - new Date(recovery.last_trained_at).getTime()) / (1000 * 60 * 60)
@@ -138,9 +135,9 @@ export function sleepRangeToHours(sleepRange: string): number {
  * Returns a multiplier: 1.0 = normal, <1.0 = slower recovery.
  */
 export function getSleepRecoveryModifier(sleepHours: number): number {
-  if (sleepHours >= 8) return 1.1   // Excellent sleep - slightly faster recovery
-  if (sleepHours >= 7) return 1.0   // Good sleep - normal recovery
-  if (sleepHours >= 6) return 0.85  // Adequate sleep - 15% slower
-  if (sleepHours >= 5) return 0.7   // Poor sleep - 30% slower
-  return 0.5                         // Very poor sleep - 50% slower
+  if (sleepHours >= 8) return 1.1 // Excellent sleep - slightly faster recovery
+  if (sleepHours >= 7) return 1.0 // Good sleep - normal recovery
+  if (sleepHours >= 6) return 0.85 // Adequate sleep - 15% slower
+  if (sleepHours >= 5) return 0.7 // Poor sleep - 30% slower
+  return 0.5 // Very poor sleep - 50% slower
 }

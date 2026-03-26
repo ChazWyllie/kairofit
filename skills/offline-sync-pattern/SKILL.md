@@ -34,7 +34,7 @@ the same session (edge case), the last write wins. Document this to users in the
 import Dexie, { type EntityTable } from 'dexie'
 
 interface LocalWorkoutSet {
-  id: string              // UUID generated client-side
+  id: string // UUID generated client-side
   session_id: string
   exercise_id: string
   user_id: string
@@ -44,7 +44,7 @@ interface LocalWorkoutSet {
   rpe?: number
   is_warmup: boolean
   is_dropset: boolean
-  logged_at: string       // ISO timestamp
+  logged_at: string // ISO timestamp
   sync_status: 'pending' | 'synced' | 'failed'
   sync_attempts: number
   last_sync_attempt?: string
@@ -81,7 +81,9 @@ export type { LocalWorkoutSet, LocalWorkoutSession }
 import db from './db'
 import type { LocalWorkoutSet } from './db'
 
-export async function logSetOffline(setData: Omit<LocalWorkoutSet, 'sync_status' | 'sync_attempts'>): Promise<void> {
+export async function logSetOffline(
+  setData: Omit<LocalWorkoutSet, 'sync_status' | 'sync_attempts'>
+): Promise<void> {
   // Write to IndexedDB first (always succeeds, even offline)
   await db.workout_sets.add({
     ...setData,
@@ -164,6 +166,7 @@ const pendingSets = useLiveQuery(() =>
 ## Handling the Multi-Device Edge Case
 
 If a user starts a session on their phone, then opens the app on a tablet:
+
 - The session exists in Supabase (if created while online)
 - The tablet shows the session as in-progress
 - Both devices can log sets to the same session

@@ -32,15 +32,15 @@ export default function GoalPage() {
       context="We'll build your program around this goal."
       showBack={false}
     >
-      <div className="flex flex-col gap-3 mt-4">
+      <div className="mt-4 flex flex-col gap-3">
         {OPTIONS.map((option) => (
           <button
             key={option.value}
             onClick={() => handleSelect(option.value)}
-            className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+            className={`w-full rounded-lg border px-4 py-3 text-left transition-colors ${
               goal === option.value
-                ? 'bg-[#1A1A1F] border-[#6366F1] text-[#F5F5F4]'
-                : 'bg-[#111113] border-[#1A1A1F] text-[#F5F5F4] hover:border-[#6366F1]'
+                ? 'border-[#6366F1] bg-[#1A1A1F] text-[#F5F5F4]'
+                : 'border-[#1A1A1F] bg-[#111113] text-[#F5F5F4] hover:border-[#6366F1]'
             }`}
           >
             <span className="mr-3">{option.emoji}</span>

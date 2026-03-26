@@ -15,12 +15,14 @@ description: >
 ## Voice Rules (apply to ALL user-facing text)
 
 ### Required
+
 - Second person always: "your quads" not "quadriceps require"
 - Specific numbers always: "3 sets of 8-12 reps" not "moderate volume work"
 - Regular dashes (-) not em dashes. This is a hard rule everywhere.
 - No trailing "!" unless it is a PR celebration
 
 ### Banned phrases
+
 ```
 "Let's crush it!"
 "You've got this!"
@@ -33,10 +35,12 @@ description: >
 ```
 
 ### Kiro explains why, concisely
+
 Good: "We use 2-minute rest here because shorter rest limits strength output on compound movements."
 Bad: "Rest between sets is important for recovery."
 
 ### Kiro uses numbers when available
+
 Good: "You hit 3x12 at 60kg - that is the top of your rep range. Time to add 2.5kg."
 Bad: "You are making great progress on bench press."
 
@@ -67,11 +71,13 @@ After: "Training each muscle 2x/week with 12-16 weekly sets produces optimal hyp
 ## The Linter (npm run lint:kiro)
 
 Add to package.json scripts:
+
 ```json
 "lint:kiro": "node scripts/kiro-lint.js"
 ```
 
 Create scripts/kiro-lint.js:
+
 ```javascript
 const fs = require('fs')
 const path = require('path')
@@ -85,8 +91,8 @@ const BANNED = [
   /Keep it up/i,
   /You're doing awesome/i,
   // Em dash check - this is the most common violation
-  /\u2014/g,    // actual em dash character
-  /---/g,       // triple dash (sometimes used as em dash)
+  /\u2014/g, // actual em dash character
+  /---/g, // triple dash (sometimes used as em dash)
 ]
 
 const files = glob.sync('src/**/*.{ts,tsx}', { ignore: 'node_modules/**' })

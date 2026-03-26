@@ -33,14 +33,14 @@ export default function EmailGatePage() {
       context="Enter your email to unlock your personalized program."
       onBack={() => router.push('/onboarding/archetype-reveal')}
     >
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="mt-4 flex flex-col gap-4">
         <input
           type="email"
           value={localEmail}
           onChange={(e) => setLocalEmail(e.target.value)}
           placeholder="you@example.com"
           autoComplete="email"
-          className="w-full px-4 py-3 rounded-lg bg-[#111113] border border-[#1A1A1F] text-[#F5F5F4] placeholder-[#6B6B68] focus:border-[#6366F1] focus:outline-none transition-colors"
+          className="w-full rounded-lg border border-[#1A1A1F] bg-[#111113] px-4 py-3 text-[#F5F5F4] placeholder-[#6B6B68] transition-colors focus:border-[#6366F1] focus:outline-none"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && isValidEmail) handleSubmit()
           }}
@@ -49,12 +49,12 @@ export default function EmailGatePage() {
         <button
           onClick={handleSubmit}
           disabled={!isValidEmail}
-          className="w-full py-3 rounded-lg bg-[#6366F1] text-white font-medium disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+          className="w-full rounded-lg bg-[#6366F1] py-3 font-medium text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
         >
           Unlock my program
         </button>
 
-        <p className="text-xs text-center text-[#6B6B68]">No spam. Unsubscribe anytime.</p>
+        <p className="text-center text-xs text-[#6B6B68]">No spam. Unsubscribe anytime.</p>
       </div>
     </OnboardingLayout>
   )

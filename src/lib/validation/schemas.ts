@@ -89,9 +89,9 @@ export const onboardingScheduleSchema = z.object({
 })
 
 export const onboardingInjuriesSchema = z.object({
-  injuries: z.array(z.enum([
-    'lower_back', 'knees', 'shoulders', 'wrists', 'hips', 'neck', 'other'
-  ])),
+  injuries: z.array(
+    z.enum(['lower_back', 'knees', 'shoulders', 'wrists', 'hips', 'neck', 'other'])
+  ),
 })
 
 export const onboardingBodyCompositionSchema = z.object({
@@ -126,17 +126,26 @@ export const onboardingEmailSchema = z.object({
 })
 
 export const onboardingEquipmentSchema = z.object({
-  equipment: z.array(z.enum([
-    'dumbbells', 'kettlebells', 'barbells', 'cables_machines',
-    'pull_up_bar', 'resistance_bands', 'bench', 'squat_rack', 'bodyweight'
-  ])).min(1, 'Select at least one equipment option'),
+  equipment: z
+    .array(
+      z.enum([
+        'dumbbells',
+        'kettlebells',
+        'barbells',
+        'cables_machines',
+        'pull_up_bar',
+        'resistance_bands',
+        'bench',
+        'squat_rack',
+        'bodyweight',
+      ])
+    )
+    .min(1, 'Select at least one equipment option'),
 })
 
 export const onboardingTrainingSetupSchema = z.object({
   split_preference: z.string().max(50),
-  workout_time_preference: z.enum([
-    'morning', 'midday', 'afternoon', 'evening', 'no_preference'
-  ]),
+  workout_time_preference: z.enum(['morning', 'midday', 'afternoon', 'evening', 'no_preference']),
   other_training: z.array(z.string()),
   sleep_hours_range: z.enum(['<5', '5-6', '7-8', '>8']),
 })

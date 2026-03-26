@@ -60,6 +60,7 @@ Missing this step causes a TypeScript missing-module error that looks like a set
 ## Security Warning: Keep This Repo Private
 
 docs/competitive/ and docs/research/ contain:
+
 - Specific competitor revenue figures
 - Screen-by-screen competitor onboarding teardowns
 - Exact pricing strategy and paywall timing decisions
@@ -73,6 +74,7 @@ Before open-sourcing: move docs/competitive/ and docs/research/ to a separate pr
 ## Final Product Decisions
 
 ### Visual Identity
+
 **Base:** Dark premium minimalist (Whoop + Notion aesthetic)
 **Accents:** Bold energetic for CTAs and key moments (Nike + Strava energy)
 **Backgrounds:** Near-black (#0A0A0B), surface (#111113), elevated (#1A1A1F)
@@ -86,6 +88,7 @@ Before open-sourcing: move docs/competitive/ and docs/research/ to a separate pr
 **No em dashes anywhere.** Use regular dashes (-) or restructure sentences.
 
 ### AI Coach "Kiro"
+
 Named coach with a consistent voice. Direct, precise, science-literate.
 No motivational fluff. Trust comes from accuracy not enthusiasm.
 
@@ -93,6 +96,7 @@ Persona toggle is a per-user preference stored in `profiles.kiro_persona_enabled
 It is NOT a global environment variable. Do not create NEXT_PUBLIC_KIRO_PERSONA_ENABLED.
 
 **Kiro voice rules:**
+
 - Second person always ("your quads" not "quadriceps require")
 - Specific numbers always ("3 sets of 8-12" not "moderate volume")
 - No em dashes anywhere in Kiro output
@@ -101,11 +105,13 @@ It is NOT a global environment variable. Do not create NEXT_PUBLIC_KIRO_PERSONA_
 - Uncertainty acknowledged honestly: "Research varies here - we default to X but watch your data"
 
 ### Pricing
+
 **Current state:** Free - `NEXT_PUBLIC_PAYWALL_ENABLED=false`
 **Future state:** $9.99/month or $79.99/year
 **Stripe is integrated.** Flip the flag to monetize. Do not build a permanent free tier until retention data supports it.
 
 ### Science Transparency (3-layer system)
+
 Layer 1 (default): One-line rationale beneath every exercise card
 Layer 2 (program overview): Full rationale paragraph from Kiro
 Layer 3 (expandable per exercise): Full research notes
@@ -113,11 +119,13 @@ Layer 3 (expandable per exercise): Full research notes
 Adaptive: experience levels 4-5 have Layer 3 open by default. Levels 1-3 see it collapsed.
 
 ### Archetypes (8 total - all implemented)
+
 System Builder, Milestone Chaser, Explorer, Pragmatist, Comeback Kid, Optimizer, Challenger, Understander.
 Code lives in: src/lib/onboarding/archetypes.ts (NOT in kiro-voice.ts).
 Type definition: KairoArchetype in src/types/index.ts must include all 8.
 
 ### Onboarding
+
 22 screens. Email gate at screen 16 (after archetype reveal at screen 15).
 Full spec: docs/onboarding/FLOW.md
 The email gate is at screen 16. Not screen 17. 16.
@@ -141,28 +149,31 @@ Kiro persona is a per-user database column, not an env flag.
 
 ### Volume Limits (level-specific - not a universal 25)
 
-| Level | Minimum Effective | Maximum Adaptive | Hard Cap |
-|---|---|---|---|
-| 1 (beginner) | 4-6 sets/week | 10-12 sets/week | 16 sets |
-| 2 (early intermediate) | 4-8 sets/week | 12-14 sets/week | 16 sets |
-| 3 (intermediate) | 8-10 sets/week | 14-16 sets/week | 20 sets |
-| 4 (experienced) | 10-14 sets/week | 16-20 sets/week | 24 sets |
-| 5 (advanced) | 12-16 sets/week | 18-22 sets/week | 25 sets |
+| Level                  | Minimum Effective | Maximum Adaptive | Hard Cap |
+| ---------------------- | ----------------- | ---------------- | -------- |
+| 1 (beginner)           | 4-6 sets/week     | 10-12 sets/week  | 16 sets  |
+| 2 (early intermediate) | 4-8 sets/week     | 12-14 sets/week  | 16 sets  |
+| 3 (intermediate)       | 8-10 sets/week    | 14-16 sets/week  | 20 sets  |
+| 4 (experienced)        | 10-14 sets/week   | 16-20 sets/week  | 24 sets  |
+| 5 (advanced)           | 12-16 sets/week   | 18-22 sets/week  | 25 sets  |
 
 The global maximum is 25 sets but only for level 5. Beginners cap at 16.
 Any code or doc that states "hard cap: 25 sets" as a universal rule is wrong.
 
 ### Post-Workout Experience (all 4, in sequence)
+
 1. Streak + milestone animation
 2. Muscle recovery heatmap update
 3. Kiro AI debrief (streaming inline, not a popup)
 4. Shareable workout card (on demand)
 
 ### Growth Strategy
+
 KairoFit is a PWA. It does NOT appear in iOS App Store or Google Play search.
 The research doc's reference to App Store Optimization as the #1 channel is WRONG for this architecture.
 
 **Actual acquisition channels for KairoFit:**
+
 1. Web SEO (Google search for "AI workout app", "research-based workout program", etc.)
 2. Content marketing (expert-authored articles on training science)
 3. Referral program (word of mouth with trial extensions)
@@ -174,21 +185,21 @@ The research doc's reference to App Store Optimization as the #1 channel is WRON
 
 ## Tech Stack
 
-| Layer | Technology | Notes |
-|---|---|---|
-| Framework | Next.js 15 App Router + Turbopack | |
-| Database + Auth | Supabase (PostgreSQL + RLS) | NEVER bypass RLS |
-| AI | Anthropic Claude API | Sonnet for generation, Haiku for safety checks |
-| AI SDK | Vercel AI SDK (@ai-sdk/anthropic) | For streaming |
-| Styling | Tailwind CSS + shadcn/ui | Dark theme always |
-| State | Zustand + TanStack Query v5 | |
-| Payments | Stripe | Feature-flagged off |
-| Hosting | Vercel | |
-| Rate limiting | Upstash Redis | Protect ALL AI endpoints |
-| Analytics | PostHog | See skills/posthog-event-taxonomy/ for event names |
-| Testing | Vitest + Playwright | |
-| PWA | Serwist (@serwist/next) | NOT next-pwa - incompatible with Turbopack |
-| Offline storage | Dexie.js (IndexedDB) | See skills/offline-sync-pattern/ |
+| Layer           | Technology                        | Notes                                              |
+| --------------- | --------------------------------- | -------------------------------------------------- |
+| Framework       | Next.js 15 App Router + Turbopack |                                                    |
+| Database + Auth | Supabase (PostgreSQL + RLS)       | NEVER bypass RLS                                   |
+| AI              | Anthropic Claude API              | Sonnet for generation, Haiku for safety checks     |
+| AI SDK          | Vercel AI SDK (@ai-sdk/anthropic) | For streaming                                      |
+| Styling         | Tailwind CSS + shadcn/ui          | Dark theme always                                  |
+| State           | Zustand + TanStack Query v5       |                                                    |
+| Payments        | Stripe                            | Feature-flagged off                                |
+| Hosting         | Vercel                            |                                                    |
+| Rate limiting   | Upstash Redis                     | Protect ALL AI endpoints                           |
+| Analytics       | PostHog                           | See skills/posthog-event-taxonomy/ for event names |
+| Testing         | Vitest + Playwright               |                                                    |
+| PWA             | Serwist (@serwist/next)           | NOT next-pwa - incompatible with Turbopack         |
+| Offline storage | Dexie.js (IndexedDB)              | See skills/offline-sync-pattern/                   |
 
 ---
 
@@ -227,7 +238,7 @@ Kiro (Claude API) owns: intake interview, substitution reasoning, program ration
 - No console.log in production. console.error for errors only.
 - Components under 200 lines. Extract sub-components.
 - Every async operation needs loading and error states.
-- Never use select('*') on Supabase. Always specify columns.
+- Never use select('\*') on Supabase. Always specify columns.
 - Comment every non-obvious decision. Built for Claude Code + beginners.
 - Server Actions use next-safe-action v7 API - see skills/server-action-builder/
 - Events use PostHog taxonomy - see skills/posthog-event-taxonomy/
@@ -257,6 +268,7 @@ KIRO_BASE_SYSTEM_PROMPT is ~2000 tokens and stable.
 Without prompt caching, every AI call pays full input price for it.
 With caching, reads cost 0.1x base price (90% discount).
 Implementation:
+
 ```typescript
 {
   role: 'system',
@@ -265,6 +277,7 @@ Implementation:
   cache_control: { type: 'ephemeral' }
 }
 ```
+
 This MUST be implemented before production. Missing it increases AI costs by ~40%.
 
 **Serwist not next-pwa:**
@@ -334,32 +347,33 @@ src/
 
 ## Reference Documents
 
-| What you are building | Read first |
-|---|---|
-| Any git commit, branch, or PR | skills/git-workflow/SKILL.md |
-| Any Server Action | skills/server-action-builder/SKILL.md |
-| Any Supabase query or DB read/write | skills/supabase-query-patterns/SKILL.md |
-| Any TypeScript type error or strict flag issue | skills/typescript-strict-patterns/SKILL.md |
-| Onboarding screens | docs/onboarding/FLOW.md |
-| Any AI feature | docs/science/PROGRAMMING_RULES.md + skills/exercise-science-grounding/SKILL.md |
-| Exercise selection or injuries | docs/science/CONTRAINDICATIONS.md |
-| Offline workout logging | skills/offline-sync-pattern/SKILL.md |
-| Auth, RLS, encryption | docs/security/SECURITY.md + skills/rls-migration-checklist/SKILL.md |
-| Health data read/write | skills/health-data-encryption/SKILL.md |
-| Kiro voice or AI content | skills/kiro-output-auditor/SKILL.md |
-| Analytics events | skills/posthog-event-taxonomy/SKILL.md |
-| New database migration | skills/rls-migration-checklist/SKILL.md |
-| FitBod gaps to exploit | docs/competitive/FITBOD_ONBOARDING_AUDIT.md |
-| Navigation patterns | docs/competitive/FITBOD_NAV_AUDIT.md |
-| Full market context | docs/research/KAIROFIT_RESEARCH_SCAFFOLD.md |
-| Database schema | supabase/migrations/001_initial_schema.sql |
-| All decisions + full context | skills/kairofit-dev-assistant/SKILL.md |
+| What you are building                          | Read first                                                                     |
+| ---------------------------------------------- | ------------------------------------------------------------------------------ |
+| Any git commit, branch, or PR                  | skills/git-workflow/SKILL.md                                                   |
+| Any Server Action                              | skills/server-action-builder/SKILL.md                                          |
+| Any Supabase query or DB read/write            | skills/supabase-query-patterns/SKILL.md                                        |
+| Any TypeScript type error or strict flag issue | skills/typescript-strict-patterns/SKILL.md                                     |
+| Onboarding screens                             | docs/onboarding/FLOW.md                                                        |
+| Any AI feature                                 | docs/science/PROGRAMMING_RULES.md + skills/exercise-science-grounding/SKILL.md |
+| Exercise selection or injuries                 | docs/science/CONTRAINDICATIONS.md                                              |
+| Offline workout logging                        | skills/offline-sync-pattern/SKILL.md                                           |
+| Auth, RLS, encryption                          | docs/security/SECURITY.md + skills/rls-migration-checklist/SKILL.md            |
+| Health data read/write                         | skills/health-data-encryption/SKILL.md                                         |
+| Kiro voice or AI content                       | skills/kiro-output-auditor/SKILL.md                                            |
+| Analytics events                               | skills/posthog-event-taxonomy/SKILL.md                                         |
+| New database migration                         | skills/rls-migration-checklist/SKILL.md                                        |
+| FitBod gaps to exploit                         | docs/competitive/FITBOD_ONBOARDING_AUDIT.md                                    |
+| Navigation patterns                            | docs/competitive/FITBOD_NAV_AUDIT.md                                           |
+| Full market context                            | docs/research/KAIROFIT_RESEARCH_SCAFFOLD.md                                    |
+| Database schema                                | supabase/migrations/001_initial_schema.sql                                     |
+| All decisions + full context                   | skills/kairofit-dev-assistant/SKILL.md                                         |
 
 ---
 
 ## RAG Decision (Deliberately Deferred)
 
 The research scaffold designed a full pgvector knowledge base:
+
 - 1536-dimensional embeddings on the exercises table
 - Cosine similarity retrieval per query
 - XML-injected context chunks (exercises, anatomy, contraindications)
@@ -373,6 +387,7 @@ Trigger for implementation: when users begin swapping exercises at >15% rate
 (indicating Kiro lacks specific knowledge) or when the system prompt exceeds 4,000 tokens.
 
 When building RAG:
+
 1. Add `CREATE EXTENSION vector` to a new migration
 2. Add `embedding vector(1536)` column to exercises table
 3. Create retrieval function using cosine similarity
@@ -391,7 +406,7 @@ Layer 2 - Property-based testing (TODO): fast-check library generates random Use
 
 Layer 3 - LLM-as-judge (TODO): after generation, a secondary Haiku call evaluates quality on 5 dimensions (safety, scientific accuracy, personalization, Kiro voice, completeness). Score threshold for acceptance: 4/5 minimum. File: src/lib/ai/quality-judge.ts
 
-Layer 4 - Snapshot regression (TODO): 50-100 expert-validated "golden profiles" with expected program outputs. New generation must match within acceptable deviation. File: src/lib/ai/__tests__/golden-profiles/
+Layer 4 - Snapshot regression (TODO): 50-100 expert-validated "golden profiles" with expected program outputs. New generation must match within acceptable deviation. File: src/lib/ai/**tests**/golden-profiles/
 
 Layer 5 - A/B production (TODO): workout completion rate as the quality proxy. Apps with >70% completion see 43% higher LTV. Track WORKOUT_COMPLETED / WORKOUT_STARTED ratio in PostHog per program generation model/prompt version.
 
@@ -400,21 +415,27 @@ Layer 5 - A/B production (TODO): workout completion rate as the quality proxy. A
 ## Workflow Patterns for Claude Code Sessions
 
 ### Git Worktrees for Parallel Sessions
+
 Run multiple isolated Claude Code sessions without context bleed:
+
 ```bash
 git worktree add ../kairofit-feature-x -b feature/x
 # Open a separate terminal in ../kairofit-feature-x
 # Each session has its own working tree but shares the git history
 ```
+
 Use case: one session builds the onboarding flow while another builds the workout logger.
 
 ### Staff Engineer Review Pattern
+
 After planning a feature but before implementing, open a second Claude Code session and say:
 "Here is my plan for [feature]. Act as a senior engineer reviewing this plan. What are the risks, missing edge cases, and better alternatives?"
 Implement only after the critique session.
 
 ### after() API for Non-Blocking Analytics
+
 Next.js 15 `after()` runs code after the response is sent. Use for analytics that should not delay the user:
+
 ```typescript
 import { after } from 'next/server'
 
@@ -430,12 +451,15 @@ export async function completeSessionAction(input) {
 ```
 
 ### useActionState + useOptimistic Together
+
 CLAUDE.md previously only mentioned useOptimistic. Both serve different purposes:
+
 - `useOptimistic`: immediate UI update before server confirms (set logging)
 - `useActionState`: form error handling and pending state (onboarding forms)
-Use useOptimistic for set logging. Use useActionState for form submissions that need error display.
+  Use useOptimistic for set logging. Use useActionState for form submissions that need error display.
 
 ### Specific Cache Revalidate Values
+
 ```typescript
 // Exercise library - changes rarely, stale for 24 hours is fine
 export const revalidate = 86400 // 24 hours
@@ -458,6 +482,7 @@ All database query functions live in `src/lib/db/queries/`.
 This applies to both Server Component usage and Client Component usage.
 
 `src/lib/db/queries/` - All typed Supabase query functions
+
 - Called directly from Server Components, Server Actions, and Route Handlers
 - Example: `getActiveProgram(userId: string): Promise<Program>`
 

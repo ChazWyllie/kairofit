@@ -23,6 +23,7 @@ const supabase = createBrowserClient()
 ```
 
 **Rules:**
+
 - `createServerClient()` is `async` - it awaits `cookies()`. Always `await` it.
 - Never use `createServerClient()` in a Client Component (`'use client'`).
 - Never use `createBrowserClient()` in a Server Component or Server Action.
@@ -48,7 +49,7 @@ Client Components use TanStack Query hooks that call fetch routes, which call th
 
 ---
 
-## Never use select('*')
+## Never use select('\*')
 
 Always name every column you need. This is enforced in code review and CI lint.
 
@@ -65,6 +66,7 @@ Always name every column you need. This is enforced in code review and CI lint.
 ```
 
 Reasons:
+
 - `select('*')` bypasses TypeScript type inference from the generated types.
 - It pulls encrypted columns you don't need, wasting bandwidth.
 - It makes it impossible to track what data each feature actually uses.
@@ -79,7 +81,8 @@ are returned with `null` instead of being filtered out.
 ```typescript
 const { data, error } = await supabase
   .from('programs')
-  .select(`
+  .select(
+    `
     id, user_id, name, is_active,
     program_days!inner (
       id, program_id, day_number, week_number, name,
@@ -91,7 +94,8 @@ const { data, error } = await supabase
         )
       )
     )
-  `)
+  `
+  )
   .eq('user_id', userId)
   .eq('is_active', true)
   .single()
@@ -149,6 +153,7 @@ TypeScript types are structurally incompatible. `as unknown` first drops the typ
 assertion, then `as T` re-asserts with the correct application type.
 
 This is acceptable here because:
+
 1. The columns selected exactly match the `Program` type definition.
 2. RLS guarantees the rows are owned by the authenticated user.
 3. The query was constructed to return the expected shape.
@@ -192,15 +197,17 @@ pulling all rows and filtering in JavaScript.
 // Only load program_days for the current week - avoids 32-row join on 8-week programs
 const { data, error } = await supabase
   .from('programs')
-  .select(`
+  .select(
+    `
     id, name, current_week,
     program_days!inner (
       id, day_number, week_number, name
     )
-  `)
+  `
+  )
   .eq('user_id', userId)
   .eq('is_active', true)
-  .eq('program_days.week_number', currentWeek ?? 1)  // filter applied at DB level
+  .eq('program_days.week_number', currentWeek ?? 1) // filter applied at DB level
   .single()
 ```
 
@@ -209,10 +216,7 @@ const { data, error } = await supabase
 ## Error handling pattern
 
 ```typescript
-const { data, error } = await supabase
-  .from('table_name')
-  .select('id, name')
-  .eq('user_id', userId)
+const { data, error } = await supabase.from('table_name').select('id, name').eq('user_id', userId)
 
 if (error) {
   // Always log the raw message for debugging
@@ -268,15 +272,15 @@ even though RLS policies would enforce it - belt and suspenders.
 
 ## Quick reference
 
-| Scenario | Pattern |
-|----------|---------|
-| Server Component read | `await createServerClient()` |
-| Client Component read | `createBrowserClient()` |
-| Nested join (required) | `table!inner (columns)` |
-| Nested join (optional) | `table (columns)` - no `!inner` |
-| Single row query | `.single()` + PGRST116 check |
-| Not found result | Return `null`, never throw |
-| Required resource missing | Throw |
-| Nested type cast | `as unknown as MyType \| null` |
-| Column selection | Always explicit - never `select('*')` |
-| Query file location | `src/lib/db/queries/` only |
+| Scenario                  | Pattern                               |
+| ------------------------- | ------------------------------------- |
+| Server Component read     | `await createServerClient()`          |
+| Client Component read     | `createBrowserClient()`               |
+| Nested join (required)    | `table!inner (columns)`               |
+| Nested join (optional)    | `table (columns)` - no `!inner`       |
+| Single row query          | `.single()` + PGRST116 check          |
+| Not found result          | Return `null`, never throw            |
+| Required resource missing | Throw                                 |
+| Nested type cast          | `as unknown as MyType \| null`        |
+| Column selection          | Always explicit - never `select('*')` |
+| Query file location       | `src/lib/db/queries/` only            |

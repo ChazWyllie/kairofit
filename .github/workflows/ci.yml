@@ -62,10 +62,10 @@ jobs:
           # Real values live in Vercel environment settings
           NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon_key
-          NEXT_PUBLIC_PAYWALL_ENABLED: "false"
-          NEXT_PUBLIC_SOCIAL_ENABLED: "false"
-          NEXT_PUBLIC_NUTRITION_ENABLED: "false"
-          NEXT_PUBLIC_WEARABLES_ENABLED: "false"
+          NEXT_PUBLIC_PAYWALL_ENABLED: 'false'
+          NEXT_PUBLIC_SOCIAL_ENABLED: 'false'
+          NEXT_PUBLIC_NUTRITION_ENABLED: 'false'
+          NEXT_PUBLIC_WEARABLES_ENABLED: 'false'
           NEXT_PUBLIC_POSTHOG_KEY: placeholder_posthog
           NEXT_PUBLIC_APP_URL: https://kairofit.com
           # Server-side vars needed if imported at build time

@@ -32,9 +32,7 @@ import type { KairoArchetype, ArchetypeDefinition } from '@/types'
  * Each archetype gets a score based on how well the answers match its profile.
  * The highest-scoring archetype wins.
  */
-export function assignArchetype(
-  scores: [number, number, number, number]
-): KairoArchetype {
+export function assignArchetype(scores: [number, number, number, number]): KairoArchetype {
   const [progress, challenge, structure, understanding] = scores
 
   // Comeback Kid check first - overrides all others if the user shows low engagement
@@ -56,7 +54,7 @@ export function assignArchetype(
     pragmatist: (5 - understanding) * 1.5 + (5 - structure) * 0.5,
 
     // Comeback Kid: already handled above
-    comeback_kid: (challenge <= 2 && progress <= 2) ? 100 : 0,
+    comeback_kid: challenge <= 2 && progress <= 2 ? 100 : 0,
 
     // Optimizer: high challenge + high structure + moderate understanding
     optimizer: challenge * 1.2 + structure * 0.8 + understanding * 0.5,
@@ -93,7 +91,7 @@ export const ARCHETYPES: Record<KairoArchetype, ArchetypeDefinition> = {
     emoji: '🏗️',
     headline: 'You thrive with structure. Knowing the why is what makes the difference.',
     description:
-      "You want a complete system, not just a workout. You track numbers, read the rationale, and follow the plan precisely. That is exactly why you will see results - consistency compounds.",
+      'You want a complete system, not just a workout. You track numbers, read the rationale, and follow the plan precisely. That is exactly why you will see results - consistency compounds.',
     program_emphasis:
       'Full periodization with detailed progress tracking. Science explanations visible by default. Progressive overload tracked meticulously week over week.',
     default_science_depth: 'expanded',

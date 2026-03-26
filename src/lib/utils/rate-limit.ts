@@ -53,13 +53,13 @@ function getLimiters(): Record<string, Ratelimit> {
         prefix: 'rl:ai:intake',
       }),
       // Auth: prevent brute force
-      'auth': new Ratelimit({
+      auth: new Ratelimit({
         redis: r,
         limiter: Ratelimit.slidingWindow(10, '5 m'),
         prefix: 'rl:auth',
       }),
       // General mutations: per-user
-      'general': new Ratelimit({
+      general: new Ratelimit({
         redis: r,
         limiter: Ratelimit.slidingWindow(60, '1 m'),
         prefix: 'rl:general',
@@ -76,10 +76,7 @@ function getLimiters(): Record<string, Ratelimit> {
  * Usage:
  * await checkRateLimit(userId, 'ai:generate')
  */
-export async function checkRateLimit(
-  identifier: string,
-  key: string = 'general'
-): Promise<void> {
+export async function checkRateLimit(identifier: string, key: string = 'general'): Promise<void> {
   const limiters = getLimiters()
   const limiter = limiters[key] ?? limiters['general']!
 
@@ -87,10 +84,11 @@ export async function checkRateLimit(
 
   if (!success) {
     const resetIn = Math.ceil((reset - Date.now()) / 1000)
-    throw new RateLimitError(
-      `Rate limit exceeded. Try again in ${resetIn} seconds.`,
-      { limit, remaining: 0, reset }
-    )
+    throw new RateLimitError(`Rate limit exceeded. Try again in ${resetIn} seconds.`, {
+      limit,
+      remaining: 0,
+      reset,
+    })
   }
 }
 

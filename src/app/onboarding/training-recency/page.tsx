@@ -33,20 +33,20 @@ export default function TrainingRecencyPage() {
       context="Helps us set the right starting volume and progression speed."
       onBack={() => router.push('/onboarding/obstacle')}
     >
-      <div className="flex flex-col gap-3 mt-4">
+      <div className="mt-4 flex flex-col gap-3">
         {OPTIONS.map((option) => (
           <button
             key={option.value}
             onClick={() => handleSelect(option.value)}
-            className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+            className={`w-full rounded-lg border px-4 py-3 text-left transition-colors ${
               training_recency_months === option.value
-                ? 'bg-[#1A1A1F] border-[#6366F1] text-[#F5F5F4]'
-                : 'bg-[#111113] border-[#1A1A1F] text-[#F5F5F4] hover:border-[#6366F1]'
+                ? 'border-[#6366F1] bg-[#1A1A1F] text-[#F5F5F4]'
+                : 'border-[#1A1A1F] bg-[#111113] text-[#F5F5F4] hover:border-[#6366F1]'
             }`}
           >
             <p className="font-medium">{option.label}</p>
             {option.description && (
-              <p className="text-sm text-[#A1A19E] mt-0.5">{option.description}</p>
+              <p className="mt-0.5 text-sm text-[#A1A19E]">{option.description}</p>
             )}
           </button>
         ))}

@@ -54,15 +54,17 @@ export default function SocialProof1Page() {
       totalSteps={TOTAL_STEPS}
       onBack={() => router.push('/onboarding/schedule')}
     >
-      <div className="flex flex-col gap-8 mt-4">
-        <div className="rounded-lg bg-[#111113] border border-[#1A1A1F] px-5 py-6">
-          <p className="text-lg text-[#F5F5F4] leading-relaxed">{proofText}</p>
-          <p className="text-xs text-[#6B6B68] mt-4">Based on published exercise science research</p>
+      <div className="mt-4 flex flex-col gap-8">
+        <div className="rounded-lg border border-[#1A1A1F] bg-[#111113] px-5 py-6">
+          <p className="text-lg leading-relaxed text-[#F5F5F4]">{proofText}</p>
+          <p className="mt-4 text-xs text-[#6B6B68]">
+            Based on published exercise science research
+          </p>
         </div>
 
         <button
           onClick={handleContinue}
-          className="w-full py-3 rounded-lg bg-[#6366F1] text-white font-medium"
+          className="w-full rounded-lg bg-[#6366F1] py-3 font-medium text-white"
         >
           Continue
         </button>

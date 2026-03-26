@@ -13,7 +13,6 @@
 
 'use client'
 
-
 interface OnboardingLayoutProps {
   step: number
   totalSteps: number
@@ -36,9 +35,9 @@ export function OnboardingLayout({
   const progressPct = (step / totalSteps) * 100
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] flex flex-col">
+    <div className="flex min-h-screen flex-col bg-[#0A0A0B]">
       {/* Progress bar */}
-      <div className="w-full h-1 bg-[#1A1A1F]">
+      <div className="h-1 w-full bg-[#1A1A1F]">
         <div
           className="h-full bg-[#6366F1] transition-all duration-300"
           style={{ width: `${progressPct}%` }}
@@ -50,7 +49,7 @@ export function OnboardingLayout({
         {showBack && onBack ? (
           <button
             onClick={onBack}
-            className="text-[#A1A19E] hover:text-[#F5F5F4] transition-colors"
+            className="text-[#A1A19E] transition-colors hover:text-[#F5F5F4]"
             aria-label="Go back"
           >
             {/* TODO: Replace with proper back arrow icon */}
@@ -65,15 +64,9 @@ export function OnboardingLayout({
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col px-6 py-8 max-w-xl mx-auto w-full">
-        {question && (
-          <h1 className="text-2xl font-medium text-[#F5F5F4] mb-2">
-            {question}
-          </h1>
-        )}
-        {context && (
-          <p className="text-sm text-[#A1A19E] mb-8">{context}</p>
-        )}
+      <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-6 py-8">
+        {question && <h1 className="mb-2 text-2xl font-medium text-[#F5F5F4]">{question}</h1>}
+        {context && <p className="mb-8 text-sm text-[#A1A19E]">{context}</p>}
         {children}
       </div>
     </div>

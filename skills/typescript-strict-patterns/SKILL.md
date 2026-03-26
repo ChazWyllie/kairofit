@@ -44,6 +44,7 @@ const value = scores[0]!
 ```
 
 **In the onboarding store (psych scores specifically):**
+
 ```typescript
 // CORRECT pattern for accessing psych_scores array
 const currentValue = psych_scores[0]?.toString()
@@ -53,9 +54,10 @@ const currentValue = psych_scores[0]?.toString()
 ```
 
 **In loops where index is always valid:**
+
 ```typescript
 for (let i = 0; i < items.length; i++) {
-  const item = items[i]!  // guaranteed by loop bounds
+  const item = items[i]! // guaranteed by loop bounds
   // ...
 }
 
@@ -66,11 +68,12 @@ for (const item of items) {
 ```
 
 **Object index signatures:**
+
 ```typescript
 const map: Record<string, number> = {}
-const value = map['key']  // type is number | undefined, not number
+const value = map['key'] // type is number | undefined, not number
 if (value !== undefined) {
-  console.log(value + 1)  // safe
+  console.log(value + 1) // safe
 }
 ```
 
@@ -83,7 +86,7 @@ when `exactOptionalPropertyTypes` is enabled. The difference:
 
 ```typescript
 interface WithOptional {
-  name?: string  // means: property may be ABSENT - not the same as { name: undefined }
+  name?: string // means: property may be ABSENT - not the same as { name: undefined }
 }
 
 // WRONG - exactOptionalPropertyTypes error
@@ -107,19 +110,17 @@ These are not compatible under `exactOptionalPropertyTypes`.
 ```typescript
 // Zod schema
 const schema = z.object({
-  body_fat_pct: z.number().optional()  // produces number | undefined
+  body_fat_pct: z.number().optional(), // produces number | undefined
 })
 
 // Supabase update - nullable column expects number | null
-const { error } = await supabase
-  .from('profiles')
-  .update({
-    // WRONG: number | undefined is not assignable to number | null
-    body_fat_pct: parsed.body_fat_pct,
+const { error } = await supabase.from('profiles').update({
+  // WRONG: number | undefined is not assignable to number | null
+  body_fat_pct: parsed.body_fat_pct,
 
-    // CORRECT: convert undefined to null explicitly
-    body_fat_pct: parsed.body_fat_pct ?? null,
-  })
+  // CORRECT: convert undefined to null explicitly
+  body_fat_pct: parsed.body_fat_pct ?? null,
+})
 ```
 
 Always apply `?? null` when writing optional Zod fields to Supabase nullable columns.
@@ -140,6 +141,7 @@ const _unusedHelper = computeSomething()
 ```
 
 **For imports:** unused imports are caught by `noUnusedLocals` too.
+
 ```typescript
 // WRONG - imported but never used
 import { format } from 'date-fns'
@@ -173,6 +175,7 @@ function process(data: string, options: ProcessOptions): string {
 ```
 
 **Callback patterns:**
+
 ```typescript
 // When an event handler must match a specific signature but you don't use all args:
 items.map((_item, index) => index)
@@ -200,11 +203,12 @@ The service worker file uses `ServiceWorkerGlobalScope` types and Background Syn
 types that conflict with standard DOM types. It also imports from `@serwist/sw` which
 has its own type declarations. Excluding it prevents type pollution into the rest of the app.
 
-**Why `scripts/**` is excluded:**
-Scripts run with `ts-node` or `tsx` directly, not compiled through Next.js.
+**Why `scripts/**`is excluded:**
+Scripts run with`ts-node`or`tsx` directly, not compiled through Next.js.
 They may import Anthropic SDK in ways that conflict with client-safe rules.
 
 **If you need to type-check an excluded file**, run TypeScript directly:
+
 ```bash
 npx tsc --noEmit --project tsconfig.json path/to/file.ts
 # Won't work for excluded files - they are excluded globally
@@ -225,7 +229,7 @@ Dexie 3.x uses `Table<T, TKey>`, not the `EntityTable` export from older docs.
 import Dexie, { type Table } from 'dexie'
 
 class KairoDb extends Dexie {
-  workoutSets!: Table<LocalWorkoutSet, string>  // Table<RowType, PrimaryKeyType>
+  workoutSets!: Table<LocalWorkoutSet, string> // Table<RowType, PrimaryKeyType>
 }
 ```
 
@@ -242,7 +246,7 @@ import { installSerwist } from '@serwist/sw'
 import { defaultCache } from '@serwist/next/worker'
 
 // In next.config.ts:
-import withSerwist from '@serwist/next'  // default import
+import withSerwist from '@serwist/next' // default import
 ```
 
 ### framer-motion in App Router
@@ -284,6 +288,7 @@ This runs `tsc --noEmit` respecting the full tsconfig including all strict flags
 Run it before every commit. The CI gate will fail if it does not pass.
 
 **Common false negatives on first run:**
+
 - `src/types/supabase.generated.ts` missing: run `npm run db:types` first
 - Import path errors: check that `@/` paths resolve correctly via `paths` in tsconfig
 
@@ -291,10 +296,10 @@ Run it before every commit. The CI gate will fail if it does not pass.
 
 ## Quick reference
 
-| Flag | What it does | Common fix |
-|------|-------------|-----------|
-| `noUncheckedIndexedAccess` | `arr[i]` returns `T \| undefined` | Use `?.` or `!` when certain |
-| `exactOptionalPropertyTypes` | `{ prop?: T }` cannot be `{ prop: undefined }` | Use `?? null` for DB writes |
-| `noUnusedLocals` | Unused `const`/`import` = error | Delete unused code |
-| `noUnusedParameters` | Unused param = error | Prefix with `_` |
-| excludes | `sw.ts`, `scripts/**` not checked | Expected - do not add to includes |
+| Flag                         | What it does                                   | Common fix                        |
+| ---------------------------- | ---------------------------------------------- | --------------------------------- |
+| `noUncheckedIndexedAccess`   | `arr[i]` returns `T \| undefined`              | Use `?.` or `!` when certain      |
+| `exactOptionalPropertyTypes` | `{ prop?: T }` cannot be `{ prop: undefined }` | Use `?? null` for DB writes       |
+| `noUnusedLocals`             | Unused `const`/`import` = error                | Delete unused code                |
+| `noUnusedParameters`         | Unused param = error                           | Prefix with `_`                   |
+| excludes                     | `sw.ts`, `scripts/**` not checked              | Expected - do not add to includes |

@@ -52,9 +52,7 @@ export function calculateLinearProgression(
 
   // All sets hit target - increase weight
   // Imperial uses lbs increments (5 upper / 10 lower), NOT the same as metric 2.5/5 kg
-  const increment = isLowerBody
-    ? (units === 'metric' ? 5 : 10)
-    : (units === 'metric' ? 2.5 : 5)
+  const increment = isLowerBody ? (units === 'metric' ? 5 : 10) : units === 'metric' ? 2.5 : 5
 
   return {
     action: 'increase_weight',
@@ -91,7 +89,8 @@ export function calculateDoubleProgression(
       action: 'maintain',
       suggested_weight: null,
       suggested_reps: targetRepsMin,
-      reason: 'No previous data - start with a comfortable weight targeting the bottom of the rep range.',
+      reason:
+        'No previous data - start with a comfortable weight targeting the bottom of the rep range.',
     }
   }
 
@@ -213,7 +212,8 @@ export function recommendSplit(daysPerWeek: number): SplitRecommendation {
       split_type: 'Full Body x2',
       description: '2 full body sessions per week',
       muscle_frequency: '2x/week per muscle group',
-      rationale: 'Full body twice weekly ensures minimum effective frequency for every muscle with maximum recovery between sessions.',
+      rationale:
+        'Full body twice weekly ensures minimum effective frequency for every muscle with maximum recovery between sessions.',
       day_structure: [
         { day: 1, focus: 'Full Body A', emphasis: 'Compound-heavy, all movement patterns' },
         { day: 2, focus: 'Full Body B', emphasis: 'Compound-heavy, variation of Day 1' },
@@ -234,7 +234,8 @@ export function recommendSplit(daysPerWeek: number): SplitRecommendation {
       split_type: 'Upper/Lower x2',
       description: '2 upper and 2 lower body days',
       muscle_frequency: '2x/week per muscle group',
-      rationale: 'Upper/Lower is the most efficient 4-day structure. Trains every muscle twice weekly while keeping sessions focused.',
+      rationale:
+        'Upper/Lower is the most efficient 4-day structure. Trains every muscle twice weekly while keeping sessions focused.',
       day_structure: [
         { day: 1, focus: 'Upper A', emphasis: 'Horizontal push and pull primary' },
         { day: 2, focus: 'Lower A', emphasis: 'Quad dominant primary' },
@@ -246,7 +247,8 @@ export function recommendSplit(daysPerWeek: number): SplitRecommendation {
       split_type: 'PPLUL Hybrid',
       description: 'Push/Pull/Legs + Upper/Lower',
       muscle_frequency: '2-3x/week per muscle group',
-      rationale: '5-day training works best as a 3+2 hybrid - three focused sessions and two full body sessions.',
+      rationale:
+        '5-day training works best as a 3+2 hybrid - three focused sessions and two full body sessions.',
       day_structure: [
         { day: 1, focus: 'Push', emphasis: 'Chest, shoulders, triceps' },
         { day: 2, focus: 'Pull', emphasis: 'Back, biceps' },
@@ -259,7 +261,8 @@ export function recommendSplit(daysPerWeek: number): SplitRecommendation {
       split_type: 'PPL x2',
       description: 'Push/Pull/Legs twice through',
       muscle_frequency: '2x/week per muscle group',
-      rationale: 'PPL x2 trains each muscle twice weekly with enough recovery between similar sessions.',
+      rationale:
+        'PPL x2 trains each muscle twice weekly with enough recovery between similar sessions.',
       day_structure: [
         { day: 1, focus: 'Push A', emphasis: 'Chest primary, shoulders secondary' },
         { day: 2, focus: 'Pull A', emphasis: 'Back primary, biceps secondary' },

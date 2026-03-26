@@ -20,16 +20,16 @@ highest-stakes first impression in the product. An unhandled error there loses t
 
 ## Model Routing Decision Tree
 
-| Task | Model | Reason |
-|---|---|---|
-| Workout program generation | claude-sonnet-4-20250514 | Needs reasoning + structured output quality |
-| Post-workout debrief | claude-sonnet-4-20250514 | Personalized coaching, nuanced |
-| Program adjustment | claude-sonnet-4-20250514 | Complex reasoning about changes |
-| Intake interview (multi-turn) | claude-sonnet-4-20250514 | Conversational intelligence |
-| Safety classification | claude-haiku-4-5-20251001 | Fast, cheap, sufficient for classification |
-| Exercise substitution | claude-haiku-4-5-20251001 | Simple mapping task |
-| LLM-as-judge quality check | claude-haiku-4-5-20251001 | Evaluation, not generation |
-| Batch pre-computation | claude-haiku-4-5-20251001 | Cost - 50% Batch API discount + cheaper model |
+| Task                          | Model                     | Reason                                        |
+| ----------------------------- | ------------------------- | --------------------------------------------- |
+| Workout program generation    | claude-sonnet-4-20250514  | Needs reasoning + structured output quality   |
+| Post-workout debrief          | claude-sonnet-4-20250514  | Personalized coaching, nuanced                |
+| Program adjustment            | claude-sonnet-4-20250514  | Complex reasoning about changes               |
+| Intake interview (multi-turn) | claude-sonnet-4-20250514  | Conversational intelligence                   |
+| Safety classification         | claude-haiku-4-5-20251001 | Fast, cheap, sufficient for classification    |
+| Exercise substitution         | claude-haiku-4-5-20251001 | Simple mapping task                           |
+| LLM-as-judge quality check    | claude-haiku-4-5-20251001 | Evaluation, not generation                    |
+| Batch pre-computation         | claude-haiku-4-5-20251001 | Cost - 50% Batch API discount + cheaper model |
 
 Cost difference: Sonnet is 3.75x more expensive than Haiku per token.
 Always use Haiku for classification, evaluation, and simple tasks.
@@ -53,6 +53,7 @@ For program generation (the most critical path), degrade in this exact sequence:
 ```
 
 For debrief generation (lower stakes):
+
 ```
 1. Sonnet streaming generation
    ↓ if fails
@@ -72,8 +73,8 @@ class AICircuitBreaker {
   private state: CircuitState = 'closed'
   private failures = 0
   private lastFailureTime = 0
-  private readonly threshold = 5        // failures before opening
-  private readonly timeout = 5 * 60 * 1000  // 5 minutes before retry
+  private readonly threshold = 5 // failures before opening
+  private readonly timeout = 5 * 60 * 1000 // 5 minutes before retry
 
   canRequest(): boolean {
     if (this.state === 'closed') return true
@@ -194,16 +195,18 @@ const response = await client.messages.create({
         name: 'workout_program',
         schema: jsonSchema,
         strict: true,
-      }
-    }
-  }
+      },
+    },
+  },
 })
 
 // STILL validate post-response - Structured Outputs does not enforce numerical constraints
 // Sets ≤ 10, reps ≤ 50, rest ≥ 30 must still be checked by workout-validator.ts
 const program = JSON.parse(response.content[0].text) as GeneratedProgram
 const validation = validateWorkoutProgram(program, experienceLevel, injuries, equipment)
-if (!validation.valid) { /* handle */ }
+if (!validation.valid) {
+  /* handle */
+}
 ```
 
 Key nuance: `strict: true` enforces schema shape but NOT numerical ranges.
@@ -217,7 +220,10 @@ The validator is still required. Structured Outputs and the validator are comple
 export async function generateProgramWithResilience(
   profile: UserProfile,
   redis: Redis
-): Promise<{ program: GeneratedProgram; source: 'ai' | 'cache' | 'haiku' | 'fallback' | 'static' }> {
+): Promise<{
+  program: GeneratedProgram
+  source: 'ai' | 'cache' | 'haiku' | 'fallback' | 'static'
+}> {
   // Check circuit breaker
   if (!programGenerationBreaker.canRequest()) {
     return fallbackToPrecomputed(profile)
@@ -239,7 +245,6 @@ export async function generateProgramWithResilience(
     await redis.set(cacheKey, JSON.stringify(program), { ex: 3600 })
 
     return { program, source: 'ai' }
-
   } catch (error) {
     programGenerationBreaker.recordFailure()
     console.error('Sonnet generation failed:', error)
@@ -300,12 +305,12 @@ const batch = await client.messages.batches.create({
   requests: combinations.map((combo, i) => ({
     custom_id: `fallback-${i}`,
     params: {
-      model: 'claude-haiku-4-5-20251001',  // Haiku for cost - 50% Batch discount on top
+      model: 'claude-haiku-4-5-20251001', // Haiku for cost - 50% Batch discount on top
       max_tokens: 4096,
       system: getKiroSystemPrompt('generation'),
       messages: [{ role: 'user', content: buildFallbackPrompt(combo) }],
-    }
-  }))
+    },
+  })),
 })
 
 // Poll for completion, validate each, write to seed file

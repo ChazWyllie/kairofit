@@ -32,21 +32,21 @@ export default function WorkoutTimePage() {
       context="We'll use this for smart notification timing."
       onBack={() => router.push('/onboarding/split-preference')}
     >
-      <div className="flex flex-col gap-3 mt-4">
+      <div className="mt-4 flex flex-col gap-3">
         {OPTIONS.map((option) => (
           <button
             key={option.value}
             onClick={() => handleSelect(option.value)}
-            className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+            className={`w-full rounded-lg border px-4 py-3 text-left transition-colors ${
               workout_time_preference === option.value
-                ? 'bg-[#1A1A1F] border-[#6366F1] text-[#F5F5F4]'
-                : 'bg-[#111113] border-[#1A1A1F] text-[#F5F5F4] hover:border-[#6366F1]'
+                ? 'border-[#6366F1] bg-[#1A1A1F] text-[#F5F5F4]'
+                : 'border-[#1A1A1F] bg-[#111113] text-[#F5F5F4] hover:border-[#6366F1]'
             }`}
           >
             <div>
               <span className="font-medium">{option.label}</span>
               {option.description && (
-                <span className="text-sm text-[#A1A19E] ml-2">{option.description}</span>
+                <span className="ml-2 text-sm text-[#A1A19E]">{option.description}</span>
               )}
             </div>
           </button>

@@ -4,6 +4,7 @@
 FitBod gates at screen 31 and loses every drop-off between screens 18-31.
 
 FIXES FROM CODE REVIEWS:
+
 - Email gate is at screen 16. Not screen 17. The intro below and all screen references say 16.
 - Archetype logic lives in src/lib/onboarding/archetypes.ts (not in kiro-voice.ts)
 - Post-signup race condition documented in screen 22 notes
@@ -27,6 +28,7 @@ FIXES FROM CODE REVIEWS:
 ## Phase 1: Quick Profile (screens 1-5)
 
 ### Screen 1 - Fitness Goal (/onboarding/goal)
+
 Question: "What brings you to KairoFit?"
 Interaction: single select, auto-advance
 Store key: goal
@@ -34,33 +36,39 @@ Options: Build muscle | Lose fat | Build strength | Improve fitness | Body recom
 Note: Goal comes FIRST, before age. Immediately frames value.
 
 ### Screen 2 - Experience Level (/onboarding/experience)
+
 Question: "How would you describe your training experience?"
 Interaction: single select, auto-advance
 Store key: experience_level
 5 options with behavioral descriptions (not just labels):
-  1 - Just starting out: "I'm new to strength training"
-  2 - Getting comfortable: "I've trained on and off, not consistently"
-  3 - Intermediate: "I train regularly and know the basics well"
-  4 - Experienced: "I've been training consistently for 2+ years"
-  5 - Advanced: "I follow structured programs and track performance closely"
+1 - Just starting out: "I'm new to strength training"
+2 - Getting comfortable: "I've trained on and off, not consistently"
+3 - Intermediate: "I train regularly and know the basics well"
+4 - Experienced: "I've been training consistently for 2+ years"
+5 - Advanced: "I follow structured programs and track performance closely"
 Note: FitBod only has 3 levels. The intermediate gap causes the most churn.
 
 ### Screen 3 - Demographics (/onboarding/demographics)
+
 Two fields on one screen to reduce total screen count:
+
 - Age range: 18-23 | 24-29 | 30s | 40s | 50+
 - Gender: Male | Female | Non-binary | Prefer not to say
-Interaction: dual field, Continue button
-Store keys: age_range, gender
+  Interaction: dual field, Continue button
+  Store keys: age_range, gender
 
 ### Screen 4 - Schedule (/onboarding/schedule)
+
 Two fields:
+
 - Days per week: 2 | 3 | 4 | 5 | 6
 - Session duration: 20-30 min | 30-45 min | 45-60 min | 60+ min
-Interaction: dual field, Continue button
-Store keys: days_per_week, session_duration_preference
-Note: Stores range label ("20-30") not a bare integer. "60+" and "60 minutes" are different.
+  Interaction: dual field, Continue button
+  Store keys: days_per_week, session_duration_preference
+  Note: Stores range label ("20-30") not a bare integer. "60+" and "60 minutes" are different.
 
 ### Screen 5 - Social Proof Interstitial (/onboarding/social-proof-1)
+
 Type: interstitial (no input)
 Content generated from goal + experience_level
 Example: "Over 84,000 intermediate lifters targeting muscle gain have built measurable strength with evidence-based programming."
@@ -70,6 +78,7 @@ Example: "Over 84,000 intermediate lifters targeting muscle gain have built meas
 ## Phase 2: Lifestyle and Context (screens 6-10)
 
 ### Screen 6 - Obstacle (/onboarding/obstacle)
+
 Question: "What has been your biggest challenge?"
 Interaction: single select, auto-advance
 Store key: obstacle
@@ -77,12 +86,15 @@ Options: Not knowing what to do | Lack of motivation | Busy schedule | Injury co
 Note: "Injury concerns" and "Not seeing results" are options FitBod misses entirely.
 
 ### Screen 7 - Lifestyle (/onboarding/lifestyle)
+
 Two fields:
+
 - Work schedule: 9-5 | Shift work | Flexible | Retired/Not working
 - Activity level: Mostly sitting | On my feet | Mix of both
-Store keys: work_schedule, activity_level
+  Store keys: work_schedule, activity_level
 
 ### Screen 8 - Injury Screening (/onboarding/injuries)
+
 FitBod NEVER asks this. This is KairoFit's most important differentiator.
 Question: "Do you have any areas of pain or injury we should work around?"
 Context: "We'll automatically exclude and modify exercises that could aggravate these areas."
@@ -95,6 +107,7 @@ After submission (if injuries selected): show confirmation card:
 You can update this anytime in your profile settings."
 
 ### Screen 9 - Body Composition (/onboarding/body)
+
 FitBod NEVER asks this.
 Question: "Help us personalize your program"
 Context: "Used for load recommendations and your transformation timeline. All data is encrypted."
@@ -103,6 +116,7 @@ Interaction: multi-field, Continue button
 Store keys: height_cm, weight_kg, body_fat_pct, units
 
 ### Screen 10 - Why Now (/onboarding/why-now)
+
 FitBod NEVER asks this.
 Question: "What made you decide to start now?"
 Interaction: single select, auto-advance
@@ -126,11 +140,13 @@ Screen 13 (/onboarding/psych-3): "I prefer structure - knowing exactly what to d
 Screen 14 (/onboarding/psych-4): "Understanding why an exercise is here motivates me to do it well."
 
 ### Screen 15 - Archetype Reveal (/onboarding/archetype)
+
 Type: archetype_reveal
 Interaction: Continue only
 Content: computed by assignArchetype(psych_scores) from src/lib/onboarding/archetypes.ts
 
 The 8 archetypes (all implemented in archetypes.ts):
+
 - System Builder: high structure + high understanding
 - Milestone Chaser: progress-driven, numbers-motivated
 - Explorer: values variety, low structure preference
@@ -151,19 +167,22 @@ Commitment forms here. The email gate fires immediately after.
 ## Phase 4: Email Gate (screen 16)
 
 ### Screen 16 - Email Gate (/onboarding/email-gate)
+
 The email gate is at screen 16. Not screen 17. Screen 16.
 
 Headline: "Your [archetype name] plan is ready."
 Sub-copy: "Enter your email to unlock your personalized program."
 Trust signals:
+
 - "Your 7-day free trial starts now. No credit card required."
 - "Join KairoFit users who follow evidence-based programs."
-Legal: Privacy Policy + Terms, "KairoFit may send training-related emails. Unsubscribe anytime."
+  Legal: Privacy Policy + Terms, "KairoFit may send training-related emails. Unsubscribe anytime."
 
 Store key: email
 After submission: set email in store, begin auth creation in background
 
 Background actions triggered on email submit:
+
 1. Create Supabase auth account (magic link or Google OAuth)
 2. Save all phase 1-4 data to profiles table
 3. Start Stripe 7-day trial (even if PAYWALL_ENABLED=false)
@@ -188,6 +207,7 @@ All interactions save directly to the Zustand store (not yet to Supabase - auth 
 The profile row is updated with phase 5 data as part of the program generation Server Action.
 
 ### Screen 17 - Equipment (/onboarding/equipment)
+
 Question: "What equipment do you have access to?"
 Context: "Your program will only include exercises you can actually do."
 Interaction: multi-select, Continue button
@@ -197,6 +217,7 @@ Note: KairoFit separates dumbbells and kettlebells (FitBod groups them).
 Note: KairoFit adds "Squat rack" as distinct from "Barbells".
 
 ### Screen 18 - Training Split (/onboarding/split)
+
 Question: "Do you have a preferred training approach?"
 Context: "If not sure, we'll build the optimal split for your schedule."
 Interaction: single select, auto-advance
@@ -204,6 +225,7 @@ Store key: split_preference
 Options: Push/Pull/Legs | Upper/Lower | Full Body | Not sure - let KairoFit decide
 
 ### Screen 19 - Workout Time (/onboarding/workout-time)
+
 FitBod NEVER asks this.
 Question: "When do you prefer to train?"
 Context: "We'll use this for notification timing."
@@ -212,6 +234,7 @@ Store key: workout_time_preference
 Options: Morning (6-9am) | Midday (11am-1pm) | Afternoon (3-6pm) | Evening (7-10pm) | No preference
 
 ### Screen 20 - Other Training (/onboarding/other-training)
+
 Question: "Do you do any other types of training?"
 Context: "We'll factor this into your weekly volume and recovery planning."
 Interaction: multi-select, Continue button
@@ -219,6 +242,7 @@ Store key: other_training
 Options: None | Running or cardio | Cycling | Swimming | Team sports | Yoga or Pilates | Martial arts
 
 ### Screen 21 - Sleep (/onboarding/sleep)
+
 Question: "How much sleep do you typically get per night?"
 Interaction: single select, auto-advance
 Store key: sleep_hours_range (note: field name is sleep_hours_range, type is SleepRange)
@@ -230,6 +254,7 @@ Stored as: '<5' | '5-6' | '7-8' | '>8' (range labels, not bare numbers)
 ## Phase 5: Program Generation (screen 22)
 
 ### Screen 22 - Program Building (/onboarding/building)
+
 This is NOT a fake loading screen. It shows the ACTUAL program being built.
 
 CRITICAL: Before calling generateProgram(), check auth_ready === true in the store.
@@ -239,15 +264,16 @@ Only when auth_ready === true: call the generateProgramAction Server Action.
 
 Layout: split-screen with all three panels simultaneously
 Left panel: Personalized research fact (from getLoadingFact() in archetypes.ts)
-  Example: "Training each muscle 2x/week with 12-16 weekly sets produces optimal
-  hypertrophy for intermediate lifters - that is exactly what your program does."
+Example: "Training each muscle 2x/week with 12-16 weekly sets produces optimal
+hypertrophy for intermediate lifters - that is exactly what your program does."
 Center panel: Projected transformation timeline chart building live
-  Example: "At 4 days/week with consistent progressive overload, expect 10-15%
-  strength increases in 8-10 weeks."
+Example: "At 4 days/week with consistent progressive overload, expect 10-15%
+strength increases in 8-10 weeks."
 Right panel: Exercise cards appearing in real time as Claude streams the program
-  Cards appear one by one as generateProgram() streams the response.
+Cards appear one by one as generateProgram() streams the response.
 
 On generation complete:
+
 - Brief success animation
 - Navigate to /dashboard
 - Dashboard shows the completed program
@@ -257,12 +283,14 @@ On generation complete:
 ## Post-Signup Actions
 
 After screen 16 (email gate), running in background during screens 17-21:
+
 1. Create Supabase auth account
 2. Save phase 1-4 onboarding data to profiles table
 3. Start Stripe 7-day trial
 4. Set auth_ready=true in store once session is confirmed
 
 After screen 22 (program generation):
+
 1. Save generated program to programs table (is_active=true)
 2. Create first workout_session record (status='in_progress')
 3. Send "Your program is ready" push notification (if PWA installed)
@@ -275,6 +303,7 @@ After screen 22 (program generation):
 
 The OnboardingState type in src/types/index.ts.
 Key fields to note:
+
 - total_steps: number (not a literal type - A/B test flexibility)
 - session_duration_preference: SessionDurationPreference (range label string, not integer)
 - sleep_hours_range: SleepRange (range label string, not bare number)

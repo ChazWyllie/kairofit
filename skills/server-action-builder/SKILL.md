@@ -28,23 +28,27 @@ import { RATE_LIMIT_KEYS } from '@/lib/validation/schemas'
 
 // Initialize safe action client with middleware chain
 // This client is shared across all actions in the file
-const action = createSafeActionClient()
-  .use(async ({ next }) => {
-    // Middleware 1: Auth check
-    const supabase = await createServerClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (error || !user) {
-      throw new Error('Authentication required')
-    }
-    // Pass user to action context
-    return next({ ctx: { user, supabase } })
-  })
+const action = createSafeActionClient().use(async ({ next }) => {
+  // Middleware 1: Auth check
+  const supabase = await createServerClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+  if (error || !user) {
+    throw new Error('Authentication required')
+  }
+  // Pass user to action context
+  return next({ ctx: { user, supabase } })
+})
 
 // Example action using the authenticated client
 export const exampleAction = action
-  .schema(z.object({
-    field: z.string().min(1).max(100),
-  }))
+  .schema(
+    z.object({
+      field: z.string().min(1).max(100),
+    })
+  )
   .action(async ({ parsedInput, ctx: { user, supabase } }) => {
     // Rate limiting (for expensive operations)
     await checkRateLimit(user.id, RATE_LIMIT_KEYS.GENERAL)
@@ -69,13 +73,15 @@ For any action that calls the Claude API:
 import { checkInputSafety } from '@/lib/ai/safety-filter'
 import { RATE_LIMIT_KEYS } from '@/lib/validation/schemas'
 
-const aiAction = createSafeActionClient()
-  .use(async ({ next }) => {
-    const supabase = await createServerClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (error || !user) throw new Error('Authentication required')
-    return next({ ctx: { user, supabase } })
-  })
+const aiAction = createSafeActionClient().use(async ({ next }) => {
+  const supabase = await createServerClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+  if (error || !user) throw new Error('Authentication required')
+  return next({ ctx: { user, supabase } })
+})
 
 export const generateProgramAction = aiAction
   .schema(z.object({ confirm_generation: z.literal(true) }))

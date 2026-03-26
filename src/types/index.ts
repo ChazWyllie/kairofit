@@ -11,12 +11,7 @@
 // USER AND PROFILE
 // ============================================================
 
-export type FitnessGoal =
-  | 'muscle'
-  | 'fat_loss'
-  | 'strength'
-  | 'fitness'
-  | 'recomposition'
+export type FitnessGoal = 'muscle' | 'fat_loss' | 'strength' | 'fitness' | 'recomposition'
 
 export type ExperienceLevel = 1 | 2 | 3 | 4 | 5
 
@@ -46,14 +41,7 @@ export type SessionDurationPreference = '15-20' | '20-30' | '30-45' | '45-60' | 
 export type SleepRange = '<5' | '5-6' | '7-8' | '>8'
 export type Units = 'metric' | 'imperial'
 
-export type InjuryZone =
-  | 'lower_back'
-  | 'knees'
-  | 'shoulders'
-  | 'wrists'
-  | 'hips'
-  | 'neck'
-  | 'other'
+export type InjuryZone = 'lower_back' | 'knees' | 'shoulders' | 'wrists' | 'hips' | 'neck' | 'other'
 
 export type Equipment =
   | 'dumbbells'
@@ -66,12 +54,7 @@ export type Equipment =
   | 'squat_rack'
   | 'bodyweight'
 
-export type WorkoutTimePreference =
-  | 'morning'
-  | 'midday'
-  | 'afternoon'
-  | 'evening'
-  | 'no_preference'
+export type WorkoutTimePreference = 'morning' | 'midday' | 'afternoon' | 'evening' | 'no_preference'
 
 export type SubscriptionStatus = 'trial' | 'active' | 'canceled' | 'past_due' | 'unpaid'
 
@@ -98,7 +81,7 @@ export interface UserProfile {
   obstacles: string[]
   // injuries is encrypted in the DB - application layer handles decryption
   // Do not access injuries_encrypted directly from components
-  injuries: InjuryZone[]  // decrypted by server-side query functions only
+  injuries: InjuryZone[] // decrypted by server-side query functions only
   why_now: string | null
 
   psych_scores: number[]
@@ -199,12 +182,7 @@ export interface Exercise {
 // PROGRAMS
 // ============================================================
 
-export type ProgressionScheme =
-  | 'linear'
-  | 'double_progression'
-  | 'rpe_based'
-  | 'dup'
-  | 'block'
+export type ProgressionScheme = 'linear' | 'double_progression' | 'rpe_based' | 'dup' | 'block'
 
 export type SessionType = 'strength' | 'hypertrophy' | 'volume' | 'full_body' | 'deload'
 
@@ -230,7 +208,7 @@ export interface Program {
 export interface ProgramDay {
   id: string
   program_id: string
-  day_number: number  // 1-6 (not 1-7, max split is 6 days)
+  day_number: number // 1-6 (not 1-7, max split is 6 days)
   week_number: number
   name: string
   focus_muscles: string[]
@@ -243,7 +221,7 @@ export interface ProgramExercise {
   id: string
   program_day_id: string
   exercise_id: string
-  user_id: string  // denormalized for RLS performance
+  user_id: string // denormalized for RLS performance
   exercise: Exercise
   order_index: number
   superset_group: number | null
@@ -288,7 +266,7 @@ export interface WorkoutSet {
   session_id: string
   exercise_id: string
   program_exercise_id: string | null
-  user_id: string  // denormalized for RLS performance
+  user_id: string // denormalized for RLS performance
   set_number: number
   reps_completed: number
   weight_kg: number | null
@@ -338,7 +316,7 @@ export interface MuscleRecovery {
   user_id: string
   muscle_group: MuscleGroup
   last_trained_at: string | null
-  estimated_recovery_pct: number  // 0-100
+  estimated_recovery_pct: number // 0-100
   sets_this_week: number
   updated_at: string
 }
@@ -381,7 +359,7 @@ export interface OnboardingState {
   // Email gate (screen 16)
   // Note: clear this from store after auth is established - do not hold PII in memory past auth
   email: string | null
-  auth_ready: boolean  // true once Supabase session is confirmed after screen 16
+  auth_ready: boolean // true once Supabase session is confirmed after screen 16
 
   // Phase 5
   equipment: Equipment[]
@@ -448,7 +426,7 @@ export interface GeneratedProgram {
 }
 
 export interface GeneratedDay {
-  day_number: number  // 1-6 only
+  day_number: number // 1-6 only
   name: string
   focus_muscles: string[]
   session_type: SessionType

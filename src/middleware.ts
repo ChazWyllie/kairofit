@@ -12,17 +12,10 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 // Routes that do NOT require authentication
-const PUBLIC_ROUTES = [
-  '/auth/login',
-  '/auth/signup',
-  '/onboarding',
-]
+const PUBLIC_ROUTES = ['/auth/login', '/auth/signup', '/onboarding']
 
 // Routes that should redirect authenticated users away (e.g. login page)
-const AUTH_ROUTES = [
-  '/auth/login',
-  '/auth/signup',
-]
+const AUTH_ROUTES = ['/auth/login', '/auth/signup']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -30,9 +23,9 @@ export async function middleware(request: NextRequest) {
   // Allow public assets and API routes through without auth check
   if (
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/api/webhooks') ||  // Stripe webhooks do their own auth
-    pathname.startsWith('/api/sync') ||       // Service worker sync - auth handled inside route
-    pathname.includes('.')  // static files
+    pathname.startsWith('/api/webhooks') || // Stripe webhooks do their own auth
+    pathname.startsWith('/api/sync') || // Service worker sync - auth handled inside route
+    pathname.includes('.') // static files
   ) {
     return NextResponse.next()
   }
@@ -64,7 +57,9 @@ export async function middleware(request: NextRequest) {
   )
 
   // Refresh the session (extends the cookie if valid)
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route))
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route))
@@ -86,7 +81,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // Run middleware on all routes except static files and api routes that handle their own auth
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|manifest.json|icons/).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|manifest.json|icons/).*)'],
 }

@@ -18,15 +18,43 @@ const RULES = [
   // Em dashes - hard rule, never use these
   // No g flag: per-line tests don't benefit from g and the lastIndex bug causes false negatives
   { pattern: /\u2014/, name: 'em-dash (unicode)', description: 'Use a regular dash (-) instead' },
-  { pattern: /&mdash;/, name: 'em-dash (HTML entity)', description: 'Use a regular dash (-) instead' },
+  {
+    pattern: /&mdash;/,
+    name: 'em-dash (HTML entity)',
+    description: 'Use a regular dash (-) instead',
+  },
 
   // Banned motivational phrases in user-facing strings
-  { pattern: /["'`].*Let'?s crush it.*["'`]/i, name: "banned phrase: \"Let's crush it\"", description: 'Kiro voice: no motivational fluff' },
-  { pattern: /["'`].*You'?ve got this.*["'`]/i, name: "banned phrase: \"You've got this\"", description: 'Kiro voice: no motivational fluff' },
-  { pattern: /["'`].*Amazing work.*["'`]/i, name: 'banned phrase: "Amazing work"', description: 'Kiro voice: no motivational fluff' },
-  { pattern: /["'`].*Great job.*["'`]/i, name: 'banned phrase: "Great job"', description: 'Kiro voice: no motivational fluff' },
-  { pattern: /["'`].*Keep it up.*["'`]/i, name: 'banned phrase: "Keep it up"', description: 'Kiro voice: no motivational fluff' },
-  { pattern: /["'`].*You'?re doing awesome.*["'`]/i, name: "banned phrase: \"You're doing awesome\"", description: 'Kiro voice: no motivational fluff' },
+  {
+    pattern: /["'`].*Let'?s crush it.*["'`]/i,
+    name: 'banned phrase: "Let\'s crush it"',
+    description: 'Kiro voice: no motivational fluff',
+  },
+  {
+    pattern: /["'`].*You'?ve got this.*["'`]/i,
+    name: 'banned phrase: "You\'ve got this"',
+    description: 'Kiro voice: no motivational fluff',
+  },
+  {
+    pattern: /["'`].*Amazing work.*["'`]/i,
+    name: 'banned phrase: "Amazing work"',
+    description: 'Kiro voice: no motivational fluff',
+  },
+  {
+    pattern: /["'`].*Great job.*["'`]/i,
+    name: 'banned phrase: "Great job"',
+    description: 'Kiro voice: no motivational fluff',
+  },
+  {
+    pattern: /["'`].*Keep it up.*["'`]/i,
+    name: 'banned phrase: "Keep it up"',
+    description: 'Kiro voice: no motivational fluff',
+  },
+  {
+    pattern: /["'`].*You'?re doing awesome.*["'`]/i,
+    name: 'banned phrase: "You\'re doing awesome"',
+    description: 'Kiro voice: no motivational fluff',
+  },
 ]
 
 // Files to scan
@@ -47,8 +75,8 @@ for (const file of files) {
       if (rule.pattern.test(line)) {
         console.error(
           `\x1b[31mERROR\x1b[0m ${file}:${lineIndex + 1}: ${rule.name}\n` +
-          `  ${line.trim()}\n` +
-          `  \x1b[33mFix:\x1b[0m ${rule.description}\n`
+            `  ${line.trim()}\n` +
+            `  \x1b[33mFix:\x1b[0m ${rule.description}\n`
         )
         totalViolations++
       }

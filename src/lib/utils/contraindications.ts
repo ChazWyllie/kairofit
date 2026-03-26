@@ -67,8 +67,8 @@ export const CONTRAINDICATIONS: Record<InjuryZone, InjuryContraindications> = {
 
   knees: {
     exclude: [
-      'leg extension',         // extreme patellar stress at lockout
-      'deep squat with load',  // excessive compressive force
+      'leg extension', // extreme patellar stress at lockout
+      'deep squat with load', // excessive compressive force
     ],
     caution: [
       {
@@ -105,10 +105,10 @@ export const CONTRAINDICATIONS: Record<InjuryZone, InjuryContraindications> = {
 
   shoulders: {
     exclude: [
-      'upright row',             // extreme internal rotation at impingement angle
+      'upright row', // extreme internal rotation at impingement angle
       'behind-neck press',
       'behind-neck lat pulldown',
-      'dip',                     // extreme shoulder extension angle
+      'dip', // extreme shoulder extension angle
     ],
     caution: [
       {
@@ -137,10 +137,10 @@ export const CONTRAINDICATIONS: Record<InjuryZone, InjuryContraindications> = {
       },
     ],
     recommend: [
-      'landmine press',      // natural shoulder path, neutral grip
+      'landmine press', // natural shoulder path, neutral grip
       'cable flye',
       'lat pulldown',
-      'face pull',           // excellent for rotator cuff health
+      'face pull', // excellent for rotator cuff health
       'band pull-apart',
       'dumbbell row',
       'rear delt flye',
@@ -149,11 +149,7 @@ export const CONTRAINDICATIONS: Record<InjuryZone, InjuryContraindications> = {
   },
 
   wrists: {
-    exclude: [
-      'wrist curl',
-      'behind-the-back barbell wrist curl',
-      'reverse wrist curl (heavy)',
-    ],
+    exclude: ['wrist curl', 'behind-the-back barbell wrist curl', 'reverse wrist curl (heavy)'],
     caution: [
       {
         exercise: 'barbell bench press',
@@ -181,10 +177,7 @@ export const CONTRAINDICATIONS: Record<InjuryZone, InjuryContraindications> = {
   },
 
   hips: {
-    exclude: [
-      'deep squat below parallel (FAI)',
-      'plyometric hip-dominant landing',
-    ],
+    exclude: ['deep squat below parallel (FAI)', 'plyometric hip-dominant landing'],
     caution: [
       {
         exercise: 'barbell squat',
@@ -213,11 +206,7 @@ export const CONTRAINDICATIONS: Record<InjuryZone, InjuryContraindications> = {
   },
 
   neck: {
-    exclude: [
-      'behind-neck press',
-      'behind-neck lat pulldown',
-      'heavy neck isolation',
-    ],
+    exclude: ['behind-neck press', 'behind-neck lat pulldown', 'heavy neck isolation'],
     caution: [
       {
         exercise: 'barbell squat',
@@ -269,10 +258,7 @@ export function getExcludedExercises(injuries: InjuryZone[]): Set<string> {
  * Returns modification notes for exercises that need caution.
  * Used by workout-validator.ts to add notes to flagged exercises.
  */
-export function getModificationNote(
-  exerciseName: string,
-  injuries: InjuryZone[]
-): string | null {
+export function getModificationNote(exerciseName: string, injuries: InjuryZone[]): string | null {
   const name = exerciseName.toLowerCase()
 
   for (const injury of injuries) {

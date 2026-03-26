@@ -41,13 +41,13 @@ const nextConfig: NextConfig = {
       "img-src 'self' blob: data: https:",
       [
         "connect-src 'self'",
-        "https://*.supabase.co",
-        "wss://*.supabase.co",
-        "https://api.anthropic.com",
-        "https://app.posthog.com",
-        "https://eu.posthog.com",
-        "https://js.stripe.com",
-        "https://api.stripe.com",
+        'https://*.supabase.co',
+        'wss://*.supabase.co',
+        'https://api.anthropic.com',
+        'https://app.posthog.com',
+        'https://eu.posthog.com',
+        'https://js.stripe.com',
+        'https://api.stripe.com',
       ].join(' '),
       "frame-src 'self' https://js.stripe.com",
       "frame-ancestors 'none'",
@@ -74,7 +74,7 @@ const nextConfig: NextConfig = {
 }
 
 export default withSerwist({
-  swSrc: 'src/app/sw.ts',         // Service worker source
-  swDest: 'public/sw.js',         // Output location Serwist expects
-  disable: process.env.NODE_ENV === 'development',  // Disable in dev for faster HMR
+  swSrc: 'src/app/sw.ts', // Service worker source
+  swDest: 'public/sw.js', // Output location Serwist expects
+  disable: process.env.NODE_ENV === 'development', // Disable in dev for faster HMR
 })(nextConfig)

@@ -62,19 +62,20 @@ export default function InjuriesPage() {
   if (showConfirmation) {
     return (
       <OnboardingLayout step={9} totalSteps={TOTAL_STEPS} showBack={false}>
-        <div className="flex flex-col gap-6 mt-4">
-          <div className="rounded-lg bg-[#111113] border border-[#10B981] px-5 py-6">
-            <p className="text-[#10B981] font-medium mb-2">Injury flags saved</p>
+        <div className="mt-4 flex flex-col gap-6">
+          <div className="rounded-lg border border-[#10B981] bg-[#111113] px-5 py-6">
+            <p className="mb-2 font-medium text-[#10B981]">Injury flags saved</p>
             <p className="text-[#F5F5F4]">
-              We&apos;ll automatically exclude and modify exercises that could aggravate those areas.
+              We&apos;ll automatically exclude and modify exercises that could aggravate those
+              areas.
             </p>
-            <p className="text-sm text-[#A1A19E] mt-2">
+            <p className="mt-2 text-sm text-[#A1A19E]">
               You can update this anytime in your profile settings.
             </p>
           </div>
           <button
             onClick={() => router.push('/onboarding/body-composition')}
-            className="w-full py-3 rounded-lg bg-[#6366F1] text-white font-medium"
+            className="w-full rounded-lg bg-[#6366F1] py-3 font-medium text-white"
           >
             Got it
           </button>
@@ -91,7 +92,7 @@ export default function InjuriesPage() {
       context="We'll automatically exclude and modify exercises that could aggravate these areas."
       onBack={() => router.push('/onboarding/lifestyle')}
     >
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="mt-4 flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           {INJURY_OPTIONS.map((option) => {
             const isSelected = selected.has(option.value)
@@ -99,19 +100,27 @@ export default function InjuriesPage() {
               <button
                 key={option.value}
                 onClick={() => toggleOption(option.value)}
-                className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+                className={`w-full rounded-lg border px-4 py-3 text-left transition-colors ${
                   isSelected
-                    ? 'bg-[#1A1A1F] border-[#6366F1] text-[#F5F5F4]'
-                    : 'bg-[#111113] border-[#1A1A1F] text-[#F5F5F4] hover:border-[#6366F1]'
+                    ? 'border-[#6366F1] bg-[#1A1A1F] text-[#F5F5F4]'
+                    : 'border-[#1A1A1F] bg-[#111113] text-[#F5F5F4] hover:border-[#6366F1]'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                    isSelected ? 'bg-[#6366F1] border-[#6366F1]' : 'border-[#6B6B68]'
-                  }`}>
+                  <div
+                    className={`flex h-4 w-4 flex-shrink-0 items-center justify-center rounded border ${
+                      isSelected ? 'border-[#6366F1] bg-[#6366F1]' : 'border-[#6B6B68]'
+                    }`}
+                  >
                     {isSelected && (
-                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 12 12">
-                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 12 12">
+                        <path
+                          d="M2 6l3 3 5-5"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     )}
                   </div>
@@ -130,7 +139,7 @@ export default function InjuriesPage() {
         <button
           onClick={handleContinue}
           disabled={selected.size === 0}
-          className="w-full py-3 rounded-lg bg-[#6366F1] text-white font-medium disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+          className="w-full rounded-lg bg-[#6366F1] py-3 font-medium text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
         >
           Continue
         </button>

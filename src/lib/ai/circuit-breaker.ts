@@ -31,8 +31,8 @@ function getRedis(): Redis {
 }
 
 const FAILURE_THRESHOLD = 5
-const WINDOW_SECONDS = 60      // rolling window for counting failures
-const RECOVERY_SECONDS = 300   // 5 minutes before retrying after circuit opens
+const WINDOW_SECONDS = 60 // rolling window for counting failures
+const RECOVERY_SECONDS = 300 // 5 minutes before retrying after circuit opens
 
 type CircuitState = 'closed' | 'open' | 'half-open'
 
@@ -42,8 +42,12 @@ export interface CircuitStatus {
   secondsUntilRetry: number | null
 }
 
-function failureKey(circuit: string) { return `cb:failures:${circuit}` }
-function openedAtKey(circuit: string) { return `cb:opened_at:${circuit}` }
+function failureKey(circuit: string) {
+  return `cb:failures:${circuit}`
+}
+function openedAtKey(circuit: string) {
+  return `cb:opened_at:${circuit}`
+}
 
 /**
  * Check whether a request should be allowed through.
@@ -53,12 +57,12 @@ export async function canRequest(circuit: string): Promise<boolean> {
   const r = getRedis()
   const openedAt = await r.get<number>(openedAtKey(circuit))
 
-  if (openedAt === null) return true  // closed - allow
+  if (openedAt === null) return true // closed - allow
 
-  const secondsSinceOpen = (Date.now() / 1000) - openedAt
-  if (secondsSinceOpen > RECOVERY_SECONDS) return true  // half-open probe
+  const secondsSinceOpen = Date.now() / 1000 - openedAt
+  if (secondsSinceOpen > RECOVERY_SECONDS) return true // half-open probe
 
-  return false  // still open
+  return false // still open
 }
 
 /**
@@ -66,10 +70,7 @@ export async function canRequest(circuit: string): Promise<boolean> {
  */
 export async function recordSuccess(circuit: string): Promise<void> {
   const r = getRedis()
-  await Promise.all([
-    r.del(failureKey(circuit)),
-    r.del(openedAtKey(circuit)),
-  ])
+  await Promise.all([r.del(failureKey(circuit)), r.del(openedAtKey(circuit))])
 }
 
 /**
@@ -107,7 +108,7 @@ export async function getCircuitStatus(circuit: string): Promise<CircuitStatus> 
     return { state: 'closed', failures, secondsUntilRetry: null }
   }
 
-  const secondsSinceOpen = (Date.now() / 1000) - openedAt
+  const secondsSinceOpen = Date.now() / 1000 - openedAt
   if (secondsSinceOpen > RECOVERY_SECONDS) {
     return { state: 'half-open', failures, secondsUntilRetry: 0 }
   }

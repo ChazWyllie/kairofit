@@ -40,26 +40,20 @@ export default function ProgramBuildingPage() {
   }, [phase, router])
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] flex flex-col items-center justify-center px-6">
-      <div className="max-w-sm w-full text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#0A0A0B] px-6">
+      <div className="w-full max-w-sm text-center">
         {/* Spinner */}
-        <div className="w-12 h-12 rounded-full border-2 border-[#1A1A1F] border-t-[#6366F1] animate-spin mx-auto mb-8" />
+        <div className="mx-auto mb-8 h-12 w-12 animate-spin rounded-full border-2 border-[#1A1A1F] border-t-[#6366F1]" />
 
         {phase === 'auth' ? (
           <>
-            <h1 className="text-xl font-medium text-[#F5F5F4] mb-2">
-              Setting up your account...
-            </h1>
-            <p className="text-sm text-[#A1A19E]">
-              Just a moment while we get everything ready.
-            </p>
+            <h1 className="mb-2 text-xl font-medium text-[#F5F5F4]">Setting up your account...</h1>
+            <p className="text-sm text-[#A1A19E]">Just a moment while we get everything ready.</p>
           </>
         ) : (
           <>
-            <h1 className="text-xl font-medium text-[#F5F5F4] mb-4">
-              Building your program...
-            </h1>
-            <p className="text-sm text-[#A1A19E] leading-relaxed">{fact}</p>
+            <h1 className="mb-4 text-xl font-medium text-[#F5F5F4]">Building your program...</h1>
+            <p className="text-sm leading-relaxed text-[#A1A19E]">{fact}</p>
           </>
         )}
       </div>

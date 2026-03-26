@@ -51,7 +51,10 @@ export async function POST(request: NextRequest) {
     const supabase = await createServerClient()
 
     // Verify auth - service worker carries browser cookie automatically
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -99,14 +102,36 @@ export async function POST(request: NextRequest) {
         .from('workout_sets')
         .upsert(
           // Map from LocalWorkoutSet shape to DB shape
-          batch.map(({ id, session_id, exercise_id, user_id, set_number,
-            reps_completed, weight_kg, rpe, is_warmup, is_dropset, logged_at }) => ({
-            id, session_id, exercise_id, user_id, set_number,
-            reps_completed, weight_kg, rpe, is_warmup, is_dropset, logged_at,
-          })),
+          batch.map(
+            ({
+              id,
+              session_id,
+              exercise_id,
+              user_id,
+              set_number,
+              reps_completed,
+              weight_kg,
+              rpe,
+              is_warmup,
+              is_dropset,
+              logged_at,
+            }) => ({
+              id,
+              session_id,
+              exercise_id,
+              user_id,
+              set_number,
+              reps_completed,
+              weight_kg,
+              rpe,
+              is_warmup,
+              is_dropset,
+              logged_at,
+            })
+          ),
           {
-            onConflict: 'id',  // idempotent: re-syncing a set is safe
-            ignoreDuplicates: false,  // update if already exists (handles partial syncs)
+            onConflict: 'id', // idempotent: re-syncing a set is safe
+            ignoreDuplicates: false, // update if already exists (handles partial syncs)
           }
         )
         .select('id')
@@ -120,7 +145,6 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ synced, failed }, { status: 200 })
-
   } catch (err) {
     console.error('Sync route error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

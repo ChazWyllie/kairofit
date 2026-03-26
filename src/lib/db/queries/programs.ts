@@ -25,12 +25,16 @@ import type { Program } from '@/types'
  * When currentWeek is provided, only loads program_days for that week,
  * avoiding a full 32-row join on an 8-week 4-day program.
  */
-export async function getActiveProgram(userId: string, currentWeek?: number): Promise<Program | null> {
+export async function getActiveProgram(
+  userId: string,
+  currentWeek?: number
+): Promise<Program | null> {
   const supabase = await createServerClient()
 
   const { data, error } = await supabase
     .from('programs')
-    .select(`
+    .select(
+      `
       id, user_id, created_at, name, description, ai_rationale,
       weeks_duration, days_per_week, goal, split_type, current_week,
       progression_scheme, is_active, projected_weeks_to_goal,
@@ -50,7 +54,8 @@ export async function getActiveProgram(userId: string, currentWeek?: number): Pr
           )
         )
       )
-    `)
+    `
+    )
     .eq('user_id', userId)
     .eq('is_active', true)
     // Filter program_days to current week only when specified.

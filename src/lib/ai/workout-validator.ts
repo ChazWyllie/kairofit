@@ -36,7 +36,7 @@ import { CONTRAINDICATIONS } from '@/lib/utils/contraindications'
 
 const VOLUME_LIMITS: Record<string, { min: number; max: number; hardCap: number }> = {
   '1': { min: 4, max: 10, hardCap: 16 },
-  '2': { min: 4, max: 12, hardCap: 16 },  // Same cap as level 1 (beginners)
+  '2': { min: 4, max: 12, hardCap: 16 }, // Same cap as level 1 (beginners)
   '3': { min: 8, max: 16, hardCap: 20 },
   '4': { min: 10, max: 20, hardCap: 24 },
   '5': { min: 12, max: 22, hardCap: 25 },
@@ -64,25 +64,49 @@ const REST_LIMITS = {
 
 const COMPOUND_EXERCISE_PATTERNS = [
   // Barbell compounds
-  'squat', 'deadlift', 'bench press', 'overhead press', 'barbell row',
-  'military press', 'front squat', 'sumo deadlift', 'romanian deadlift',
+  'squat',
+  'deadlift',
+  'bench press',
+  'overhead press',
+  'barbell row',
+  'military press',
+  'front squat',
+  'sumo deadlift',
+  'romanian deadlift',
   // Dumbbell compounds
-  'dumbbell bench press', 'dumbbell row', 'dumbbell press', 'dumbbell lunge',
-  'goblet squat', 'dumbbell deadlift',
+  'dumbbell bench press',
+  'dumbbell row',
+  'dumbbell press',
+  'dumbbell lunge',
+  'goblet squat',
+  'dumbbell deadlift',
   // Bodyweight compounds
-  'pull-up', 'chin-up', 'dip', 'push-up', 'inverted row',
+  'pull-up',
+  'chin-up',
+  'dip',
+  'push-up',
+  'inverted row',
   // Machine compounds
-  'lat pulldown', 'cable row', 'leg press', 'chest press machine',
+  'lat pulldown',
+  'cable row',
+  'leg press',
+  'chest press machine',
   // Other common compounds
-  'split squat', 'bulgarian split squat', 'step-up', 'hip thrust',
-  'kettlebell swing', 'lunge', 'hack squat', 'trap bar deadlift',
+  'split squat',
+  'bulgarian split squat',
+  'step-up',
+  'hip thrust',
+  'kettlebell swing',
+  'lunge',
+  'hack squat',
+  'trap bar deadlift',
 ]
 
 // Heavy compounds: barbell movements plus high-load deadlift variations.
 // These require the 120s minimum rest per PROGRAMMING_RULES.md.
 // Dumbbell/machine/bodyweight compounds (dumbbell row, leg press, etc.) do not.
 const HEAVY_COMPOUND_PATTERNS = [
-  'barbell',             // catches all barbell variations
+  'barbell', // catches all barbell variations
   'conventional deadlift',
   'sumo deadlift',
   'trap bar deadlift',
@@ -107,8 +131,16 @@ const DANGEROUS_PAIRINGS: Array<[string, string, string]> = [
   // Note: 'squat' + 'conventional deadlift' - not 'deadlift' (too broad: catches squat + RDL which is valid)
   ['squat', 'conventional deadlift', 'Excessive lumbar fatigue - both create high spinal loading'],
   ['bench press', 'overhead press', 'Excessive shoulder fatigue when combined'],
-  ['conventional deadlift', 'romanian deadlift', 'Same posterior chain pattern - excessive fatigue'],
-  ['overhead press', 'incline bench', 'Combined shoulder volume exceeds single-session recovery capacity'],
+  [
+    'conventional deadlift',
+    'romanian deadlift',
+    'Same posterior chain pattern - excessive fatigue',
+  ],
+  [
+    'overhead press',
+    'incline bench',
+    'Combined shoulder volume exceeds single-session recovery capacity',
+  ],
 ]
 
 // ============================================================
@@ -167,7 +199,8 @@ function validateDay(
     warnings.push({
       field: `day_${day.day_number}`,
       message: 'No compound exercise detected in this session',
-      suggestion: 'Consider adding a primary compound movement (squat, hinge, push, pull, or split squat)',
+      suggestion:
+        'Consider adding a primary compound movement (squat, hinge, push, pull, or split squat)',
     })
   }
 
@@ -244,7 +277,10 @@ function validateExercise(
   }
 
   // Rest periods
-  if (exercise.rest_seconds < REST_LIMITS.absolute_min || exercise.rest_seconds > REST_LIMITS.absolute_max) {
+  if (
+    exercise.rest_seconds < REST_LIMITS.absolute_min ||
+    exercise.rest_seconds > REST_LIMITS.absolute_max
+  ) {
     errors.push({
       field: `day_${dayNumber}.${exercise.exercise_name}.rest_seconds`,
       rule: 'rest_range',
@@ -337,20 +373,45 @@ function validateWeeklyVolume(
 function inferPrimaryMuscle(exerciseName: string): string | null {
   const name = exerciseName.toLowerCase()
   if (name.includes('bench') || name.includes('fly') || name.includes('chest')) return 'chest'
-  if (name.includes('row') || name.includes('pulldown') || name.includes('pull-up') || name.includes('pullup')) return 'back'
-  if (name.includes('squat') || name.includes('leg press') || name.includes('hack squat')) return 'quads'
-  if (name.includes('deadlift') || name.includes('romanian') || name.includes('leg curl') || name.includes('nordic')) return 'hamstrings'
-  if (name.includes('shoulder press') || name.includes('overhead press') || name.includes('lateral raise') || name.includes('military')) return 'shoulders'
-  if (name.includes('curl') && !name.includes('leg curl') && !name.includes('nordic')) return 'biceps'
-  if (name.includes('tricep') || name.includes('pushdown') || name.includes('skull') || name.includes('extension')) return 'triceps'
-  if (name.includes('hip thrust') || name.includes('glute bridge') || name.includes('glute')) return 'glutes'
+  if (
+    name.includes('row') ||
+    name.includes('pulldown') ||
+    name.includes('pull-up') ||
+    name.includes('pullup')
+  )
+    return 'back'
+  if (name.includes('squat') || name.includes('leg press') || name.includes('hack squat'))
+    return 'quads'
+  if (
+    name.includes('deadlift') ||
+    name.includes('romanian') ||
+    name.includes('leg curl') ||
+    name.includes('nordic')
+  )
+    return 'hamstrings'
+  if (
+    name.includes('shoulder press') ||
+    name.includes('overhead press') ||
+    name.includes('lateral raise') ||
+    name.includes('military')
+  )
+    return 'shoulders'
+  if (name.includes('curl') && !name.includes('leg curl') && !name.includes('nordic'))
+    return 'biceps'
+  if (
+    name.includes('tricep') ||
+    name.includes('pushdown') ||
+    name.includes('skull') ||
+    name.includes('extension')
+  )
+    return 'triceps'
+  if (name.includes('hip thrust') || name.includes('glute bridge') || name.includes('glute'))
+    return 'glutes'
   if (name.includes('calf') || name.includes('standing calf')) return 'calves'
   if (name.includes('face pull') || name.includes('rear delt')) return 'rear_delts'
   return null
 }
 
-
 // ============================================================
 // TYPES
 // ============================================================
-

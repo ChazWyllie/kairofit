@@ -27,7 +27,9 @@ import type { PrecacheEntry } from '@serwist/precaching'
 import { getPendingSets, markSetsAsSynced, markSetsAsFailed } from '../lib/offline/db'
 
 // SyncEvent is part of the Background Sync API and is not yet in lib.dom.d.ts
-interface SyncEvent extends ExtendableEvent { readonly tag: string }
+interface SyncEvent extends ExtendableEvent {
+  readonly tag: string
+}
 
 declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: (PrecacheEntry | string)[]
@@ -71,7 +73,7 @@ async function syncWorkoutSets(): Promise<void> {
 
   // Step 3: Parse the response and update IndexedDB accordingly
   // The route returns: { synced: string[], failed: string[] }
-  const result = await response.json() as { synced: string[]; failed: string[] }
+  const result = (await response.json()) as { synced: string[]; failed: string[] }
 
   const syncPromises: Promise<void>[] = []
 

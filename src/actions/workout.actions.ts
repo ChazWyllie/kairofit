@@ -25,13 +25,15 @@ import {
 // Auth check runs before EVERY action in this file.
 // ============================================================
 
-const action = createSafeActionClient()
-  .use(async ({ next }) => {
-    const supabase = await createServerClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (error || !user) throw new Error('Authentication required')
-    return next({ ctx: { user, supabase } })
-  })
+const action = createSafeActionClient().use(async ({ next }) => {
+  const supabase = await createServerClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+  if (error || !user) throw new Error('Authentication required')
+  return next({ ctx: { user, supabase } })
+})
 
 // ============================================================
 // LOG SET
@@ -64,7 +66,7 @@ export const logSetAction = action
         rpe: parsedInput.rpe ?? null,
         is_warmup: parsedInput.is_warmup,
         is_dropset: parsedInput.is_dropset,
-        user_id: user.id,  // always server-resolved user_id
+        user_id: user.id, // always server-resolved user_id
       })
       .select('id, set_number, reps_completed, weight_kg, rpe, logged_at')
       .single()
@@ -121,9 +123,7 @@ export const completeSessionAction = action
 
     const completedAt = new Date()
     const startedAt = session.started_at ? new Date(session.started_at) : completedAt
-    const durationSeconds = Math.floor(
-      (completedAt.getTime() - startedAt.getTime()) / 1000
-    )
+    const durationSeconds = Math.floor((completedAt.getTime() - startedAt.getTime()) / 1000)
 
     const { data, error } = await supabase
       .from('workout_sessions')
