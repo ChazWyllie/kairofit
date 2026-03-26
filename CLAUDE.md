@@ -336,6 +336,7 @@ src/
 
 | What you are building | Read first |
 |---|---|
+| Any git commit, branch, or PR | skills/git-workflow/SKILL.md |
 | Any Server Action | skills/server-action-builder/SKILL.md |
 | Onboarding screens | docs/onboarding/FLOW.md |
 | Any AI feature | docs/science/PROGRAMMING_RULES.md + skills/exercise-science-grounding/SKILL.md |
