@@ -43,29 +43,6 @@ const RECOVERY_HOURS: Record<MuscleGroup, number> = {
 }
 
 // ============================================================
-// VOLUME CONTRIBUTION WEIGHTS
-// ============================================================
-
-// How much each set contributes to fatigue (0-1 scale)
-// Compound movements contribute to multiple muscles
-// These weights are applied when calculating recovery percentage
-const VOLUME_FATIGUE_WEIGHT: Record<MuscleGroup, number> = {
-  chest: 1.0,
-  back: 1.0,
-  quads: 1.2,       // Large muscle group, more total fatigue
-  hamstrings: 1.2,
-  glutes: 1.0,
-  shoulders: 0.8,
-  biceps: 0.7,
-  triceps: 0.7,
-  calves: 0.6,
-  abs: 0.5,
-  traps: 0.6,
-  forearms: 0.5,
-  lower_back: 1.5,  // High fatigue contribution, slow recovery
-}
-
-// ============================================================
 // MAIN RECOVERY CALCULATION
 // ============================================================
 
@@ -82,7 +59,7 @@ const VOLUME_FATIGUE_WEIGHT: Record<MuscleGroup, number> = {
 export function calculateRecoveryPct(
   muscleGroup: MuscleGroup,
   lastTrainedAt: Date | null,
-  setsTrainedInSession: number
+  _setsTrainedInSession: number
 ): number {
   if (!lastTrainedAt) return 100  // Never trained = fully recovered
 

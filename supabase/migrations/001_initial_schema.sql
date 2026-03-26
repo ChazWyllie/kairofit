@@ -324,7 +324,7 @@ CREATE TABLE public.workout_sets (
   user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
 
   set_number int NOT NULL CHECK (set_number BETWEEN 1 AND 20),
-  reps_completed int NOT NULL CHECK (reps_completed BETWEEN 1 AND 100)  -- 0 corrupts progressive overload calculations,
+  reps_completed int NOT NULL CHECK (reps_completed BETWEEN 1 AND 100),  -- 0 corrupts progressive overload calculations
   weight_kg numeric(6,2),
   rpe int CHECK (rpe BETWEEN 1 AND 10),
   is_warmup boolean DEFAULT false,

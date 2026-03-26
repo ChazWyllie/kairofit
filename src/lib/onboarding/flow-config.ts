@@ -11,7 +11,7 @@
  * TODO: Some screen configs are stubs (options array). Fill in options from FLOW.md.
  */
 
-import type { OnboardingState, FitnessGoal, InjuryZone, Equipment } from '@/types'
+import type { OnboardingState } from '@/types'
 
 // ============================================================
 // SCREEN TYPES
@@ -157,7 +157,6 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
     ],
   },
   {
-  {
     // Training recency - distinct from experience level.
     // A level-3 user who has not trained in 8 months needs a different program
     // than one who trained last week. This is how Comeback Kid archetype triggers
@@ -181,6 +180,7 @@ export const ONBOARDING_FLOW: OnboardingScreen[] = [
       { value: '24', label: 'More than a year ago' },
     ],
   },
+  {
     id: 'lifestyle',
     step: 8,
     phase: 2,

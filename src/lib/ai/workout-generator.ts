@@ -18,8 +18,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { zodToJsonSchema } from 'zod-to-json-schema'
 import { z } from 'zod'
-import { getKiroSystemPrompt, KIRO_BASE_SYSTEM_PROMPT } from './kiro-voice'
-import { checkInputSafety } from './safety-filter'
+import { KIRO_BASE_SYSTEM_PROMPT } from './kiro-voice'
 import { validateWorkoutProgram } from './workout-validator'
 import { canRequest, recordSuccess, recordFailure, classifyEquipmentBucket, CIRCUITS } from './circuit-breaker'
 import { recommendSplit } from '@/lib/utils/progressive-overload'
@@ -225,7 +224,7 @@ async function getFallbackProgram(
     .single()
 
   if (data?.program_json) {
-    return { program: data.program_json as GeneratedProgram, source: 'supabase_fallback' }
+    return { program: data.program_json as unknown as GeneratedProgram, source: 'supabase_fallback' }
   }
 
   return { program: buildStaticFallback(), source: 'static_fallback' }
@@ -240,8 +239,8 @@ async function getFallbackProgram(
  * TODO: Implement - see skills/ai-resilience/SKILL.md for the debrief degradation chain.
  */
 export async function generateDebrief(
-  sessionId: string,
-  userId: string
+  _sessionId: string,
+  _userId: string
 ): Promise<{ text: string; source: GenerationSource }> {
   // TODO: Implement full streaming debrief using Sonnet
   // Steps: load session data -> build debrief prompt -> stream from Sonnet
@@ -250,7 +249,7 @@ export async function generateDebrief(
   // Until implemented: return the static fallback so post-workout flow does not crash.
   // The pattern used in generateProgram (return fallback, never throw) applies here too.
   return {
-    text: 'Your session is logged. Kiro's analysis will be available once this feature ships.',
+    text: "Your session is logged. Kiro's analysis will be available once this feature ships.",
     source: 'static_fallback',
   }
 }

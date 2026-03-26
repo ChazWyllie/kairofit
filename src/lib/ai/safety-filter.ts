@@ -73,7 +73,9 @@ function detectExtremeRestriction(input: string): boolean {
     /\b(\d{3,4})\s*(?:cal(?:ories?)?|kcal)\s*(?:per day|a day|daily|total)/i
   )
   if (dailyTotalMatch) {
-    const calories = parseInt(dailyTotalMatch[1], 10)
+    const calStr = dailyTotalMatch[1]
+    if (calStr === undefined) return false
+    const calories = parseInt(calStr, 10)
     if (calories < 800) return true
   }
   return false
@@ -151,7 +153,8 @@ async function classifyWithHaiku(input: string): Promise<SafetyResult> {
       }],
     })
 
-    const text = response.content[0].type === 'text' ? response.content[0].text.trim() : 'YES'
+    const firstBlock = response.content[0]
+    const text = firstBlock?.type === 'text' ? firstBlock.text.trim() : 'YES'
     const isFitnessRelated = text.toUpperCase().startsWith('YES')
 
     if (!isFitnessRelated) {

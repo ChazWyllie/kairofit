@@ -27,7 +27,7 @@ import type {
   ValidationError,
   ValidationWarning,
 } from '@/types'
-import { CONTRAINDICATIONS, getModificationNote } from '@/lib/utils/contraindications'
+import { CONTRAINDICATIONS } from '@/lib/utils/contraindications'
 
 // ============================================================
 // VOLUME LIMITS
@@ -126,7 +126,7 @@ export function validateWorkoutProgram(
 
 function validateDay(
   day: GeneratedDay,
-  experienceLevel: ExperienceLevel,
+  _experienceLevel: ExperienceLevel,
   injuries: InjuryZone[],
   equipment: Equipment[],
   weeklyVolume: Record<string, number>
@@ -191,7 +191,7 @@ function validateDay(
 function validateExercise(
   exercise: GeneratedExercise,
   injuries: InjuryZone[],
-  equipment: Equipment[],
+  _equipment: Equipment[],
   dayNumber: number
 ): ValidationResult {
   const errors: ValidationError[] = []
@@ -271,7 +271,7 @@ function validateExercise(
     }
 
     const cautionEntry = contra.caution.find(({ exercise: ex }) =>
-      exName.includes(ex.toLowerCase().split('->')[0].trim())
+      exName.includes(ex.toLowerCase().split('->')[0]!.trim())
     )
     if (cautionEntry && !exercise.modification_note) {
       warnings.push({

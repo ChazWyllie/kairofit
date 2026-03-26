@@ -54,7 +54,18 @@ export const logSetAction = action
 
     const { data, error } = await supabase
       .from('workout_sets')
-      .insert({ ...parsedInput, user_id: user.id })  // always server-resolved user_id
+      .insert({
+        session_id: parsedInput.session_id,
+        exercise_id: parsedInput.exercise_id,
+        program_exercise_id: parsedInput.program_exercise_id ?? null,
+        set_number: parsedInput.set_number,
+        reps_completed: parsedInput.reps_completed,
+        weight_kg: parsedInput.weight_kg ?? null,
+        rpe: parsedInput.rpe ?? null,
+        is_warmup: parsedInput.is_warmup,
+        is_dropset: parsedInput.is_dropset,
+        user_id: user.id,  // always server-resolved user_id
+      })
       .select('id, set_number, reps_completed, weight_kg, rpe, logged_at')
       .single()
 
@@ -109,8 +120,9 @@ export const completeSessionAction = action
     if (session.status === 'completed') throw new Error('Session already completed')
 
     const completedAt = new Date()
+    const startedAt = session.started_at ? new Date(session.started_at) : completedAt
     const durationSeconds = Math.floor(
-      (completedAt.getTime() - new Date(session.started_at).getTime()) / 1000
+      (completedAt.getTime() - startedAt.getTime()) / 1000
     )
 
     const { data, error } = await supabase

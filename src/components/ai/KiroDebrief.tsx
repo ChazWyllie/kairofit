@@ -21,7 +21,7 @@ interface KiroDebriefProps {
   onComplete?: () => void
 }
 
-export function KiroDebrief({ sessionId, onComplete }: KiroDebriefProps) {
+export function KiroDebrief({ sessionId, onComplete: _onComplete }: KiroDebriefProps) {
   // TODO: Implement with useChat or useCompletion from Vercel AI SDK
   // The debrief streams inline - exercise cards, next-session targets,
   // and Kiro's coaching notes appear token by token.

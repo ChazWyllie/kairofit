@@ -30,11 +30,11 @@ describe('calculateLinearProgression', () => {
 
   it('increases upper body weight by 2.5 kg when all reps hit (metric)', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 1,
+      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
         reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '2', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 2,
+      { id: '2', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 2,
         reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '3', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 3,
+      { id: '3', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 3,
         reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
     ]
     const result = calculateLinearProgression(sets, 8, false, 'metric')
@@ -44,7 +44,7 @@ describe('calculateLinearProgression', () => {
 
   it('increases lower body weight by 5 kg when all reps hit (metric)', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 1,
+      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
         reps_completed: 5, weight_kg: 100, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
     ]
     const result = calculateLinearProgression(sets, 5, true, 'metric')
@@ -54,7 +54,7 @@ describe('calculateLinearProgression', () => {
 
   it('increases upper body weight by 5 lbs (not 2.5 kg) when in imperial', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 1,
+      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
         reps_completed: 8, weight_kg: 135, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
     ]
     const result = calculateLinearProgression(sets, 8, false, 'imperial')
@@ -64,9 +64,9 @@ describe('calculateLinearProgression', () => {
 
   it('maintains weight when not all sets hit target reps', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 1,
+      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
         reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '2', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 2,
+      { id: '2', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 2,
         reps_completed: 6, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },  // missed
     ]
     const result = calculateLinearProgression(sets, 8, false)
@@ -82,9 +82,9 @@ describe('calculateLinearProgression', () => {
 describe('calculateDoubleProgression', () => {
   it('suggests more reps when below reps_max', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 1,
+      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
         reps_completed: 8, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '2', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 2,
+      { id: '2', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 2,
         reps_completed: 9, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
     ]
     const result = calculateDoubleProgression(sets, 8, 12, false)
@@ -96,11 +96,11 @@ describe('calculateDoubleProgression', () => {
 
   it('increases weight when all sets hit reps_max (metric upper)', () => {
     const sets = [
-      { id: '1', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 1,
+      { id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 1,
         reps_completed: 12, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '2', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 2,
+      { id: '2', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 2,
         reps_completed: 12, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
-      { id: '3', session_id: 's', exercise_id: 'e', user_id: 'u', set_number: 3,
+      { id: '3', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u', set_number: 3,
         reps_completed: 12, weight_kg: 60, rpe: null, is_warmup: false, is_dropset: false, logged_at: '' },
     ]
     const result = calculateDoubleProgression(sets, 8, 12, false, 'metric')
@@ -114,7 +114,7 @@ describe('calculateDoubleProgression', () => {
 
   it('resets reps to reps_min after weight increase', () => {
     const sets = Array(3).fill(null).map((_, i) => ({
-      id: String(i), session_id: 's', exercise_id: 'e', user_id: 'u',
+      id: String(i), session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u',
       set_number: i + 1, reps_completed: 12, weight_kg: 80,
       rpe: null, is_warmup: false, is_dropset: false, logged_at: '',
     }))
@@ -226,7 +226,7 @@ describe('shouldDeload', () => {
 describe('calculateRPEProgression', () => {
   function makeWorkingSet(rpe: number, weight_kg: number, reps_completed = 8): WorkoutSet {
     return {
-      id: '1', session_id: 's', exercise_id: 'e', user_id: 'u',
+      id: '1', session_id: 's', exercise_id: 'e', program_exercise_id: null, user_id: 'u',
       set_number: 1, reps_completed, weight_kg, rpe,
       is_warmup: false, is_dropset: false, logged_at: '',
     }

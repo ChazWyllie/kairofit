@@ -213,8 +213,8 @@ export function getLoadingFact(goal: string, experienceLevel: number): string {
     ],
   }
 
-  const goalFacts = facts[goal] ?? facts.fitness
-  return goalFacts[experienceLevel % goalFacts.length] ?? goalFacts[0]
+  const goalFacts = (facts[goal] ?? facts['fitness']) as string[]
+  return goalFacts[experienceLevel % goalFacts.length] ?? goalFacts[0] ?? ''
 }
 
 /**
@@ -234,5 +234,5 @@ export function getProjectionText(
     fitness: `At ${daysPerWeek} days/week, you will notice meaningful improvements - more energy, better endurance, increased strength - within ${weeksEstimate} weeks.`,
   }
 
-  return projections[goal] ?? projections.fitness
+  return projections[goal] ?? projections['fitness'] ?? ''
 }

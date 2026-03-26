@@ -81,9 +81,9 @@ export async function checkRateLimit(
   key: string = 'general'
 ): Promise<void> {
   const limiters = getLimiters()
-  const limiter = limiters[key] ?? limiters['general']
+  const limiter = limiters[key] ?? limiters['general']!
 
-  const { success, limit, remaining, reset } = await limiter.limit(identifier)
+  const { success, limit, reset } = await limiter.limit(identifier)
 
   if (!success) {
     const resetIn = Math.ceil((reset - Date.now()) / 1000)

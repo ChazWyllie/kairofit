@@ -8,8 +8,7 @@
 
 import { describe, it, expect } from 'vitest'
 import { validateWorkoutProgram } from '../workout-validator'
-import { shouldDeload } from '@/lib/utils/progressive-overload'
-import type { GeneratedProgram, ExperienceLevel } from '@/types'
+import type { GeneratedProgram } from '@/types'
 import validProgram from './fixtures/valid-program.json'
 
 // ============================================================

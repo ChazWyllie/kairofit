@@ -9,7 +9,7 @@
  * TODO: Implement sync.ts to drain pending sets to Supabase
  */
 
-import Dexie, { type EntityTable } from 'dexie'
+import Dexie, { type Table } from 'dexie'
 
 // ============================================================
 // LOCAL TYPES (offline versions of DB types)
@@ -48,8 +48,8 @@ export interface LocalWorkoutSession {
 // ============================================================
 
 class KairoFitOfflineDB extends Dexie {
-  workout_sets!: EntityTable<LocalWorkoutSet, 'id'>
-  workout_sessions!: EntityTable<LocalWorkoutSession, 'id'>
+  workout_sets!: Table<LocalWorkoutSet, string>
+  workout_sessions!: Table<LocalWorkoutSession, string>
 
   constructor() {
     super('kairofit_offline')
@@ -103,7 +103,7 @@ export async function markSetsAsFailed(setIds: string[]): Promise<void> {
   await db.workout_sets
     .where('id')
     .anyOf(setIds)
-    .modify((set) => {
+    .modify((set: LocalWorkoutSet) => {
       set.sync_status = 'failed'
       set.sync_attempts = (set.sync_attempts || 0) + 1
       set.last_sync_attempt = new Date().toISOString()

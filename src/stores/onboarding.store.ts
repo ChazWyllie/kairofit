@@ -123,7 +123,7 @@ const initialState: OnboardingState = {
 // STORE
 // ============================================================
 
-export const useOnboardingStore = create<OnboardingState & OnboardingActions>((set, get) => ({
+export const useOnboardingStore = create<OnboardingState & OnboardingActions>((set) => ({
   ...initialState,
 
   nextStep: () => set((state) => ({

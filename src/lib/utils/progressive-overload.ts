@@ -37,7 +37,7 @@ export function calculateLinearProgression(
     }
   }
 
-  const lastWeight = previousSets[previousSets.length - 1].weight_kg ?? 0
+  const lastWeight = previousSets[previousSets.length - 1]!.weight_kg ?? 0
   const allSetsHitTarget = previousSets.every((s) => s.reps_completed >= targetReps)
 
   if (!allSetsHitTarget) {
@@ -95,7 +95,7 @@ export function calculateDoubleProgression(
     }
   }
 
-  const lastWeight = previousSets[previousSets.length - 1].weight_kg ?? 0
+  const lastWeight = previousSets[previousSets.length - 1]!.weight_kg ?? 0
   const avgRepsCompleted =
     previousSets.reduce((sum, s) => sum + s.reps_completed, 0) / previousSets.length
   const allSetsHitMax = previousSets.every((s) => s.reps_completed >= targetRepsMax)
@@ -160,7 +160,7 @@ export function calculateRPEProgression(
   }
 
   const avgRPE = workingSets.reduce((sum, s) => sum + (s.rpe ?? 7), 0) / workingSets.length
-  const lastWeight = workingSets[workingSets.length - 1].weight_kg ?? 0
+  const lastWeight = workingSets[workingSets.length - 1]!.weight_kg ?? 0
   const targetReps = Math.round((targetRepsMin + targetRepsMax) / 2)
 
   if (avgRPE < 7) {
@@ -271,7 +271,7 @@ export function recommendSplit(daysPerWeek: number): SplitRecommendation {
     },
   }
 
-  return splits[daysPerWeek] ?? splits[4]
+  return splits[daysPerWeek] ?? splits[4]!
 }
 
 // ============================================================

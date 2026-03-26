@@ -39,7 +39,7 @@ const initialState: ActiveWorkoutState = {
 export const useWorkoutStore = create<ActiveWorkoutState & WorkoutActions>((set) => ({
   ...initialState,
 
-  startWorkout: (sessionId, programDayId, programId) => set({
+  startWorkout: (sessionId, programDayId, _programId) => set({
     session_id: sessionId,
     program_day_id: programDayId,
     is_active: true,

@@ -16,7 +16,6 @@ import { z } from 'zod'
 
 const uuid = z.string().uuid()
 const rpe = z.number().int().min(1).max(10)
-const timestamp = z.string().datetime()
 
 // ============================================================
 // WORKOUT LOGGING

@@ -13,7 +13,6 @@
 
 'use client'
 
-import { useOnboardingStore } from '@/stores/onboarding.store'
 
 interface OnboardingLayoutProps {
   step: number
