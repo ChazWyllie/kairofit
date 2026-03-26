@@ -57,8 +57,9 @@ const REST_LIMITS = {
 
 // ============================================================
 // COMPOUND EXERCISE DETECTION
-// Uses both keyword matching AND the is_compound flag (when available)
-// Broadened beyond barbell-only to include common compound variations
+// Two tiers:
+// - isCompoundExercise: broad - used for the "no compound detected" warning
+// - isHeavyCompound: heavy barbell movements that require 120s minimum rest
 // ============================================================
 
 const COMPOUND_EXERCISE_PATTERNS = [
@@ -77,9 +78,24 @@ const COMPOUND_EXERCISE_PATTERNS = [
   'kettlebell swing', 'lunge', 'hack squat', 'trap bar deadlift',
 ]
 
+// Heavy compounds: barbell movements plus high-load deadlift variations.
+// These require the 120s minimum rest per PROGRAMMING_RULES.md.
+// Dumbbell/machine/bodyweight compounds (dumbbell row, leg press, etc.) do not.
+const HEAVY_COMPOUND_PATTERNS = [
+  'barbell',             // catches all barbell variations
+  'conventional deadlift',
+  'sumo deadlift',
+  'trap bar deadlift',
+]
+
 function isCompoundExercise(exerciseName: string): boolean {
   const name = exerciseName.toLowerCase()
   return COMPOUND_EXERCISE_PATTERNS.some((pattern) => name.includes(pattern))
+}
+
+function isHeavyCompound(exerciseName: string): boolean {
+  const name = exerciseName.toLowerCase()
+  return HEAVY_COMPOUND_PATTERNS.some((pattern) => name.includes(pattern))
 }
 
 // ============================================================
@@ -88,7 +104,8 @@ function isCompoundExercise(exerciseName: string): boolean {
 
 const DANGEROUS_PAIRINGS: Array<[string, string, string]> = [
   // [exercise A pattern, exercise B pattern, reason]
-  ['squat', 'deadlift', 'Excessive lumbar fatigue - both create high spinal loading'],
+  // Note: 'squat' + 'conventional deadlift' - not 'deadlift' (too broad: catches squat + RDL which is valid)
+  ['squat', 'conventional deadlift', 'Excessive lumbar fatigue - both create high spinal loading'],
   ['bench press', 'overhead press', 'Excessive shoulder fatigue when combined'],
   ['conventional deadlift', 'romanian deadlift', 'Same posterior chain pattern - excessive fatigue'],
   ['overhead press', 'incline bench', 'Combined shoulder volume exceeds single-session recovery capacity'],
@@ -236,8 +253,8 @@ function validateExercise(
     })
   }
 
-  // Compound exercises need 120s minimum rest
-  if (isCompoundExercise(exercise.exercise_name) && exercise.rest_seconds < REST_LIMITS.compound_min) {
+  // Heavy barbell compounds need 120s minimum rest
+  if (isHeavyCompound(exercise.exercise_name) && exercise.rest_seconds < REST_LIMITS.compound_min) {
     errors.push({
       field: `day_${dayNumber}.${exercise.exercise_name}.rest_seconds`,
       rule: 'compound_rest_minimum',

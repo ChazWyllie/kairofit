@@ -39,7 +39,7 @@ export function KiroDebrief({ sessionId, onComplete: _onComplete }: KiroDebriefP
         <div className="w-8 h-8 rounded-full bg-[#6366F1] flex items-center justify-center">
           <span className="text-xs font-medium text-white">K</span>
         </div>
-        <span className="text-sm font-medium text-[#F5F5F4]">Kiro's analysis</span>
+        <span className="text-sm font-medium text-[#F5F5F4]">Kiro&apos;s analysis</span>
       </div>
 
       {/* TODO: Replace with streaming text component */}

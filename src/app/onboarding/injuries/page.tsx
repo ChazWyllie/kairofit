@@ -66,7 +66,7 @@ export default function InjuriesPage() {
           <div className="rounded-lg bg-[#111113] border border-[#10B981] px-5 py-6">
             <p className="text-[#10B981] font-medium mb-2">Injury flags saved</p>
             <p className="text-[#F5F5F4]">
-              We'll automatically exclude and modify exercises that could aggravate those areas.
+              We&apos;ll automatically exclude and modify exercises that could aggravate those areas.
             </p>
             <p className="text-sm text-[#A1A19E] mt-2">
               You can update this anytime in your profile settings.
