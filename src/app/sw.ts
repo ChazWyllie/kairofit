@@ -18,7 +18,7 @@
  */
 
 import { defaultCache } from '@serwist/next/worker'
-import { installSerwist } from '@serwist/sw'
+import { installSerwist } from 'serwist'
 import type { PrecacheEntry } from '@serwist/precaching'
 
 // Import Dexie helpers - service worker runs in the same origin so IndexedDB is accessible
