@@ -24,6 +24,9 @@ test-results/
 *.key
 Thumbs.db
 
+# Claude Code local settings
+.claude/
+
 # Debug logs
 npm-debug.log*
 yarn-error.log*
