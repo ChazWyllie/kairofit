@@ -135,8 +135,11 @@ All steps must be green before merging. Run them locally before pushing:
 
 ```bash
 cd "C:\Projects\kairofit"
-npm run typecheck && npm run lint && npm run lint:kiro && npm test
+npm run format && npm run typecheck && npm run lint && npm run lint:kiro && npm test
 ```
+
+Run `npm run format` first - Prettier reformats in place. If files change, stage and
+include them in the commit. Never commit unformatted code.
 
 **Note**: CI targets `main` branch. If the default branch is `master`, rename it:
 
