@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:e2e": "playwright test --passWithNoTests",
+    "test:e2e": "playwright test",
     "db:push": "supabase db push",
     "db:migrate": "supabase migration new",
     "db:seed": "supabase db seed",
