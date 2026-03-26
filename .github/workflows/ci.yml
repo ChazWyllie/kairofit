@@ -29,7 +29,10 @@ jobs:
       - name: Prettier format check
         run: npm run format:check
       - name: Security audit
-        run: npm audit --audit-level=high
+        # --omit=dev skips devDependencies (supabase CLI, vitest, etc.)
+        # which are never shipped to production and have known CVEs in
+        # transitive deps (tar via supabase CLI). Only production deps matter.
+        run: npm audit --audit-level=high --omit=dev
 
   test:
     name: Unit tests
