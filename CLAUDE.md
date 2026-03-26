@@ -338,6 +338,8 @@ src/
 |---|---|
 | Any git commit, branch, or PR | skills/git-workflow/SKILL.md |
 | Any Server Action | skills/server-action-builder/SKILL.md |
+| Any Supabase query or DB read/write | skills/supabase-query-patterns/SKILL.md |
+| Any TypeScript type error or strict flag issue | skills/typescript-strict-patterns/SKILL.md |
 | Onboarding screens | docs/onboarding/FLOW.md |
 | Any AI feature | docs/science/PROGRAMMING_RULES.md + skills/exercise-science-grounding/SKILL.md |
 | Exercise selection or injuries | docs/science/CONTRAINDICATIONS.md |
