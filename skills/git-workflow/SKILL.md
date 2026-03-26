@@ -11,6 +11,20 @@ description: >
 
 # Git Workflow
 
+## The rule: never push directly to main
+
+Every change goes through a branch and a PR - no exceptions.
+
+**Why this matters:** CI runs on the PR branch before anything touches main.
+If a check fails, it fails on the branch and main stays clean.
+Pushing directly to main means broken commits in the permanent history and
+no opportunity for CI to block bad code before it lands.
+
+The only time direct-to-main is acceptable: one-word typo fixes in markdown docs
+where there is zero chance of a CI failure. When in doubt, use a branch.
+
+---
+
 ## Two-repo setup (Windows only)
 
 KairoFit has two paths that must stay in sync:
@@ -25,6 +39,41 @@ Write new files to both paths. When files differ, `C:\Projects\kairofit` is auth
 for git - it is what gets committed and pushed.
 
 On Mac: only one path exists. Clone the repo, run everything from that directory.
+
+---
+
+## Full workflow (every change follows this sequence)
+
+```bash
+# 1. Start from a clean, up-to-date main
+cd "C:\Projects\kairofit"
+git checkout main && git pull
+
+# 2. Create a branch
+git checkout -b feat/your-feature
+
+# 3. Make changes, then run the full local CI check
+npm run format && npm run typecheck && npm run lint && npm run lint:kiro && npm test
+
+# 4. If any check fails - fix it before committing. Never push a red check.
+
+# 5. Stage and commit (specific files, not git add -A)
+git add src/actions/onboarding.actions.ts src/lib/db/queries/profiles.ts
+git commit -m "feat: add createAccountAction with OTP magic link"
+
+# 6. Push the branch and open a PR
+git push -u origin feat/your-feature
+gh pr create --title "feat: add createAccountAction" --body "..."
+
+# 7. Wait for CI to go green on the PR. Fix failures on the branch if needed.
+
+# 8. Squash merge and clean up
+gh pr merge --squash --delete-branch
+git checkout main && git pull
+```
+
+**`npm run format` must run before every commit.** Prettier reformats files in place.
+If files change after formatting, stage them and include in the commit.
 
 ---
 
@@ -43,16 +92,7 @@ Examples:
 feat/auth-infrastructure
 feat/program-generation
 fix/onboarding-persist-store
-chore/rename-master-to-main
-```
-
-Create from `main` (or `master` until renamed):
-
-```bash
-cd "C:\Projects\kairofit"
-git checkout main
-git pull
-git checkout -b feat/your-feature
+chore/add-prettier-config
 ```
 
 ---
@@ -93,6 +133,33 @@ EOF
 
 ---
 
+## CI gate - what must pass before merge
+
+The pipeline in `.github/workflows/ci.yml` runs these checks in order:
+
+| Step            | Command                                   | What it catches                               |
+| --------------- | ----------------------------------------- | --------------------------------------------- |
+| TypeScript      | `npm run typecheck`                       | Type errors, missing imports                  |
+| ESLint          | `npm run lint`                            | Code quality rules                            |
+| Kiro voice lint | `npm run lint:kiro`                       | Em dashes, banned phrases in output strings   |
+| Prettier        | `npm run format:check`                    | Formatting inconsistencies                    |
+| Security audit  | `npm audit --audit-level=high --omit=dev` | High/critical CVEs in production deps         |
+| Unit tests      | `npm test`                                | Logic correctness                             |
+| Build           | `npm run build`                           | Next.js compilation with placeholder env vars |
+| E2E             | `npm run test:e2e`                        | Full flow (runs only on PRs targeting `main`) |
+
+Run locally before pushing to catch failures before CI does:
+
+```bash
+cd "C:\Projects\kairofit"
+npm run format && npm run typecheck && npm run lint && npm run lint:kiro && npm test
+```
+
+**If local checks fail, fix them before pushing.** A red local check will be a red CI check.
+Do not push and rely on CI to tell you what's wrong - it costs 2-3 minutes per cycle.
+
+---
+
 ## PR size guidelines
 
 Each PR should do exactly one thing. As a solo developer the value is:
@@ -101,53 +168,7 @@ Each PR should do exactly one thing. As a solo developer the value is:
 2. Clean history - each PR maps to one logical change
 3. Easy rollback - revert one PR without touching others
 
-Natural boundaries for the auth + onboarding-to-DB plan:
-
-| PR  | Branch                     | Contains                                                           |
-| --- | -------------------------- | ------------------------------------------------------------------ |
-| 1   | `feat/auth-infrastructure` | Zustand persist, auth callback route, `createAccountAction`        |
-| 2   | `feat/program-generation`  | `saveOnboardingProfileAction`, `generateProgramAction`, DB queries |
-| 3   | `feat/onboarding-wiring`   | Wire email-gate + program-building screens to actions              |
-| 4   | `feat/dashboard`           | Minimal dashboard page + login OTP form                            |
-
-PRs 1 and 2 are independent and can be opened simultaneously.
-PR 3 should not be merged until 1 and 2 are merged (it imports their actions).
-PR 4 is independent of 1-3.
-
----
-
-## CI gate - what must pass before merge
-
-The pipeline in `.github/workflows/ci.yml` runs these checks in order:
-
-| Step            | Command                        | What it catches                               |
-| --------------- | ------------------------------ | --------------------------------------------- |
-| TypeScript      | `npm run typecheck`            | Type errors, missing imports                  |
-| ESLint          | `npm run lint`                 | Code quality rules                            |
-| Kiro voice lint | `npm run lint:kiro`            | Em dashes, banned phrases in output strings   |
-| Prettier        | `npm run format:check`         | Formatting inconsistencies                    |
-| Security audit  | `npm audit --audit-level=high` | High/critical CVEs in deps                    |
-| Unit tests      | `npm test`                     | Logic correctness                             |
-| Build           | `npm run build`                | Next.js compilation with placeholder env vars |
-| E2E             | `npm run test:e2e`             | Full flow (runs only on PRs targeting `main`) |
-
-All steps must be green before merging. Run them locally before pushing:
-
-```bash
-cd "C:\Projects\kairofit"
-npm run format && npm run typecheck && npm run lint && npm run lint:kiro && npm test
-```
-
-Run `npm run format` first - Prettier reformats in place. If files change, stage and
-include them in the commit. Never commit unformatted code.
-
-**Note**: CI targets `main` branch. If the default branch is `master`, rename it:
-
-```bash
-git branch -m master main
-git push origin -u main
-# Then update the default branch in GitHub repo settings
-```
+Keep PRs focused. If a change balloons into multiple logical units, split it.
 
 ---
 
@@ -173,6 +194,7 @@ One paragraph describing what this PR does and why it was needed.
 ## Checklist
 
 ### Always
+- [x] `npm run format` run - no unformatted files
 - [x] `npm run typecheck` passes with 0 errors
 - [x] `npm run lint` passes with 0 errors
 - [x] `npm run lint:kiro` passes (no em dashes, no banned phrases)
@@ -253,8 +275,8 @@ git worktree remove ..\kairofit-auth
 git checkout main && git pull
 git checkout -b feat/my-feature
 
-# Check before committing
-npm run typecheck && npm run lint && npm run lint:kiro && npm test
+# Local checks (run before every push)
+npm run format && npm run typecheck && npm run lint && npm run lint:kiro && npm test
 
 # Commit
 git add src/actions/onboarding.actions.ts src/lib/db/queries/profiles.ts
@@ -264,7 +286,7 @@ git commit -m "feat: add createAccountAction with OTP magic link"
 git push -u origin feat/my-feature
 gh pr create --title "feat: add createAccountAction" --body "..."
 
-# Merge and clean up
+# Wait for CI green, then merge
 gh pr merge --squash --delete-branch
 git checkout main && git pull
 ```
