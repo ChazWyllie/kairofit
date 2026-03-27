@@ -27,9 +27,7 @@ export default function SignupPage() {
         {/* Wordmark */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-[#F5F5F4]">KairoFit</h1>
-          <p className="mt-2 text-sm text-[#A1A19E]">
-            Your program starts here
-          </p>
+          <p className="mt-2 text-sm text-[#A1A19E]">Your program starts here</p>
         </div>
 
         <Suspense fallback={<SignupFormSkeleton />}>
@@ -42,7 +40,7 @@ export default function SignupPage() {
 
 function SignupFormSkeleton() {
   return (
-    <div className="space-y-6 animate-pulse">
+    <div className="animate-pulse space-y-6">
       <div className="space-y-3">
         <div className="h-4 w-24 rounded bg-[#111113]" />
         <div className="h-12 rounded-lg bg-[#111113]" />

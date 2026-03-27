@@ -32,10 +32,20 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/5 bg-[#0A0A0B]/95 backdrop-blur-sm">
       <div className="flex h-16 items-center justify-around px-2">
         {/* Home tab */}
-        <NavTab href={NAV_ITEMS[0].href} icon={NAV_ITEMS[0].icon} label={NAV_ITEMS[0].label} active={pathname === NAV_ITEMS[0].href} />
+        <NavTab
+          href={NAV_ITEMS[0].href}
+          icon={NAV_ITEMS[0].icon}
+          label={NAV_ITEMS[0].label}
+          active={pathname === NAV_ITEMS[0].href}
+        />
 
         {/* Program tab */}
-        <NavTab href={NAV_ITEMS[1].href} icon={NAV_ITEMS[1].icon} label={NAV_ITEMS[1].label} active={pathname.startsWith('/program')} />
+        <NavTab
+          href={NAV_ITEMS[1].href}
+          icon={NAV_ITEMS[1].icon}
+          label={NAV_ITEMS[1].label}
+          active={pathname.startsWith('/program')}
+        />
 
         {/* Centre Workout CTA */}
         <Link
@@ -47,10 +57,20 @@ export function BottomNav() {
         </Link>
 
         {/* Progress tab */}
-        <NavTab href={NAV_ITEMS[2].href} icon={NAV_ITEMS[2].icon} label={NAV_ITEMS[2].label} active={pathname.startsWith('/progress')} />
+        <NavTab
+          href={NAV_ITEMS[2].href}
+          icon={NAV_ITEMS[2].icon}
+          label={NAV_ITEMS[2].label}
+          active={pathname.startsWith('/progress')}
+        />
 
         {/* Profile tab */}
-        <NavTab href={NAV_ITEMS[3].href} icon={NAV_ITEMS[3].icon} label={NAV_ITEMS[3].label} active={pathname.startsWith('/profile')} />
+        <NavTab
+          href={NAV_ITEMS[3].href}
+          icon={NAV_ITEMS[3].icon}
+          label={NAV_ITEMS[3].label}
+          active={pathname.startsWith('/profile')}
+        />
       </div>
     </nav>
   )

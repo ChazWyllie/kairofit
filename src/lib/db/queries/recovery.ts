@@ -52,17 +52,15 @@ export async function updateMuscleRecovery(
 ): Promise<void> {
   const supabase = await createServerClient()
 
-  const { error } = await supabase
-    .from('muscle_recovery')
-    .upsert(
-      {
-        user_id: userId,
-        muscle_group: muscleGroup,
-        ...updates,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id,muscle_group' }
-    )
+  const { error } = await supabase.from('muscle_recovery').upsert(
+    {
+      user_id: userId,
+      muscle_group: muscleGroup,
+      ...updates,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id,muscle_group' }
+  )
 
   if (error) {
     console.error('updateMuscleRecovery error:', error.message)

@@ -24,9 +24,7 @@ export async function GET(request: NextRequest) {
 
   if (!code) {
     // No code means the link was invalid or expired
-    return NextResponse.redirect(
-      new URL('/auth/login?error=invalid_link', request.url)
-    )
+    return NextResponse.redirect(new URL('/auth/login?error=invalid_link', request.url))
   }
 
   const cookieStore = await cookies()
@@ -40,9 +38,7 @@ export async function GET(request: NextRequest) {
           return cookieStore.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          )
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
         },
       },
     }
@@ -53,9 +49,7 @@ export async function GET(request: NextRequest) {
 
   if (exchangeError) {
     console.error('Auth callback exchange error:', exchangeError.message)
-    return NextResponse.redirect(
-      new URL('/auth/login?error=exchange_failed', request.url)
-    )
+    return NextResponse.redirect(new URL('/auth/login?error=exchange_failed', request.url))
   }
 
   // Session is now set via cookies. Determine where to send the user.

@@ -87,7 +87,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         </p>
         <button
           onClick={() => setFormState('idle')}
-          className="text-sm text-[#6366F1] hover:text-[#818CF8] transition-colors"
+          className="text-sm text-[#6366F1] transition-colors hover:text-[#818CF8]"
         >
           Use a different email
         </button>
@@ -112,12 +112,12 @@ export function AuthForm({ mode }: AuthFormProps) {
           onChange={(e) => setEmail(e.target.value)}
           disabled={formState === 'submitting'}
           placeholder="you@example.com"
-          className="w-full rounded-lg border border-white/10 bg-[#111113] px-4 py-3 text-[#F5F5F4] placeholder:text-[#6B6B68] focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1] disabled:opacity-50 transition-colors"
+          className="w-full rounded-lg border border-white/10 bg-[#111113] px-4 py-3 text-[#F5F5F4] transition-colors placeholder:text-[#6B6B68] focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1] disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={formState === 'submitting' || !email.trim()}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#6366F1] px-4 py-3 text-sm font-medium text-white hover:bg-[#5558E6] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:ring-offset-2 focus:ring-offset-[#0A0A0B] disabled:opacity-50 transition-colors"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#6366F1] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#5558E6] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:ring-offset-2 focus:ring-offset-[#0A0A0B] disabled:opacity-50"
         >
           {formState === 'submitting' ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -142,7 +142,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       <button
         onClick={handleGoogleOAuth}
         disabled={formState === 'submitting'}
-        className="flex w-full items-center justify-center gap-3 rounded-lg border border-white/10 bg-[#111113] px-4 py-3 text-sm font-medium text-[#F5F5F4] hover:bg-[#1A1A1F] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:ring-offset-2 focus:ring-offset-[#0A0A0B] disabled:opacity-50 transition-colors"
+        className="flex w-full items-center justify-center gap-3 rounded-lg border border-white/10 bg-[#111113] px-4 py-3 text-sm font-medium text-[#F5F5F4] transition-colors hover:bg-[#1A1A1F] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:ring-offset-2 focus:ring-offset-[#0A0A0B] disabled:opacity-50"
       >
         <GoogleIcon />
         Continue with Google
@@ -158,14 +158,17 @@ export function AuthForm({ mode }: AuthFormProps) {
         {mode === 'login' ? (
           <>
             New to KairoFit?{' '}
-            <a href="/auth/signup" className="text-[#6366F1] hover:text-[#818CF8] transition-colors">
+            <a
+              href="/auth/signup"
+              className="text-[#6366F1] transition-colors hover:text-[#818CF8]"
+            >
               Create an account
             </a>
           </>
         ) : (
           <>
             Already have an account?{' '}
-            <a href="/auth/login" className="text-[#6366F1] hover:text-[#818CF8] transition-colors">
+            <a href="/auth/login" className="text-[#6366F1] transition-colors hover:text-[#818CF8]">
               Sign in
             </a>
           </>

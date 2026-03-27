@@ -118,12 +118,14 @@ export async function getExerciseSubstitutes(exerciseId: string): Promise<Exerci
 
   const { data, error } = await supabase
     .from('exercise_substitutes')
-    .select(`
+    .select(
+      `
       priority,
       substitute:substitute_id (
         ${EXERCISE_COLUMNS}
       )
-    `)
+    `
+    )
     .eq('exercise_id', exerciseId)
     .order('priority')
     .limit(5)
@@ -133,5 +135,5 @@ export async function getExerciseSubstitutes(exerciseId: string): Promise<Exerci
   }
 
   // The join returns { priority, substitute: Exercise } - extract the exercise
-  return ((data ?? []).map((row) => row.substitute).filter(Boolean)) as unknown as Exercise[]
+  return (data ?? []).map((row) => row.substitute).filter(Boolean) as unknown as Exercise[]
 }

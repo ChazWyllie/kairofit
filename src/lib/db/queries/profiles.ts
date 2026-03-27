@@ -57,13 +57,15 @@ export async function getProfileForGeneration(userId: string): Promise<UserProfi
 
   const { data, error } = await supabase
     .from('profiles')
-    .select(`
+    .select(
+      `
       id, goal, experience_level, training_recency_months, age_range, gender,
       days_per_week, session_duration_preference, work_schedule, activity_level,
       obstacles, injuries, why_now, psych_scores, archetype,
       equipment, split_preference, workout_time_preference, other_training,
       sleep_hours_range, kiro_persona_enabled, preferred_units
-    `)
+    `
+    )
     .eq('id', userId)
     .single()
 
@@ -82,10 +84,7 @@ export async function getProfileForGeneration(userId: string): Promise<UserProfi
  * in body_measurements (not profiles) to support the measurements log.
  * See Phase 10 for the measurements insert logic.
  */
-export async function saveOnboardingData(
-  userId: string,
-  state: OnboardingState
-): Promise<void> {
+export async function saveOnboardingData(userId: string, state: OnboardingState): Promise<void> {
   const supabase = await createServerClient()
 
   const { error } = await supabase
@@ -135,7 +134,10 @@ type ProfileSettingsUpdates = {
  * Update arbitrary profile fields.
  * Used by the profile settings page for unit preference, Kiro persona toggle, etc.
  */
-export async function updateProfile(userId: string, updates: ProfileSettingsUpdates): Promise<void> {
+export async function updateProfile(
+  userId: string,
+  updates: ProfileSettingsUpdates
+): Promise<void> {
   const supabase = await createServerClient()
 
   const { error } = await supabase.from('profiles').update(updates).eq('id', userId)

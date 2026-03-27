@@ -45,8 +45,10 @@ export const updateProfileAction = action
     // in the profiles table Update type. Only include keys that are present.
     const updates: Record<string, unknown> = {}
     if (parsedInput.display_name !== undefined) updates.display_name = parsedInput.display_name
-    if (parsedInput.preferred_units !== undefined) updates.preferred_units = parsedInput.preferred_units
-    if (parsedInput.kiro_persona_enabled !== undefined) updates.kiro_persona_enabled = parsedInput.kiro_persona_enabled
+    if (parsedInput.preferred_units !== undefined)
+      updates.preferred_units = parsedInput.preferred_units
+    if (parsedInput.kiro_persona_enabled !== undefined)
+      updates.kiro_persona_enabled = parsedInput.kiro_persona_enabled
 
     const { error } = await supabase.from('profiles').update(updates).eq('id', user.id)
     if (error) throw new Error(`Failed to update profile: ${error.message}`)
