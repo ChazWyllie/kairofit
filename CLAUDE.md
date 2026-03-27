@@ -24,13 +24,17 @@ npm run build         # Production build
 npm run typecheck     # TypeScript check - run before every commit
 npm run lint          # ESLint
 npm run lint:kiro     # Kiro voice linter (em dashes, banned phrases)
+npm run format        # Prettier write - run before committing
+npm run format:check  # Prettier dry-run (used in CI)
 npm test              # Vitest unit tests
+npm run test:coverage # Vitest with coverage report
 npm run test:e2e      # Playwright end-to-end tests
 npm run db:push       # Push schema to Supabase
 npm run db:migrate    # Create new migration file
 npm run db:seed       # Seed exercise library
 npm run db:reset      # Reset local DB (dev only)
 npm run db:types      # Regenerate Supabase TypeScript types -> src/types/supabase.generated.ts
+npm run generate:fallbacks  # Pre-generate fallback programs for AI resilience (scripts/generate-fallback-programs.ts)
 ```
 
 ---
@@ -283,23 +287,44 @@ This MUST be implemented before production. Missing it increases AI costs by ~40
 **Serwist not next-pwa:**
 next-pwa conflicts with Turbopack. Only use @serwist/next.
 
+**AI circuit breaker requires Redis (not memory):**
+Vercel serverless functions are ephemeral - module-level singletons reset on every cold start.
+A memory-only circuit breaker provides zero production protection: after 5 failures the circuit
+"opens", then the next request arrives as a cold start with a reset counter and tries again.
+The implementation at `src/lib/ai/circuit-breaker.ts` stores state in Upstash Redis.
+Do NOT replace it with an in-memory alternative. See skills/ai-resilience/SKILL.md.
+
+**Prettier is configured:**
+`prettier.config.js` uses `prettier-plugin-tailwindcss` for class sorting.
+Run `npm run format` before committing. CI runs `npm run format:check` and will fail on unformatted files.
+
 ---
 
 ## File Conventions
 
 ```
 src/
+  middleware.ts         # Edge runtime auth guard - protects (app)/ routes, passes
+                        # through /api/webhooks (Stripe does its own auth) and
+                        # /api/sync (auth handled inside route). Keep lean - no DB calls.
   app/
+    layout.tsx          # Root layout (providers, HTML structure)
+    globals.css         # Global Tailwind styles
+    manifest.ts         # PWA manifest generation
+    sw.ts               # Serwist service worker (excluded from tsconfig)
     (auth)/             # Login, signup (no app layout)
     (app)/              # All authenticated routes (with shell layout)
     onboarding/         # Onboarding quiz (multi-step, client components)
-    api/webhooks/       # Route Handlers for webhooks ONLY
+    api/
+      webhooks/         # Stripe webhooks (auth via signature verification)
+      sync/
+        workout-sets/   # Offline sync endpoint - receives batched sets from service worker
   actions/              # Server Actions (next-safe-action v7)
-    workout.actions.ts
-    program.actions.ts
-    profile.actions.ts
-    onboarding.actions.ts
-    social.actions.ts
+    workout.actions.ts  # EXISTS
+    # program.actions.ts    <- TODO
+    # profile.actions.ts    <- TODO
+    # onboarding.actions.ts <- TODO
+    # social.actions.ts     <- TODO (requires NEXT_PUBLIC_SOCIAL_ENABLED=true)
   components/
     ui/                 # shadcn/ui base - never modify directly
     workout/            # WorkoutCard, SetLogger, RestTimer, etc.
@@ -309,20 +334,22 @@ src/
     social/             # ShareCard, Leaderboard, etc.
   lib/
     ai/
-      client.ts         # Anthropic SDK singleton
-      prompts.ts        # System prompt templates
-      workout-generator.ts  # Core generation logic
+      workout-generator.ts  # Core generation logic (includes Anthropic SDK client + prompts)
       workout-validator.ts  # Post-generation rule enforcement
       safety-filter.ts  # Input safety check (runs before EVERY Claude call)
-      rag.ts            # pgvector exercise knowledge retrieval
+      circuit-breaker.ts    # Redis-backed circuit breaker for Claude API resilience
+                            # Tracks failures per key in Upstash Redis - MUST use Redis,
+                            # memory-only breaks on Vercel cold starts. Keys: PROGRAM_GENERATION,
+                            # DEBRIEF, ADJUSTMENT, INTAKE. See skills/ai-resilience/SKILL.md
       kiro-voice.ts     # Kiro voice constants and task-specific prompts
                         # (imports from src/lib/onboarding/archetypes.ts)
+      # rag.ts          <- DEFERRED to post-MVP. See RAG Decision section below.
     db/
       supabase.ts       # Client + server Supabase singletons
       queries/          # Typed query functions - no raw SQL in components
     offline/
       db.ts             # Dexie.js IndexedDB schema
-      sync.ts           # Background sync queue
+      # sync.ts         <- TODO: background sync queue (not yet built)
     onboarding/
       archetypes.ts     # ALL archetype logic lives here (8 archetypes)
       flow-config.ts    # Onboarding screen config (drives UI)
@@ -330,8 +357,9 @@ src/
       rate-limit.ts     # Upstash Redis rate limiting
       progressive-overload.ts  # Deterministic overload calculations
       recovery-model.ts # SRA curve per muscle group
-      workout-share.ts  # Share card image generation
+      equipment.ts      # Equipment categorization (classifyEquipmentBucket)
       contraindications.ts  # Injury-to-exercise mapping
+      # workout-share.ts <- TODO: share card image generation (not yet built)
     validation/
       schemas.ts        # All Zod schemas
   hooks/                # Custom React hooks
@@ -350,6 +378,7 @@ src/
 | What you are building                          | Read first                                                                     |
 | ---------------------------------------------- | ------------------------------------------------------------------------------ |
 | Any git commit, branch, or PR                  | skills/git-workflow/SKILL.md                                                   |
+| AI resilience / fallback programs              | skills/ai-resilience/SKILL.md                                                  |
 | Any Server Action                              | skills/server-action-builder/SKILL.md                                          |
 | Any Supabase query or DB read/write            | skills/supabase-query-patterns/SKILL.md                                        |
 | Any TypeScript type error or strict flag issue | skills/typescript-strict-patterns/SKILL.md                                     |
@@ -388,8 +417,8 @@ Trigger for implementation: when users begin swapping exercises at >15% rate
 
 When building RAG:
 
-1. Add `CREATE EXTENSION vector` to a new migration
-2. Add `embedding vector(1536)` column to exercises table
+1. ~~Add `CREATE EXTENSION vector` to a new migration~~ - DONE in `supabase/migrations/002_resilience_and_rag_prep.sql`
+2. Add `embedding vector(1536)` column to exercises table (new migration)
 3. Create retrieval function using cosine similarity
 4. Create src/lib/ai/rag.ts
 5. Update workout-generator.ts to inject retrieved context before generation
