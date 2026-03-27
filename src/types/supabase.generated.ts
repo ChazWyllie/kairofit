@@ -458,7 +458,7 @@ export type Database = {
           goal: string | null
           height_cm_encrypted: string | null
           id: string
-          injuries_encrypted: string | null
+          injuries: string[] | null
           kiro_persona_enabled: boolean | null
           obstacles: string[] | null
           onboarding_completed_at: string | null
@@ -495,7 +495,7 @@ export type Database = {
           goal?: string | null
           height_cm_encrypted?: string | null
           id: string
-          injuries_encrypted?: string | null
+          injuries?: string[] | null
           kiro_persona_enabled?: boolean | null
           obstacles?: string[] | null
           onboarding_completed_at?: string | null
@@ -532,7 +532,7 @@ export type Database = {
           goal?: string | null
           height_cm_encrypted?: string | null
           id?: string
-          injuries_encrypted?: string | null
+          injuries?: string[] | null
           kiro_persona_enabled?: boolean | null
           obstacles?: string[] | null
           onboarding_completed_at?: string | null
