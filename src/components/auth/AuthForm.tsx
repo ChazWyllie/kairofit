@@ -14,7 +14,7 @@
 
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { createBrowserClient } from '@/lib/db/supabase'
+import { createBrowserClient } from '@/lib/db/supabase-browser'
 import { Mail, Loader2 } from 'lucide-react'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
