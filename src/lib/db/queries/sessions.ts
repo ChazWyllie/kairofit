@@ -125,7 +125,7 @@ export async function getStreakCount(userId: string): Promise<number> {
 
   const today = new Date()
   let streak = 0
-  let checking = new Date(today)
+  const checking = new Date(today)
 
   while (true) {
     const key = `${checking.getFullYear()}-${checking.getMonth()}-${checking.getDate()}`

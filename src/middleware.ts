@@ -12,7 +12,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 // Routes that do NOT require authentication
-const PUBLIC_ROUTES = ['/auth/login', '/auth/signup', '/onboarding']
+const PUBLIC_ROUTES = ['/auth/login', '/auth/signup', '/auth/callback', '/onboarding']
 
 // Routes that should redirect authenticated users away (e.g. login page)
 const AUTH_ROUTES = ['/auth/login', '/auth/signup']

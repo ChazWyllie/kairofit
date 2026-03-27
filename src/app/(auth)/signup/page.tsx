@@ -1,8 +1,12 @@
 /**
- * Login Page
+ * Signup Page
  *
  * Lives in (auth) route group - no app shell layout applied.
- * Renders the shared AuthForm in "login" mode.
+ * Renders the shared AuthForm in "signup" mode.
+ *
+ * Supabase handles magic link identically for new and existing users,
+ * so the auth trigger in 001_initial_schema.sql creates the profile
+ * row on first signup automatically.
  *
  * Middleware redirects authenticated users away from this page to /dashboard.
  */
@@ -12,11 +16,11 @@ import { Suspense } from 'react'
 import { AuthForm } from '@/components/auth/AuthForm'
 
 export const metadata: Metadata = {
-  title: 'Sign in - KairoFit',
-  description: 'Sign in to your KairoFit account for research-backed AI workout programming.',
+  title: 'Create account - KairoFit',
+  description: 'Start your research-backed AI workout program. Free to get started.',
 }
 
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#0A0A0B] px-4">
       <div className="w-full max-w-sm">
@@ -24,20 +28,19 @@ export default function LoginPage() {
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-[#F5F5F4]">KairoFit</h1>
           <p className="mt-2 text-sm text-[#A1A19E]">
-            Research-backed AI workout programming
+            Your program starts here
           </p>
         </div>
 
-        {/* AuthForm reads useSearchParams, which requires Suspense in App Router */}
-        <Suspense fallback={<AuthFormSkeleton />}>
-          <AuthForm mode="login" />
+        <Suspense fallback={<SignupFormSkeleton />}>
+          <AuthForm mode="signup" />
         </Suspense>
       </div>
     </div>
   )
 }
 
-function AuthFormSkeleton() {
+function SignupFormSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
       <div className="space-y-3">
