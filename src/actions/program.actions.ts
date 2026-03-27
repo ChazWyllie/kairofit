@@ -71,7 +71,9 @@ export const generateProgramAction = action
     // generateProgram never throws - it returns a source field indicating degradation level.
     // Log the source for observability but proceed regardless.
     if (result.source !== 'ai_sonnet') {
-      console.error(`generateProgramAction: using fallback source=${result.source} for user=${user.id}`)
+      console.error(
+        `generateProgramAction: using fallback source=${result.source} for user=${user.id}`
+      )
     }
 
     const program = await saveProgramToDb(user.id, result.program, {
@@ -83,10 +85,7 @@ export const generateProgramAction = action
     // After response is sent: analytics and onboarding step update
     after(async () => {
       const supabase = await createServerClient()
-      await supabase
-        .from('profiles')
-        .update({ onboarding_step: 22 })
-        .eq('id', user.id)
+      await supabase.from('profiles').update({ onboarding_step: 22 }).eq('id', user.id)
     })
 
     return { programId: program.id }

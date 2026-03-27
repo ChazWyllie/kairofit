@@ -17,7 +17,8 @@ export async function getWorkoutSession(sessionId: string): Promise<WorkoutSessi
 
   const { data, error } = await supabase
     .from('workout_sessions')
-    .select(`
+    .select(
+      `
       id, user_id, program_day_id, program_id, started_at, completed_at,
       duration_seconds, perceived_effort, energy_level, user_notes,
       ai_debrief, next_session_adjustments, status,
@@ -25,7 +26,8 @@ export async function getWorkoutSession(sessionId: string): Promise<WorkoutSessi
         id, session_id, exercise_id, program_exercise_id, user_id,
         set_number, reps_completed, weight_kg, rpe, is_warmup, is_dropset, logged_at
       )
-    `)
+    `
+    )
     .eq('id', sessionId)
     .single()
 
@@ -45,10 +47,12 @@ export async function getSessionSets(sessionId: string): Promise<WorkoutSet[]> {
 
   const { data, error } = await supabase
     .from('workout_sets')
-    .select(`
+    .select(
+      `
       id, session_id, exercise_id, program_exercise_id, user_id,
       set_number, reps_completed, weight_kg, rpe, is_warmup, is_dropset, logged_at
-    `)
+    `
+    )
     .eq('session_id', sessionId)
     .order('exercise_id')
     .order('set_number')
@@ -64,18 +68,17 @@ export async function getSessionSets(sessionId: string): Promise<WorkoutSet[]> {
  * Get the user's most recent completed sessions.
  * Used by the Kiro debrief for context and by the progress chart.
  */
-export async function getSessionHistory(
-  userId: string,
-  limit = 10
-): Promise<WorkoutSession[]> {
+export async function getSessionHistory(userId: string, limit = 10): Promise<WorkoutSession[]> {
   const supabase = await createServerClient()
 
   const { data, error } = await supabase
     .from('workout_sessions')
-    .select(`
+    .select(
+      `
       id, user_id, program_day_id, program_id, started_at, completed_at,
       duration_seconds, perceived_effort, energy_level, status
-    `)
+    `
+    )
     .eq('user_id', userId)
     .eq('status', 'completed')
     .order('completed_at', { ascending: false })
@@ -125,7 +128,7 @@ export async function getStreakCount(userId: string): Promise<number> {
 
   const today = new Date()
   let streak = 0
-  let checking = new Date(today)
+  const checking = new Date(today)
 
   while (true) {
     const key = `${checking.getFullYear()}-${checking.getMonth()}-${checking.getDate()}`

@@ -122,7 +122,9 @@ export async function saveProgramToDb(
       experience_level_target: meta.experience_level_target,
       current_week: 1,
     })
-    .select('id, user_id, name, current_week, weeks_duration, days_per_week, goal, split_type, is_active')
+    .select(
+      'id, user_id, name, current_week, weeks_duration, days_per_week, goal, split_type, is_active'
+    )
     .single()
 
   if (programError || !program) {
@@ -153,7 +155,6 @@ export async function saveProgramToDb(
 
     // Resolve exercise names to IDs and insert program_exercises
     for (const [i, ex] of day.exercises.entries()) {
-
       // Look up exercise by name (the AI returns names, not IDs)
       const { data: exercise } = await supabase
         .from('exercises')
