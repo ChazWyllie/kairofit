@@ -11,6 +11,7 @@
  */
 
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import type {
   OnboardingState,
   FitnessGoal,
@@ -123,7 +124,9 @@ const initialState: OnboardingState = {
 // STORE
 // ============================================================
 
-export const useOnboardingStore = create<OnboardingState & OnboardingActions>((set) => ({
+export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
+  persist(
+    (set) => ({
   ...initialState,
 
   nextStep: () =>
@@ -182,4 +185,7 @@ export const useOnboardingStore = create<OnboardingState & OnboardingActions>((s
   setUnits: (units) => set({ units }),
 
   reset: () => set(initialState),
-}))
+    }),
+    { name: 'kairofit-onboarding' }
+  )
+)
