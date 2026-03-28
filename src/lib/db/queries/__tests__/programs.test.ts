@@ -157,9 +157,7 @@ function createSupabaseMock(config: SupabaseMockConfig = {}) {
         return {
           insert: vi.fn(() => ({
             select: vi.fn(() => ({
-              single: vi.fn(() =>
-                Promise.resolve({ data: dayInsertData, error: dayInsertError })
-              ),
+              single: vi.fn(() => Promise.resolve({ data: dayInsertData, error: dayInsertError })),
             })),
           })),
         }
@@ -234,8 +232,22 @@ describe('saveProgramToDb', () => {
 
       const program = makeGeneratedProgram({
         days: [
-          { day_number: 1, name: 'Day 1', focus_muscles: [], session_type: 'hypertrophy', estimated_duration_minutes: 45, exercises: [] },
-          { day_number: 2, name: 'Day 2', focus_muscles: [], session_type: 'hypertrophy', estimated_duration_minutes: 45, exercises: [] },
+          {
+            day_number: 1,
+            name: 'Day 1',
+            focus_muscles: [],
+            session_type: 'hypertrophy',
+            estimated_duration_minutes: 45,
+            exercises: [],
+          },
+          {
+            day_number: 2,
+            name: 'Day 2',
+            focus_muscles: [],
+            session_type: 'hypertrophy',
+            estimated_duration_minutes: 45,
+            exercises: [],
+          },
         ],
       })
 
@@ -348,14 +360,24 @@ describe('saveProgramToDb', () => {
             exercises: [
               {
                 exercise_name: 'Bench Press',
-                sets: 3, reps_min: 8, reps_max: 12, rest_seconds: 120,
-                rpe_target: null, rationale: 'Push', progression_scheme: 'double_progression',
+                sets: 3,
+                reps_min: 8,
+                reps_max: 12,
+                rest_seconds: 120,
+                rpe_target: null,
+                rationale: 'Push',
+                progression_scheme: 'double_progression',
                 modification_note: null,
               },
               {
                 exercise_name: 'Dumbbell Row',
-                sets: 3, reps_min: 8, reps_max: 12, rest_seconds: 90,
-                rpe_target: null, rationale: 'Pull', progression_scheme: 'double_progression',
+                sets: 3,
+                reps_min: 8,
+                reps_max: 12,
+                rest_seconds: 90,
+                rpe_target: null,
+                rationale: 'Pull',
+                progression_scheme: 'double_progression',
                 modification_note: null,
               },
             ],

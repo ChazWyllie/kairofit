@@ -127,64 +127,64 @@ const initialState: OnboardingState = {
 export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
   persist(
     (set) => ({
-  ...initialState,
+      ...initialState,
 
-  nextStep: () =>
-    set((state) => ({
-      current_step: Math.min(state.current_step + 1, state.total_steps),
-    })),
+      nextStep: () =>
+        set((state) => ({
+          current_step: Math.min(state.current_step + 1, state.total_steps),
+        })),
 
-  prevStep: () =>
-    set((state) => ({
-      current_step: Math.max(state.current_step - 1, 1),
-    })),
+      prevStep: () =>
+        set((state) => ({
+          current_step: Math.max(state.current_step - 1, 1),
+        })),
 
-  goToStep: (step) => set({ current_step: step }),
+      goToStep: (step) => set({ current_step: step }),
 
-  // Phase 1
-  setGoal: (goal) => set({ goal }),
-  setExperienceLevel: (experience_level) => set({ experience_level }),
-  setTrainingRecency: (training_recency_months) => set({ training_recency_months }),
-  setAgeRange: (age_range) => set({ age_range }),
-  setGender: (gender) => set({ gender }),
-  setDaysPerWeek: (days_per_week) => set({ days_per_week }),
-  setSessionDuration: (session_duration_preference) => set({ session_duration_preference }),
+      // Phase 1
+      setGoal: (goal) => set({ goal }),
+      setExperienceLevel: (experience_level) => set({ experience_level }),
+      setTrainingRecency: (training_recency_months) => set({ training_recency_months }),
+      setAgeRange: (age_range) => set({ age_range }),
+      setGender: (gender) => set({ gender }),
+      setDaysPerWeek: (days_per_week) => set({ days_per_week }),
+      setSessionDuration: (session_duration_preference) => set({ session_duration_preference }),
 
-  // Phase 2
-  setObstacle: (obstacle) => set({ obstacle }),
-  setWorkSchedule: (work_schedule) => set({ work_schedule }),
-  setActivityLevel: (activity_level) => set({ activity_level }),
-  setInjuries: (injuries) => set({ injuries }),
-  setHeightCm: (height_cm) => set({ height_cm }),
-  setWeightKg: (weight_kg) => set({ weight_kg }),
-  setBodyFatPct: (body_fat_pct) => set({ body_fat_pct }),
-  setWhyNow: (why_now) => set({ why_now }),
+      // Phase 2
+      setObstacle: (obstacle) => set({ obstacle }),
+      setWorkSchedule: (work_schedule) => set({ work_schedule }),
+      setActivityLevel: (activity_level) => set({ activity_level }),
+      setInjuries: (injuries) => set({ injuries }),
+      setHeightCm: (height_cm) => set({ height_cm }),
+      setWeightKg: (weight_kg) => set({ weight_kg }),
+      setBodyFatPct: (body_fat_pct) => set({ body_fat_pct }),
+      setWhyNow: (why_now) => set({ why_now }),
 
-  // Phase 3
-  setPsychScore: (index, score) =>
-    set((state) => {
-      const scores = [...state.psych_scores] as [number, number, number, number]
-      scores[index] = score
-      return { psych_scores: scores }
-    }),
-  setArchetype: (archetype) => set({ archetype }),
+      // Phase 3
+      setPsychScore: (index, score) =>
+        set((state) => {
+          const scores = [...state.psych_scores] as [number, number, number, number]
+          scores[index] = score
+          return { psych_scores: scores }
+        }),
+      setArchetype: (archetype) => set({ archetype }),
 
-  // Email gate
-  setEmail: (email) => set({ email }),
-  setAuthReady: (auth_ready) => set({ auth_ready }),
-  // Clear email from memory once auth is confirmed
-  // Do not hold PII in client state longer than needed
-  clearEmailAfterAuth: () => set({ email: null }),
+      // Email gate
+      setEmail: (email) => set({ email }),
+      setAuthReady: (auth_ready) => set({ auth_ready }),
+      // Clear email from memory once auth is confirmed
+      // Do not hold PII in client state longer than needed
+      clearEmailAfterAuth: () => set({ email: null }),
 
-  // Phase 5
-  setEquipment: (equipment) => set({ equipment }),
-  setSplitPreference: (split_preference) => set({ split_preference }),
-  setWorkoutTimePreference: (workout_time_preference) => set({ workout_time_preference }),
-  setOtherTraining: (other_training) => set({ other_training }),
-  setSleepHoursRange: (sleep_hours_range) => set({ sleep_hours_range }),
-  setUnits: (units) => set({ units }),
+      // Phase 5
+      setEquipment: (equipment) => set({ equipment }),
+      setSplitPreference: (split_preference) => set({ split_preference }),
+      setWorkoutTimePreference: (workout_time_preference) => set({ workout_time_preference }),
+      setOtherTraining: (other_training) => set({ other_training }),
+      setSleepHoursRange: (sleep_hours_range) => set({ sleep_hours_range }),
+      setUnits: (units) => set({ units }),
 
-  reset: () => set(initialState),
+      reset: () => set(initialState),
     }),
     { name: 'kairofit-onboarding' }
   )

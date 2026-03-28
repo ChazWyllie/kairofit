@@ -77,7 +77,9 @@ export default function ProgramBuildingPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#0A0A0B] px-6">
         <div className="w-full max-w-sm text-center">
-          <p data-testid="program-building-error-message" className="mb-6 text-sm text-[#EF4444]">{errorMessage}</p>
+          <p data-testid="program-building-error-message" className="mb-6 text-sm text-[#EF4444]">
+            {errorMessage}
+          </p>
           {isAuthError ? (
             <button
               data-testid="program-building-reauth-button"
@@ -108,16 +110,29 @@ export default function ProgramBuildingPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#0A0A0B] px-6">
       <div className="w-full max-w-sm text-center">
         {/* Spinner */}
-        <div data-testid="program-building-spinner" className="mx-auto mb-8 h-12 w-12 animate-spin rounded-full border-2 border-[#1A1A1F] border-t-[#6366F1]" />
+        <div
+          data-testid="program-building-spinner"
+          className="mx-auto mb-8 h-12 w-12 animate-spin rounded-full border-2 border-[#1A1A1F] border-t-[#6366F1]"
+        />
 
         {phase === 'auth' ? (
           <>
-            <h1 data-testid="program-building-auth-heading" className="mb-2 text-xl font-medium text-[#F5F5F4]">Setting up your account...</h1>
+            <h1
+              data-testid="program-building-auth-heading"
+              className="mb-2 text-xl font-medium text-[#F5F5F4]"
+            >
+              Setting up your account...
+            </h1>
             <p className="text-sm text-[#A1A19E]">Just a moment while we get everything ready.</p>
           </>
         ) : (
           <>
-            <h1 data-testid="program-building-gen-heading" className="mb-4 text-xl font-medium text-[#F5F5F4]">Building your program...</h1>
+            <h1
+              data-testid="program-building-gen-heading"
+              className="mb-4 text-xl font-medium text-[#F5F5F4]"
+            >
+              Building your program...
+            </h1>
             <p className="text-sm leading-relaxed text-[#A1A19E]">{fact}</p>
           </>
         )}

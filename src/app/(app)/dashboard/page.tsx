@@ -27,7 +27,12 @@ export default async function DashboardPage() {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
         <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-[#1A1A1F] border-t-[#6366F1]" />
-        <h1 data-testid="dashboard-loading-heading" className="mb-2 text-xl font-medium text-[#F5F5F4]">Building your program...</h1>
+        <h1
+          data-testid="dashboard-loading-heading"
+          className="mb-2 text-xl font-medium text-[#F5F5F4]"
+        >
+          Building your program...
+        </h1>
         <p className="text-sm text-[#A1A19E]">
           Your personalized plan is being generated. Check back in a moment.
         </p>
@@ -38,7 +43,9 @@ export default async function DashboardPage() {
   return (
     <div className="px-4 py-6">
       <div className="mb-6">
-        <h1 data-testid="dashboard-program-name" className="text-2xl font-semibold text-[#F5F5F4]">{program.name}</h1>
+        <h1 data-testid="dashboard-program-name" className="text-2xl font-semibold text-[#F5F5F4]">
+          {program.name}
+        </h1>
         {program.description && (
           <p className="mt-1 text-sm text-[#A1A19E]">{program.description}</p>
         )}
@@ -80,7 +87,9 @@ export default async function DashboardPage() {
           ))}
         </div>
       ) : (
-        <p data-testid="dashboard-no-days-message" className="text-sm text-[#6B6B68]">No training days found.</p>
+        <p data-testid="dashboard-no-days-message" className="text-sm text-[#6B6B68]">
+          No training days found.
+        </p>
       )}
     </div>
   )

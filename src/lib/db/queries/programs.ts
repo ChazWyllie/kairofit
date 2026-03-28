@@ -181,9 +181,7 @@ export async function saveProgramToDb(
         if (!exerciseId) {
           // workout-validator.ts should have caught this, but be defensive
           // Truncate name to avoid logging arbitrary AI-generated strings at full length
-          console.error(
-            `saveProgramToDb: exercise not found: ${ex.exercise_name.substring(0, 60)}`
-          )
+          console.error(`saveProgramToDb: exercise not found: ${ex.exercise_name.substring(0, 60)}`)
           return null
         }
         return {

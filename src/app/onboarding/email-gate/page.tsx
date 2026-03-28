@@ -63,7 +63,11 @@ export default function EmailGatePage() {
           }}
         />
 
-        {error && <p data-testid="email-gate-error" className="text-sm text-[#EF4444]">{error}</p>}
+        {error && (
+          <p data-testid="email-gate-error" className="text-sm text-[#EF4444]">
+            {error}
+          </p>
+        )}
 
         <button
           data-testid="email-gate-submit"

@@ -160,7 +160,8 @@ export const onboardingStateSchema = z.object({
   age_range: onboardingDemographicsSchema.shape.age_range.optional(),
   gender: onboardingDemographicsSchema.shape.gender.optional(),
   days_per_week: onboardingScheduleSchema.shape.days_per_week.optional(),
-  session_duration_preference: onboardingScheduleSchema.shape.session_duration_preference.optional(),
+  session_duration_preference:
+    onboardingScheduleSchema.shape.session_duration_preference.optional(),
   work_schedule: onboardingLifestyleSchema.shape.work_schedule.optional(),
   activity_level: onboardingLifestyleSchema.shape.activity_level.optional(),
   obstacle: onboardingLifestyleSchema.shape.obstacle.optional(),
