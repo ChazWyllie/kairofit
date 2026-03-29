@@ -132,28 +132,7 @@ export async function saveProgramToDb(
     throw new Error(`Failed to insert program: ${programError?.message}`)
   }
 
-  // Step 3: resolve all exercise names to IDs in a single batch query.
-  // The AI returns exercise names, not IDs. Rather than N individual lookups
-  // (one per exercise), we collect all unique names upfront and do one OR query.
-  const allExerciseNames = generated.days.flatMap((day) =>
-    day.exercises.map((ex) => ex.exercise_name)
-  )
-  const uniqueNames = [...new Set(allExerciseNames)]
-
-  const exerciseMap = new Map<string, string>() // lower-cased name -> exercise id
-
-  if (uniqueNames.length > 0) {
-    const { data: exercises } = await supabase
-      .from('exercises')
-      .select('id, name')
-      .or(uniqueNames.map((n) => `name.ilike.${n}`).join(','))
-
-    for (const ex of exercises ?? []) {
-      exerciseMap.set(ex.name.toLowerCase(), ex.id)
-    }
-  }
-
-  // Step 4: insert days and batch-insert their exercises
+  // Step 3: insert all program days and exercises
   for (const day of generated.days) {
     const { data: programDay, error: dayError } = await supabase
       .from('program_days')
@@ -174,38 +153,41 @@ export async function saveProgramToDb(
       throw new Error(`Failed to insert program day: ${dayError?.message}`)
     }
 
-    // Build the exercise rows for this day, skipping any names the AI invented
-    const exerciseRows = day.exercises
-      .map((ex, i) => {
-        const exerciseId = exerciseMap.get(ex.exercise_name.toLowerCase())
-        if (!exerciseId) {
-          // workout-validator.ts should have caught this, but be defensive
-          // Truncate name to avoid logging arbitrary AI-generated strings at full length
-          console.error(`saveProgramToDb: exercise not found: ${ex.exercise_name.substring(0, 60)}`)
-          return null
-        }
-        return {
-          program_day_id: programDay.id,
-          exercise_id: exerciseId,
-          user_id: userId,
-          order_index: i,
-          sets: ex.sets,
-          reps_min: ex.reps_min,
-          reps_max: ex.reps_max,
-          rest_seconds: ex.rest_seconds,
-          rpe_target: ex.rpe_target,
-          rationale: ex.rationale,
-          progression_scheme: ex.progression_scheme,
-          modification_note: ex.modification_note,
-        }
-      })
-      .filter((row): row is NonNullable<typeof row> => row !== null)
+    // Resolve exercise names to IDs and insert program_exercises
+    for (const [i, ex] of day.exercises.entries()) {
+      // Look up exercise by name (the AI returns names, not IDs)
+      const { data: exercise } = await supabase
+        .from('exercises')
+        .select('id')
+        .ilike('name', ex.exercise_name)
+        .limit(1)
+        .single()
 
-    if (exerciseRows.length > 0) {
-      const { error: exError } = await supabase.from('program_exercises').insert(exerciseRows)
+      if (!exercise) {
+        // Skip exercises the AI invented that don't exist in the library
+        // workout-validator.ts should have caught this, but be defensive
+        console.error(`saveProgramToDb: exercise not found: ${ex.exercise_name}`)
+        continue
+      }
+
+      const { error: exError } = await supabase.from('program_exercises').insert({
+        program_day_id: programDay.id,
+        exercise_id: exercise.id,
+        user_id: userId,
+        order_index: i,
+        sets: ex.sets,
+        reps_min: ex.reps_min,
+        reps_max: ex.reps_max,
+        rest_seconds: ex.rest_seconds,
+        rpe_target: ex.rpe_target,
+        rationale: ex.rationale,
+        progression_scheme: ex.progression_scheme,
+        modification_note: ex.modification_note,
+      })
+
       if (exError) {
         console.error('saveProgramToDb exercise insert error:', exError.message)
-        // Continue on insert failure - partial program is better than none
+        // Continue on individual exercise failure - partial program is better than none
       }
     }
   }
