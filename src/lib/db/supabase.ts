@@ -1,36 +1,17 @@
 /**
- * Supabase Client Helpers
+ * Supabase Server Client
  *
- * Two patterns depending on context:
- * - createBrowserClient(): for Client Components
- * - createServerClient(): for Server Components and Server Actions
- *
- * Never use createBrowserClient() in a Server Component.
- * Never use createServerClient() in a Client Component.
+ * Server-only module - imports `next/headers` which cannot be bundled
+ * for Client Components. For browser/client usage, import from
+ * '@/lib/db/supabase-browser' instead.
  *
  * The service role client (createServiceRoleClient) is for Edge Functions only.
  * Never expose the service role key to the browser.
  */
 
-import { createBrowserClient as _createBrowserClient } from '@supabase/ssr'
 import { createServerClient as _createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import type { Database } from '@/types/supabase.generated'
-
-// ============================================================
-// BROWSER CLIENT (Client Components)
-// ============================================================
-
-/**
- * Use in Client Components for real-time subscriptions and reads.
- * Reads are subject to RLS - users only see their own data.
- */
-export function createBrowserClient() {
-  return _createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-}
 
 // ============================================================
 // SERVER CLIENT (Server Components + Server Actions)
