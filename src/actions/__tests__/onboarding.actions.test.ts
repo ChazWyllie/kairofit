@@ -44,7 +44,11 @@ import { checkRateLimit } from '@/lib/utils/rate-limit'
 import { generateProgram } from '@/lib/ai/workout-generator'
 import { getProfileForGeneration, saveOnboardingData } from '@/lib/db/queries/profiles'
 import { saveProgramToDb } from '@/lib/db/queries/programs'
-import { createAccountAction, generateProgramAction, persistOnboardingState } from '../onboarding.actions'
+import {
+  createAccountAction,
+  generateProgramAction,
+  persistOnboardingState,
+} from '../onboarding.actions'
 import type { UserProfile, GeneratedProgram, Program, OnboardingState } from '@/types'
 
 // ---------------------------------------------------------------------------
