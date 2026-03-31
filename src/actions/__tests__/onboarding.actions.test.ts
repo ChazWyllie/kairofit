@@ -42,16 +42,50 @@ vi.mock('next/headers', () => ({
 import { createServerClient } from '@/lib/db/supabase'
 import { checkRateLimit } from '@/lib/utils/rate-limit'
 import { generateProgram } from '@/lib/ai/workout-generator'
-import { getProfileForGeneration } from '@/lib/db/queries/profiles'
+import { getProfileForGeneration, saveOnboardingData } from '@/lib/db/queries/profiles'
 import { saveProgramToDb } from '@/lib/db/queries/programs'
-import { createAccountAction, generateProgramAction } from '../onboarding.actions'
-import type { UserProfile, GeneratedProgram, Program } from '@/types'
+import {
+  createAccountAction,
+  generateProgramAction,
+  persistOnboardingState,
+} from '../onboarding.actions'
+import type { UserProfile, GeneratedProgram, Program, OnboardingState } from '@/types'
 
 // ---------------------------------------------------------------------------
 // Test fixtures
 // ---------------------------------------------------------------------------
 
 const MOCK_USER = { id: 'user-123', email: 'test@example.com' }
+
+const MOCK_ONBOARDING_STATE: OnboardingState = {
+  current_step: 23,
+  total_steps: 23,
+  goal: 'muscle',
+  experience_level: 3,
+  training_recency_months: 2,
+  age_range: '24-29',
+  gender: 'male',
+  days_per_week: 4,
+  session_duration_preference: '45-60',
+  obstacle: 'time',
+  work_schedule: '9-5',
+  activity_level: 'sedentary',
+  injuries: [],
+  height_cm: 180,
+  weight_kg: 80,
+  body_fat_pct: null,
+  why_now: 'new_start',
+  psych_scores: [4, 3, 2, 5],
+  archetype: 'system_builder',
+  email: 'test@example.com',
+  auth_ready: true,
+  equipment: ['dumbbells', 'barbells'],
+  split_preference: 'upper_lower',
+  workout_time_preference: 'morning',
+  other_training: [],
+  sleep_hours_range: '7-8',
+  units: 'metric',
+}
 
 const MOCK_PROFILE: Partial<UserProfile> = {
   id: 'user-123',
@@ -253,5 +287,60 @@ describe('generateProgramAction', () => {
     const result = await generateProgramAction({ confirm_generation: true })
 
     expect(result?.serverError).toBeDefined()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// persistOnboardingState
+// ---------------------------------------------------------------------------
+
+describe('persistOnboardingState', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.mocked(saveOnboardingData).mockResolvedValue(undefined)
+  })
+
+  it('calls saveOnboardingData with the authenticated user id and state', async () => {
+    vi.mocked(createServerClient).mockResolvedValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({
+          data: { user: MOCK_USER },
+          error: null,
+        }),
+      },
+    } as never)
+
+    await persistOnboardingState(MOCK_ONBOARDING_STATE)
+
+    expect(vi.mocked(saveOnboardingData)).toHaveBeenCalledWith('user-123', MOCK_ONBOARDING_STATE)
+  })
+
+  it('throws Authentication required when there is no session', async () => {
+    vi.mocked(createServerClient).mockResolvedValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({
+          data: { user: null },
+          error: new Error('No session'),
+        }),
+      },
+    } as never)
+
+    await expect(persistOnboardingState(MOCK_ONBOARDING_STATE)).rejects.toThrow(
+      'Authentication required'
+    )
+  })
+
+  it('propagates errors thrown by saveOnboardingData', async () => {
+    vi.mocked(createServerClient).mockResolvedValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({
+          data: { user: MOCK_USER },
+          error: null,
+        }),
+      },
+    } as never)
+    vi.mocked(saveOnboardingData).mockRejectedValue(new Error('DB write failed'))
+
+    await expect(persistOnboardingState(MOCK_ONBOARDING_STATE)).rejects.toThrow('DB write failed')
   })
 })
