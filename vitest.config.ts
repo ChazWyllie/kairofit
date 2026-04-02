@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-oxc'
 import { resolve } from 'path'
 
 export default defineConfig({
@@ -10,10 +10,11 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    exclude: [],
     coverage: {
       provider: 'v8',
-      include: ['src/lib/**/*.ts'],
-      exclude: ['src/lib/**/*.test.ts', 'src/types/**'],
+      include: ['src/lib/**/*.ts', 'src/components/**/*.tsx'],
+      exclude: ['src/lib/**/*.test.ts', 'src/components/**/*.test.tsx', 'src/types/**'],
     },
   },
   resolve: {

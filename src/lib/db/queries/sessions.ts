@@ -6,7 +6,7 @@
  */
 
 import { createServerClient } from '@/lib/db/supabase'
-import type { WorkoutSession, WorkoutSet } from '@/types'
+import type { WorkoutSession, WorkoutSet, ProgramDay } from '@/types'
 
 /**
  * Get a single workout session with all its sets.
@@ -184,4 +184,104 @@ export async function getWeeklyVolume(userId: string): Promise<number> {
   return (data ?? []).reduce((total, set) => {
     return total + (set.weight_kg ?? 0) * set.reps_completed
   }, 0)
+}
+
+/**
+ * Get the next unlogged program day for the current week.
+ *
+ * Logic:
+ * 1. Fetch all program_days for programId where week_number = currentWeek, ordered by day_number
+ * 2. Fetch all completed workout_sessions for userId where program_id = programId
+ *    and started_at >= start of current ISO week
+ * 3. Return the first program_day whose id is NOT in the completed sessions' program_day_id set
+ * 4. Return null if all days are logged or no days exist
+ */
+export async function getNextProgramDay(
+  userId: string,
+  programId: string,
+  currentWeek: number
+): Promise<ProgramDay | null> {
+  const supabase = await createServerClient()
+
+  // Normalize week 0 to week 1
+  const week = currentWeek > 0 ? currentWeek : 1
+
+  // Fetch all program days for this week
+  const { data: programDays, error: daysError } = await supabase
+    .from('program_days')
+    .select(
+      `
+      id, program_id, day_number, week_number, name, focus_muscles,
+      session_type, estimated_duration_minutes,
+      program_exercises (
+        id, program_day_id, exercise_id, user_id, order_index,
+        superset_group, sets, reps_min, reps_max, rest_seconds,
+        rpe_target, rir_target, rationale, progression_scheme,
+        modification_note, is_flagged_for_injury,
+        exercises (
+          id, name, slug, primary_muscles, secondary_muscles,
+          movement_pattern, is_compound, equipment_required,
+          research_rationale, form_cues, contraindicated_for
+        )
+      )
+    `
+    )
+    .eq('program_id', programId)
+    .eq('week_number', week)
+    .order('day_number')
+
+  if (daysError) {
+    console.error('getNextProgramDay days error:', daysError.message)
+    return null
+  }
+
+  if (!programDays || programDays.length === 0) {
+    return null
+  }
+
+  // Start of current ISO week (Monday)
+  const now = new Date()
+  const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1 // 0=Mon, 6=Sun
+  const weekStart = new Date(now)
+  weekStart.setDate(now.getDate() - dayOfWeek)
+  weekStart.setHours(0, 0, 0, 0)
+
+  // Fetch completed sessions for this program this week
+  const { data: sessions, error: sessionsError } = await supabase
+    .from('workout_sessions')
+    .select('id, program_day_id')
+    .eq('user_id', userId)
+    .eq('program_id', programId)
+    .eq('status', 'completed')
+    .gte('started_at', weekStart.toISOString())
+
+  if (sessionsError) {
+    console.error('getNextProgramDay sessions error:', sessionsError.message)
+    return null
+  }
+
+  // Build a set of logged program_day IDs
+  const loggedDayIds = new Set((sessions ?? []).map((s) => s.program_day_id))
+
+  // Return the first unlogged day
+  for (const day of programDays) {
+    if (!loggedDayIds.has(day.id)) {
+      // Map response to ProgramDay type
+      const mapped: ProgramDay = {
+        id: day.id,
+        program_id: day.program_id,
+        day_number: day.day_number,
+        week_number: day.week_number ?? 1,
+        name: day.name,
+        focus_muscles: day.focus_muscles ?? [],
+        session_type: (day.session_type as ProgramDay['session_type']) ?? null,
+        estimated_duration_minutes: day.estimated_duration_minutes,
+        exercises: day.program_exercises as unknown as ProgramDay['exercises'],
+      }
+      return mapped
+    }
+  }
+
+  // All days are logged
+  return null
 }
