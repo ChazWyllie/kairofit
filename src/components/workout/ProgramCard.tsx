@@ -36,7 +36,9 @@ export function ProgramCard({ program, archetype }: ProgramCardProps) {
       </div>
 
       <div className="flex flex-wrap items-center gap-4 text-sm text-[#A1A19E]">
-        <span>Week {program.current_week} of {program.weeks_duration}</span>
+        <span>
+          Week {program.current_week} of {program.weeks_duration}
+        </span>
         {program.days_per_week && <span>{program.days_per_week} days/week</span>}
       </div>
     </div>

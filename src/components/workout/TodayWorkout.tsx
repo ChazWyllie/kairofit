@@ -21,7 +21,10 @@ export function TodayWorkout({ day, weeksComplete }: TodayWorkoutProps) {
           {day.focus_muscles.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-2">
               {day.focus_muscles.map((muscle) => (
-                <span key={muscle} className="rounded-full bg-[#1A1A1F] px-2.5 py-1 text-xs text-[#A1A19E]">
+                <span
+                  key={muscle}
+                  className="rounded-full bg-[#1A1A1F] px-2.5 py-1 text-xs text-[#A1A19E]"
+                >
                   {muscle}
                 </span>
               ))}
@@ -31,10 +34,7 @@ export function TodayWorkout({ day, weeksComplete }: TodayWorkoutProps) {
 
         <div className="space-y-2">
           {day.exercises.map((exercise) => (
-            <div
-              key={exercise.id}
-              className="rounded-lg border border-[#1A1A1F] bg-[#0A0A0B] p-4"
-            >
+            <div key={exercise.id} className="rounded-lg border border-[#1A1A1F] bg-[#0A0A0B] p-4">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="font-medium text-[#F5F5F4]">{exercise.exercise.name}</p>
@@ -52,7 +52,7 @@ export function TodayWorkout({ day, weeksComplete }: TodayWorkoutProps) {
         </div>
 
         <button
-          className="w-full rounded-lg bg-[#6366F1] py-3 font-medium text-white opacity-50 cursor-not-allowed"
+          className="w-full cursor-not-allowed rounded-lg bg-[#6366F1] py-3 font-medium text-white opacity-50"
           disabled
           aria-disabled="true"
           title="Workout logging coming soon"

@@ -21,9 +21,7 @@ export function StatsStrip({ streak, weeklyVolumeKg }: StatsStripProps) {
       </div>
 
       <div className="rounded-lg border border-[#1A1A1F] bg-[#111113] p-4">
-        <p className="text-2xl font-semibold text-[#F5F5F4]">
-          {weeklyVolumeKg.toLocaleString()}
-        </p>
+        <p className="text-2xl font-semibold text-[#F5F5F4]">{weeklyVolumeKg.toLocaleString()}</p>
         <p className="mt-1 text-sm text-[#6B6B68]">kg this week</p>
       </div>
     </div>
