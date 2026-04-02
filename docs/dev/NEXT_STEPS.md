@@ -219,23 +219,23 @@ All analytics use `after()` so they never delay the user response.
 
 ## Key files reference
 
-| File | Status | Purpose |
-| ---- | ------ | ------- |
-| `src/lib/ai/workout-generator.ts` | Complete | AI generation with resilience chain |
-| `src/lib/ai/workout-validator.ts` | Complete | Post-generation constraint enforcement |
-| `src/lib/ai/safety-filter.ts` | Complete | Input safety check before every Claude call |
-| `src/lib/utils/progressive-overload.ts` | Complete | Deterministic overload calculations |
-| `src/lib/utils/recovery-model.ts` | Complete | SRA curve per muscle group |
-| `src/lib/db/supabase.ts` | Complete | Browser + server Supabase clients |
-| `src/middleware.ts` | Complete | Auth route protection |
-| `src/stores/onboarding.store.ts` | Complete | Onboarding quiz state with localStorage persist |
-| `src/stores/workout.store.ts` | Complete | Active workout state |
-| `src/actions/onboarding.actions.ts` | Complete | OTP send, persist onboarding state |
-| `src/actions/program.actions.ts` | Complete (stubs for adjust/swap) | AI program generation |
-| `src/actions/workout.actions.ts` | Stubs | Set logging, session management |
-| `src/app/onboarding/` | Complete | All 23 screens |
-| `src/app/(app)/dashboard/` | Minimal | Home screen placeholder |
-| `supabase/migrations/001_initial_schema.sql` | Complete | Full DB schema + RLS + triggers |
+| File                                         | Status                           | Purpose                                         |
+| -------------------------------------------- | -------------------------------- | ----------------------------------------------- |
+| `src/lib/ai/workout-generator.ts`            | Complete                         | AI generation with resilience chain             |
+| `src/lib/ai/workout-validator.ts`            | Complete                         | Post-generation constraint enforcement          |
+| `src/lib/ai/safety-filter.ts`                | Complete                         | Input safety check before every Claude call     |
+| `src/lib/utils/progressive-overload.ts`      | Complete                         | Deterministic overload calculations             |
+| `src/lib/utils/recovery-model.ts`            | Complete                         | SRA curve per muscle group                      |
+| `src/lib/db/supabase.ts`                     | Complete                         | Browser + server Supabase clients               |
+| `src/middleware.ts`                          | Complete                         | Auth route protection                           |
+| `src/stores/onboarding.store.ts`             | Complete                         | Onboarding quiz state with localStorage persist |
+| `src/stores/workout.store.ts`                | Complete                         | Active workout state                            |
+| `src/actions/onboarding.actions.ts`          | Complete                         | OTP send, persist onboarding state              |
+| `src/actions/program.actions.ts`             | Complete (stubs for adjust/swap) | AI program generation                           |
+| `src/actions/workout.actions.ts`             | Stubs                            | Set logging, session management                 |
+| `src/app/onboarding/`                        | Complete                         | All 23 screens                                  |
+| `src/app/(app)/dashboard/`                   | Minimal                          | Home screen placeholder                         |
+| `supabase/migrations/001_initial_schema.sql` | Complete                         | Full DB schema + RLS + triggers                 |
 
 ---
 
