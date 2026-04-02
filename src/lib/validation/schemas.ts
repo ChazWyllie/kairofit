@@ -103,7 +103,7 @@ export const onboardingBodyCompositionSchema = z.object({
 
 export const onboardingLifestyleSchema = z.object({
   work_schedule: z.enum(['9-5', 'shift', 'flexible', 'retired']),
-  activity_level: z.enum(['sedentary', 'active', 'mixed']),
+  activity_level: z.enum(['sedentary', 'active', 'mixed', 'variable']),
   obstacle: z.string().max(100),
 })
 

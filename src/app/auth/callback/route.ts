@@ -54,9 +54,19 @@ export async function GET(request: NextRequest) {
 
   // Session is now set via cookies. Determine where to send the user.
 
-  // If a specific redirect was requested (e.g. from middleware), honour it
-  if (redirectTo && redirectTo.startsWith('/')) {
-    return NextResponse.redirect(new URL(redirectTo, request.url))
+  // If a specific redirect was requested (e.g. from middleware), honour it.
+  // Validate it is a same-origin path to prevent open redirect via protocol-relative URLs
+  // (e.g. //attacker.com would pass startsWith('/') but resolve to a different origin).
+  if (redirectTo) {
+    try {
+      const requestOrigin = new URL(request.url).origin
+      const parsed = new URL(redirectTo, request.url)
+      if (parsed.origin === requestOrigin) {
+        return NextResponse.redirect(parsed)
+      }
+    } catch {
+      // Invalid URL - fall through to default routing
+    }
   }
 
   // Otherwise, check if onboarding is complete to decide the destination
