@@ -51,7 +51,7 @@ const MOCK_FULL_PROGRAM: Program = {
 }
 
 const DEFAULT_META = {
-  generation_model: 'claude-sonnet-4-6',
+  generation_model: 'ai_sonnet',
   generation_prompt_version: '1.0',
   experience_level_target: 3,
 }
@@ -164,17 +164,19 @@ function createSupabaseMock(config: SupabaseMockConfig = {}) {
       }
 
       if (table === 'exercises') {
-        // Batch OR query: .select('id, name').or('name.ilike.X,name.ilike.Y')
-        // Returns an array of matching exercises (empty when exerciseLookupData is null)
-        const exerciseRows = exerciseLookupData
-          ? [
-              { id: exerciseLookupData.id, name: 'Bench Press' },
-              { id: exerciseLookupData.id, name: 'Dumbbell Row' },
-            ]
-          : []
+        // Batch lookup: .select('id, name').or(orFilter)
         return {
           select: vi.fn(() => ({
-            or: vi.fn(() => Promise.resolve({ data: exerciseRows })),
+            or: vi.fn(() =>
+              Promise.resolve({
+                data: exerciseLookupData
+                  ? [
+                      { id: exerciseLookupData.id, name: 'bench press' },
+                      { id: exerciseLookupData.id, name: 'dumbbell row' },
+                    ]
+                  : [],
+              })
+            ),
           })),
         }
       }

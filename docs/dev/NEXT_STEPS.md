@@ -1,224 +1,263 @@
 # KairoFit - Next Steps
 
-## What was just built (onboarding screens 10-23)
-
-All 23 onboarding quiz screens are complete. TypeScript passes with 0 errors.
-
-Screens built:
-
-- Step 10: `body-composition` - height + weight + optional body fat (dual_field)
-- Step 11: `why-now` - 6 motivation options (single_select auto_advance)
-- Steps 12-15: `psych-1` through `psych-4` - 5-point Likert scale (single_select auto_advance)
-- Step 16: `archetype-reveal` - computes archetype from psych scores, shows card (continue_only)
-- Step 17: `email-gate` - email input, disabled until valid format (text_input)
-- Step 18: `equipment` - 9 equipment options, requires 1+ selection (multi_select)
-- Step 19: `split-preference` - 4 training split options (single_select auto_advance)
-- Step 20: `workout-time` - 5 time preferences with descriptions (single_select auto_advance)
-- Step 21: `other-training` - 7 options with 'none' mutual exclusion (multi_select)
-- Step 22: `sleep` - 4 sleep range options (single_select auto_advance)
-- Step 23: `program-building` - loading stub with 5s auth_ready check
-
-The email-gate (step 17) and program-building (step 23) have TODOs waiting for server actions.
+_Last updated: 2026-04-01. Reflects state after Phase 2 (auth + onboarding-to-dashboard) completion._
 
 ---
 
-## What to build next: Auth + Onboarding-to-DB Flow
+## What is built and working
 
-The goal is a working end-to-end path:
-**quiz complete -> create account -> AI generates program -> dashboard**
+### Foundation (Phase 0+0.5)
 
-### Problem: Zustand store is in-memory
+- Full DB schema + RLS + triggers (`supabase/migrations/001_initial_schema.sql`)
+- Supabase client split: server (`createServerClient`) + browser (`createBrowserClient`)
+- Query layer: `src/lib/db/queries/` - profiles, programs, exercises, sessions, recovery
+- Action stubs: `workout.actions.ts`, `program.actions.ts`, `profile.actions.ts`
+- App shell: layout with `BottomNav`, placeholder dashboard, middleware route protection
+- Zustand stores: `onboarding.store.ts` (with `persist` middleware), `workout.store.ts`
 
-When a user clicks a magic link email, the browser reloads and wipes the Zustand store.
-Fix: add `persist` middleware to `src/stores/onboarding.store.ts`.
+### Auth infrastructure (Phase 1)
 
-```typescript
-// src/stores/onboarding.store.ts
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware' // add this
+- `src/app/auth/callback/route.ts` - exchanges magic link code for session, redirects
+- `src/app/(auth)/login/page.tsx` - magic link login form with `createAccountAction`
+- `src/app/(auth)/signup/page.tsx` - signup form (reuses auth flow)
+- `src/middleware.ts` - protects all `(app)` routes, redirects unauthenticated to `/login`
 
-export const useOnboardingStore = create<OnboardingState & OnboardingActions>()(
-  persist(
-    // wrap with persist
-    (set) => ({ ...initialState, ...actions }),
-    { name: 'kairofit-onboarding' } // localStorage key
-  )
-)
-```
+### Onboarding-to-dashboard flow (Phase 2)
 
-### Files to create
+- All 23 onboarding quiz screens complete (Steps 1-23)
+- Step 17 (`email-gate`) - triggers `createAccountAction`, sends OTP magic link
+- Step 23 (`program-building`) - awaits `auth_ready`, calls `persistOnboardingState` + `generateProgramAction`, redirects to `/dashboard`
+- `src/actions/onboarding.actions.ts` - `createAccountAction` (OTP with origin allowlist), `persistOnboardingState` (Zod-validated, writes to profiles)
+- `src/actions/program.actions.ts` - `generateProgramAction` (AI generation, rate-limited, resilience chain)
+- `src/lib/ai/workout-generator.ts` - full AI generation with Sonnet/Haiku fallback + static fallback
+- `src/lib/ai/workout-validator.ts` - post-generation constraint enforcement (volume caps, injuries, rep ranges)
+- `src/app/(app)/dashboard/page.tsx` - minimal dashboard showing active program
 
-#### 1. `src/app/auth/callback/route.ts` - Auth callback route
+### Security hardening
 
-Handles the magic link redirect after email verification:
+- `createAccountAction` origin allowlist prevents OTP token-hijacking via crafted Origin header
+- `onboardingStateSchema.parse(state)` validates all client-supplied state at DB write boundary
+- RLS enforced on all tables; no service role key exposed to client
 
-```typescript
-import { createServerClient } from '@/lib/db/supabase'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { cookies } from 'next/headers'
+### Test coverage (73/73 passing)
 
-export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/onboarding/program-building'
-
-  if (code) {
-    const cookieStore = cookies()
-    const supabase = createServerClient(cookieStore)
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
-    }
-  }
-
-  return NextResponse.redirect(`${origin}/auth/login?error=auth_failed`)
-}
-```
-
-#### 2. `src/actions/onboarding.actions.ts` - Three server actions
-
-Uses `next-safe-action` v7 (same pattern as `src/actions/workout.actions.ts`).
-
-**`createAccountAction`** - sends OTP magic link:
-
-- Input: `{ email: string }` validated with `onboardingEmailSchema` (already in schemas.ts)
-- Rate limit with `RATE_LIMIT_KEYS.AUTH`
-- `supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: origin + '/auth/callback' } })`
-- Return `{ success: true }`
-- DB trigger `handle_new_user()` auto-creates blank profiles row on first sign-in
-
-**`saveOnboardingProfileAction`** - saves all phase 1-5 data to profiles table:
-
-- Input: full onboarding state fields (goal, experience_level, archetype, equipment, injuries, etc.)
-- Requires auth - `supabase.auth.getUser()`
-- `UPDATE profiles SET ... WHERE id = user.id`
-- Set `onboarding_completed_at = NOW()`
-
-**`generateProgramAction`** - runs AI generation and saves program:
-
-- No input (reads profile from DB)
-- Requires auth
-- Rate limit with `RATE_LIMIT_KEYS.AI_GENERATE`
-- Call `generateProgram(profile)` from `src/lib/ai/workout-generator.ts` (already complete)
-- Insert generated program into `programs`, `program_days`, `program_exercises` tables
-- Return `{ programId: string }`
-
-#### 3. `src/lib/db/queries/profiles.ts` - Profile queries
-
-```typescript
-export async function getProfileForGeneration(userId: string): Promise<UserProfile>
-```
-
-Loads full profile for the AI generator. Select specific columns - never `select('*')`.
-
-Also extend `src/lib/db/queries/programs.ts` with `saveProgramToDb(userId, program)`.
-
-### Files to modify
-
-#### `src/app/onboarding/email-gate/page.tsx`
-
-Wire `createAccountAction` into the submit handler:
-
-```typescript
-import { createAccountAction } from '@/actions/onboarding.actions'
-import { useTransition } from 'react'
-
-const [isPending, startTransition] = useTransition()
-
-function handleSubmit() {
-  setEmail(localEmail)
-  setAuthReady(false)
-  startTransition(async () => {
-    const result = await createAccountAction({ email: localEmail })
-    if (result?.data?.success) {
-      setAuthReady(true)
-    }
-    nextStep()
-    router.push('/onboarding/equipment')
-  })
-}
-```
-
-Disable the button while `isPending`.
-
-#### `src/app/onboarding/program-building/page.tsx`
-
-Replace the stub setTimeout with real action calls:
-
-```typescript
-useEffect(() => {
-  if (phase !== 'generating') return
-
-  async function run() {
-    await saveOnboardingProfileAction({ goal, experience_level, archetype, ... })
-    const result = await generateProgramAction()
-    if (result?.data?.programId) {
-      router.push('/dashboard')
-    }
-  }
-  run()
-}, [phase])
-```
-
-#### `src/app/(app)/dashboard/page.tsx` - create minimal dashboard
-
-- Server component
-- `const program = await getActiveProgram(userId)` (already implemented)
-- Show program name + day list
-- If no program yet: spinner + "Program is being generated..."
-
-#### `src/app/(auth)/login/page.tsx` - wire OTP form
-
-Replace stub with working magic link form:
-
-- Email input
-- Submit calls `createAccountAction({ email })`
-- Show "Check your email" confirmation state
+- `src/lib/db/queries/__tests__/programs.test.ts` - saveProgramToDb coverage
+- `src/actions/__tests__/onboarding.actions.test.ts` - createAccountAction + persistOnboardingState
+- `src/stores/__tests__/onboarding.store.test.ts` - store state transitions
+- `src/lib/ai/__tests__/workout-validator.test.ts` - constraint enforcement
+- `src/lib/utils/__tests__/progressive-overload.test.ts` - overload calculations
 
 ---
 
-## How to run on Mac
+## What to build next
 
-```bash
-# Clone and install
-git clone <repo-url>
-cd kairofit
-npm install
+### Phase 3: Dashboard + Active Program UI
 
-# Set up environment
-cp .env.example .env.local
-# Fill in: SUPABASE_URL, SUPABASE_ANON_KEY, ANTHROPIC_API_KEY
-# Also needed: UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
+The current dashboard is a minimal placeholder. Build the real home screen.
 
-# Set up Supabase
-npx supabase login
-npx supabase link --project-ref YOUR_PROJECT_REF
-npm run db:push        # apply schema + triggers
-npm run db:types       # generate TypeScript types  <- REQUIRED before dev
-npm run db:seed        # seed exercise library
+**Goal:** User opens app, sees today's workout and their active program at a glance.
 
-# Run
-npm run dev            # localhost:3000
-```
+**Files to create/modify:**
 
-**Important**: `npm run db:types` MUST run after `db:push`. Skipping it causes a TypeScript
-missing-module error that looks like a setup failure but isn't.
+- `src/app/(app)/dashboard/page.tsx` - server component, loads active program
+- `src/components/workout/ProgramCard.tsx` - shows program name, archetype, week X/Y
+- `src/components/workout/TodayWorkout.tsx` - today's session with exercise list
+- `src/components/charts/ProgressChart.tsx` - lightweight weekly volume chart
+
+**Data needed:**
+
+- `getActiveProgram(userId)` - already in `src/lib/db/queries/programs.ts`
+- `getRecentSessions(userId, limit)` - add to `src/lib/db/queries/sessions.ts`
+
+**Acceptance criteria:**
+
+- [ ] Dashboard loads active program name, week number, days
+- [ ] Today's session shows exercise list with sets/reps/weight targets
+- [ ] Empty state if no program exists ("Generating your program...")
+- [ ] TypeScript clean, 80%+ test coverage
+
+---
+
+### Phase 4: Workout Logging (Set Logger)
+
+The core revenue-driving feature. Users log sets in real time.
+
+**Goal:** User can start a session, log each set with reps/weight, rest between sets, and complete the session.
+
+**Files to create:**
+
+- `src/app/(app)/workout/[sessionId]/page.tsx` - active workout view
+- `src/components/workout/SetLogger.tsx` - +/- controls for reps and weight
+- `src/components/workout/RestTimer.tsx` - countdown timer after each set
+- `src/components/workout/ExerciseCard.tsx` - shows target, logs actual
+
+**Actions to implement** (stubs exist in `workout.actions.ts`):
+
+- `startSessionAction` - creates session row, returns sessionId
+- `logSetAction` - inserts set into `workout_sets` with reps/weight/rpe
+- `completeSessionAction` - marks session complete, triggers `after()` hooks
+
+**Offline-first:** See `skills/offline-sync-pattern/` - sets queue to IndexedDB first, sync in background.
+
+**Acceptance criteria:**
+
+- [ ] Start workout from dashboard - session created in DB
+- [ ] Log sets with reps and weight - persisted (online) or queued (offline)
+- [ ] Rest timer countdown with haptic feedback on mobile
+- [ ] Complete workout - session marked done, redirect to post-workout
+
+---
+
+### Phase 5: Post-Workout Experience
+
+The four-step post-workout sequence defined in CLAUDE.md.
+
+**Goal:** After completing a session, show streak animation, recovery heatmap update, Kiro debrief, and optional share card.
+
+**Files to create:**
+
+- `src/app/(app)/workout/complete/page.tsx` - post-workout flow container
+- `src/components/workout/StreakAnimation.tsx` - streak + milestone badge
+- `src/components/charts/RecoveryHeatmap.tsx` - muscle recovery visualization
+- `src/components/ai/KiroDebrief.tsx` - streaming inline AI debrief (not a popup)
+- `src/components/social/ShareCard.tsx` - shareable workout card (on demand)
+
+**Sequence:**
+
+1. Streak + milestone animation (Framer Motion, must be `'use client'`)
+2. Recovery heatmap update (SRA curve - see `src/lib/utils/recovery-model.ts`)
+3. Kiro AI debrief (streaming via Vercel AI SDK, inline text)
+4. Share card (on demand only - see `src/lib/utils/workout-share.ts`)
+
+**Kiro voice rules:** Direct, specific numbers, no motivational fluff. See `skills/kiro-output-auditor/`.
+
+---
+
+### Phase 6: Progressive Overload + Adaptive Programming
+
+The intelligence that makes KairoFit defensible vs. FitBod.
+
+**Goal:** Program automatically adjusts based on logged performance. Next session targets are personalized.
+
+**Files to create/modify:**
+
+- `src/lib/utils/progressive-overload.ts` - deterministic overload calculations (exists, verify complete)
+- `src/lib/db/queries/sessions.ts` - add `getRecentPerformance(userId, exerciseId)` query
+- `src/actions/program.actions.ts` - add `adjustProgramAction` (stub exists)
+
+**Logic:**
+
+- If user hit all reps at top of range for 2+ sessions: increase weight by micro-increment
+- If user missed bottom of rep range: hold weight, flag for review
+- Deload trigger: 4 weeks of linear progression or explicit fatigue signal
+
+All calculations in `src/lib/utils/` - deterministic code owns programming logic, Kiro owns language.
+
+---
+
+### Phase 7: Testing Layers 2-5
+
+CLAUDE.md defines a 5-layer testing roadmap. Only Layer 1 exists.
+
+**Layer 2 - Property-based testing:**
+
+- Install `fast-check`
+- `src/lib/ai/workout-validator.test.ts` - generate random `UserProfile` objects, verify invariants
+- Invariants: no program exceeds volume caps, no contraindicated exercises, all rest periods valid
+
+**Layer 3 - LLM-as-judge:**
+
+- `src/lib/ai/quality-judge.ts` - secondary Haiku call evaluates generation quality
+- 5 dimensions: safety, scientific accuracy, personalization, Kiro voice, completeness
+- Threshold: 4/5 minimum to accept
+
+**Layer 4 - Snapshot regression:**
+
+- `src/lib/ai/__tests__/golden-profiles/` - 50 expert-validated profiles
+- Run generation against each, verify output is within acceptable deviation
+
+**Layer 5 - A/B production:**
+
+- PostHog `WORKOUT_COMPLETED` / `WORKOUT_STARTED` ratio per prompt version
+- See `skills/posthog-event-taxonomy/` for event naming
+
+---
+
+### Phase 8: Analytics + PostHog
+
+**Goal:** Instrument all critical user events before revenue launch.
+
+**Events to implement** (see `skills/posthog-event-taxonomy/` for exact names):
+
+- `ONBOARDING_STEP_COMPLETED` - with step name + archetype at reveal
+- `PROGRAM_GENERATED` - with generation_model, experience_level
+- `WORKOUT_STARTED` - with program_id, session_day_number
+- `SET_LOGGED` - with exercise_name, reps, weight
+- `WORKOUT_COMPLETED` - with session_duration, total_sets
+- `KIRO_DEBRIEF_VIEWED` - with session_id
+
+All analytics use `after()` so they never delay the user response.
+
+---
+
+### Phase 9: PWA + Offline
+
+**Goal:** App installs to home screen, works offline during workouts.
+
+**Already configured:** `@serwist/next` in `next.config.ts` (NOT `next-pwa`).
+
+**To implement:**
+
+- `src/lib/offline/db.ts` - Dexie.js schema for queued sets (see `skills/offline-sync-pattern/`)
+- `src/lib/offline/sync.ts` - background sync queue with retry logic
+- Service worker caches: exercise library, active program, static assets
+- Offline banner component when network is unavailable
+
+**Key constraint:** `framer-motion` components must be `'use client'`. LazyMotion with `domAnimation` bundle reduces bundle size.
 
 ---
 
 ## Key files reference
 
-| File                                         | Status                   | Purpose                                          |
-| -------------------------------------------- | ------------------------ | ------------------------------------------------ |
-| `src/lib/ai/workout-generator.ts`            | Complete                 | AI program generation with full resilience chain |
-| `src/lib/ai/workout-validator.ts`            | Complete                 | Post-generation constraint enforcement           |
-| `src/lib/utils/progressive-overload.ts`      | Complete                 | Deterministic overload calculations              |
-| `src/lib/db/supabase.ts`                     | Complete                 | Browser + server Supabase clients                |
-| `src/middleware.ts`                          | Complete                 | Auth route protection                            |
-| `src/stores/onboarding.store.ts`             | Complete (needs persist) | All onboarding quiz state                        |
-| `src/actions/workout.actions.ts`             | Complete                 | Log set, start/complete sessions                 |
-| `src/actions/onboarding.actions.ts`          | TODO                     | Create account, save profile, generate program   |
-| `src/app/onboarding/`                        | Complete                 | All 23 screens                                   |
-| `src/app/(app)/dashboard/`                   | TODO                     | Home screen after login                          |
-| `supabase/migrations/001_initial_schema.sql` | Complete                 | Full DB schema + RLS + triggers                  |
+| File                                         | Status                           | Purpose                                         |
+| -------------------------------------------- | -------------------------------- | ----------------------------------------------- |
+| `src/lib/ai/workout-generator.ts`            | Complete                         | AI generation with resilience chain             |
+| `src/lib/ai/workout-validator.ts`            | Complete                         | Post-generation constraint enforcement          |
+| `src/lib/ai/safety-filter.ts`                | Complete                         | Input safety check before every Claude call     |
+| `src/lib/utils/progressive-overload.ts`      | Complete                         | Deterministic overload calculations             |
+| `src/lib/utils/recovery-model.ts`            | Complete                         | SRA curve per muscle group                      |
+| `src/lib/db/supabase.ts`                     | Complete                         | Browser + server Supabase clients               |
+| `src/middleware.ts`                          | Complete                         | Auth route protection                           |
+| `src/stores/onboarding.store.ts`             | Complete                         | Onboarding quiz state with localStorage persist |
+| `src/stores/workout.store.ts`                | Complete                         | Active workout state                            |
+| `src/actions/onboarding.actions.ts`          | Complete                         | OTP send, persist onboarding state              |
+| `src/actions/program.actions.ts`             | Complete (stubs for adjust/swap) | AI program generation                           |
+| `src/actions/workout.actions.ts`             | Stubs                            | Set logging, session management                 |
+| `src/app/onboarding/`                        | Complete                         | All 23 screens                                  |
+| `src/app/(app)/dashboard/`                   | Minimal                          | Home screen placeholder                         |
+| `supabase/migrations/001_initial_schema.sql` | Complete                         | Full DB schema + RLS + triggers                 |
+
+---
+
+## How to run locally
+
+```bash
+git clone <repo-url>
+cd kairofit
+npm install
+
+cp .env.example .env.local
+# Required: SUPABASE_URL, SUPABASE_ANON_KEY, ANTHROPIC_API_KEY
+# Required: UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
+# Required: NEXT_PUBLIC_APP_URL (e.g. http://localhost:3000)
+
+npx supabase login
+npx supabase link --project-ref YOUR_PROJECT_REF
+npm run db:push        # apply schema + triggers
+npm run db:types       # generate TypeScript types <- REQUIRED before dev
+npm run db:seed        # seed exercise library
+
+npm run dev            # localhost:3000
+```
+
+`npm run db:types` MUST run after `db:push`. Skipping it causes a TypeScript missing-module error.
