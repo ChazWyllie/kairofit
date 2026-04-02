@@ -7,7 +7,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getNextProgramDay } from '../sessions'
-import type { ProgramDay } from '@/types'
+import type { ProgramDay, ProgramExercise, SessionType } from '@/types'
 
 // Mock the Supabase client
 vi.mock('@/lib/db/supabase', () => ({
@@ -24,8 +24,9 @@ const mockProgramDayRow = (overrides: Partial<ProgramDay> = {}) => ({
   week_number: 1,
   name: 'Push Day',
   focus_muscles: ['chest', 'shoulders', 'triceps'],
-  session_type: 'hypertrophy',
+  session_type: 'hypertrophy' as SessionType,
   estimated_duration_minutes: 45,
+  exercises: [] as ProgramExercise[],
   program_exercises: [],
   ...overrides,
 })
