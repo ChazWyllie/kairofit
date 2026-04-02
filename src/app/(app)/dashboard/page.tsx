@@ -2,14 +2,18 @@
  * Dashboard Page (Server Component)
  *
  * First screen the user sees after onboarding completes.
- * Loads the active program via getActiveProgram and renders
- * a summary of the program name and day list.
+ * Loads the active program, profile, streak, volume, and next day.
  *
  * Auth is guaranteed by middleware - no redirect logic needed here.
  */
 
 import { createServerClient } from '@/lib/db/supabase'
 import { getActiveProgram } from '@/lib/db/queries/programs'
+import { getProfile } from '@/lib/db/queries/profiles'
+import { getStreakCount, getWeeklyVolume, getNextProgramDay } from '@/lib/db/queries/sessions'
+import { ProgramCard } from '@/components/workout/ProgramCard'
+import { TodayWorkout } from '@/components/workout/TodayWorkout'
+import { StatsStrip } from '@/components/workout/StatsStrip'
 
 export const revalidate = 0 // always fresh - user expects immediate updates
 
@@ -21,7 +25,15 @@ export default async function DashboardPage() {
 
   // Middleware guarantees auth, but session can expire between middleware check and here
   // (TOCTOU window), so defensive null check is still required
-  const program = user ? await getActiveProgram(user.id) : null
+  if (!user) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
+        <h1 className="text-xl font-medium text-[#F5F5F4]">Unauthorized</h1>
+      </div>
+    )
+  }
+
+  const program = await getActiveProgram(user.id)
 
   if (!program) {
     return (
@@ -40,57 +52,23 @@ export default async function DashboardPage() {
     )
   }
 
+  // Load profile, stats, and next day in parallel
+  const [profile, streak, weeklyVolume, nextDay] = await Promise.all([
+    getProfile(user.id),
+    getStreakCount(user.id),
+    getWeeklyVolume(user.id),
+    getNextProgramDay(user.id, program.id, program.current_week),
+  ])
+
+  const weeksComplete = nextDay === null && program.days.length > 0
+
   return (
-    <div className="px-4 py-6">
-      <div className="mb-6">
-        <h1 data-testid="dashboard-program-name" className="text-2xl font-semibold text-[#F5F5F4]">
-          {program.name}
-        </h1>
-        {program.description && (
-          <p className="mt-1 text-sm text-[#A1A19E]">{program.description}</p>
-        )}
-      </div>
+    <div className="space-y-6 px-4 py-6">
+      <ProgramCard program={program} archetype={profile?.archetype ?? null} />
 
-      {program.days && program.days.length > 0 ? (
-        <div className="flex flex-col gap-3">
-          {program.days.map((day) => (
-            <div
-              key={day.id}
-              data-testid="dashboard-day-card"
-              className="rounded-xl border border-[#1A1A1F] bg-[#111113] p-4"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wider text-[#6B6B68]">
-                    Day {day.day_number}
-                  </p>
-                  <p className="mt-0.5 font-medium text-[#F5F5F4]">{day.name}</p>
-                </div>
-                {day.estimated_duration_minutes && (
-                  <span className="text-sm text-[#6B6B68]">{day.estimated_duration_minutes}m</span>
-                )}
-              </div>
+      <StatsStrip streak={streak} weeklyVolumeKg={weeklyVolume} />
 
-              {day.focus_muscles && day.focus_muscles.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {day.focus_muscles.map((muscle) => (
-                    <span
-                      key={muscle}
-                      className="rounded-full bg-[#1A1A1F] px-2 py-0.5 text-xs text-[#A1A19E]"
-                    >
-                      {muscle}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p data-testid="dashboard-no-days-message" className="text-sm text-[#6B6B68]">
-          No training days found.
-        </p>
-      )}
+      <TodayWorkout day={nextDay} weeksComplete={weeksComplete} />
     </div>
   )
 }
