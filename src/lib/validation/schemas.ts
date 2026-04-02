@@ -168,7 +168,7 @@ export const onboardingStateSchema = z.object({
   injuries: onboardingInjuriesSchema.shape.injuries.optional(),
   height_cm: onboardingBodyCompositionSchema.shape.height_cm.optional(),
   weight_kg: onboardingBodyCompositionSchema.shape.weight_kg.optional(),
-  body_fat_pct: onboardingBodyCompositionSchema.shape.body_fat_pct.nullable().optional(),
+  body_fat_pct: onboardingBodyCompositionSchema.shape.body_fat_pct.optional(),
   why_now: onboardingWhyNowSchema.shape.why_now.optional(),
   psych_scores: onboardingPsychSchema.shape.psych_scores.optional(),
   archetype: z
@@ -192,7 +192,6 @@ export const onboardingStateSchema = z.object({
   email: z.string().email().optional(),
   auth_ready: z.boolean().optional(),
   current_step: z.number().int().min(1).optional(),
-  total_steps: z.number().int().min(1).optional(),
   archetype_scores: z.record(z.number()).optional(),
 })
 

@@ -77,7 +77,7 @@ export const generateProgramAction = action
     }
 
     const program = await saveProgramToDb(user.id, result.program, {
-      generation_model: 'claude-sonnet-4-6',
+      generation_model: result.source,
       generation_prompt_version: 'v1',
       experience_level_target: profile.experience_level ?? 1,
     })
