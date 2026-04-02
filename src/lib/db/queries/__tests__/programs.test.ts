@@ -164,14 +164,19 @@ function createSupabaseMock(config: SupabaseMockConfig = {}) {
       }
 
       if (table === 'exercises') {
-        // Per-exercise lookup: .select('id').ilike('name', ex.exercise_name).limit(1).single()
+        // Batch lookup: .select('id, name').or(orFilter)
         return {
           select: vi.fn(() => ({
-            ilike: vi.fn(() => ({
-              limit: vi.fn(() => ({
-                single: vi.fn(() => Promise.resolve({ data: exerciseLookupData })),
-              })),
-            })),
+            or: vi.fn(() =>
+              Promise.resolve({
+                data: exerciseLookupData
+                  ? [
+                      { id: exerciseLookupData.id, name: 'bench press' },
+                      { id: exerciseLookupData.id, name: 'dumbbell row' },
+                    ]
+                  : [],
+              })
+            ),
           })),
         }
       }

@@ -312,7 +312,9 @@ describe('persistOnboardingState', () => {
 
     await persistOnboardingState(MOCK_ONBOARDING_STATE)
 
-    expect(vi.mocked(saveOnboardingData)).toHaveBeenCalledWith('user-123', MOCK_ONBOARDING_STATE)
+    // total_steps is UI-only state (wizard progress bar); onboardingStateSchema strips it before DB write
+    const { total_steps: _total, ...expectedState } = MOCK_ONBOARDING_STATE
+    expect(vi.mocked(saveOnboardingData)).toHaveBeenCalledWith('user-123', expectedState)
   })
 
   it('throws Authentication required when there is no session', async () => {

@@ -168,7 +168,7 @@ export const onboardingStateSchema = z.object({
   injuries: onboardingInjuriesSchema.shape.injuries.optional(),
   height_cm: onboardingBodyCompositionSchema.shape.height_cm.optional(),
   weight_kg: onboardingBodyCompositionSchema.shape.weight_kg.optional(),
-  body_fat_pct: onboardingBodyCompositionSchema.shape.body_fat_pct.optional(),
+  body_fat_pct: onboardingBodyCompositionSchema.shape.body_fat_pct.nullable().optional(),
   why_now: onboardingWhyNowSchema.shape.why_now.optional(),
   psych_scores: onboardingPsychSchema.shape.psych_scores.optional(),
   archetype: z
