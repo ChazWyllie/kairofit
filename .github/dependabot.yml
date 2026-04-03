@@ -23,9 +23,17 @@ updates:
       supabase:
         patterns:
           - '@supabase/*'
-    # Don't auto-update major versions - review those manually
     versioning-strategy: auto
     open-pull-requests-limit: 10
+    ignore:
+      # Vite ecosystem: major/minor bumps cause OXC cross-platform lock file issues.
+      # Only allow patch-level security fixes. Upgrade manually after testing.
+      - dependency-name: 'vitest'
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']
+      - dependency-name: '@vitejs/*'
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']
+      - dependency-name: '@vitest/*'
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']
 
   - package-ecosystem: 'github-actions'
     directory: '/'

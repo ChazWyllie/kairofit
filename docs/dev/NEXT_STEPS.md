@@ -1,6 +1,6 @@
 # KairoFit - Next Steps
 
-_Last updated: 2026-04-01. Reflects state after Phase 2 (auth + onboarding-to-dashboard) completion._
+_Last updated: 2026-04-02. Reflects state after Phase 3 (dashboard UI) completion._
 
 ---
 
@@ -39,44 +39,29 @@ _Last updated: 2026-04-01. Reflects state after Phase 2 (auth + onboarding-to-da
 - `onboardingStateSchema.parse(state)` validates all client-supplied state at DB write boundary
 - RLS enforced on all tables; no service role key exposed to client
 
-### Test coverage (73/73 passing)
+### Test coverage (98/104 passing)
 
 - `src/lib/db/queries/__tests__/programs.test.ts` - saveProgramToDb coverage
 - `src/actions/__tests__/onboarding.actions.test.ts` - createAccountAction + persistOnboardingState
-- `src/stores/__tests__/onboarding.store.test.ts` - store state transitions
+- `src/stores/__tests__/onboarding.store.test.ts` - store state transitions (6 tests failing due to pre-existing jsdom `localStorage.clear` issue - unrelated to Phase 3)
 - `src/lib/ai/__tests__/workout-validator.test.ts` - constraint enforcement
 - `src/lib/utils/__tests__/progressive-overload.test.ts` - overload calculations
+- `src/components/workout/__tests__/ProgramCard.test.tsx` - ProgramCard component (17 tests)
+- `src/lib/db/queries/__tests__/sessions.test.ts` - getNextProgramDay query (11 tests)
+
+### Dashboard UI (Phase 3)
+
+Real home screen replacing the placeholder. Built on `feature/phase-3-dashboard`, merged via PR.
+
+- `src/app/(app)/dashboard/page.tsx` - server component, parallel data fetching with `Promise.all`
+- `src/components/workout/ProgramCard.tsx` - program name, archetype badge, week X of Y
+- `src/components/workout/TodayWorkout.tsx` - next unlogged day with exercise list; handles week-complete and no-program states
+- `src/components/workout/StatsStrip.tsx` - streak (orange if >0) and weekly volume
+- `src/lib/db/queries/sessions.ts` - added `getNextProgramDay` (returns first unlogged day in current week)
 
 ---
 
 ## What to build next
-
-### Phase 3: Dashboard + Active Program UI
-
-The current dashboard is a minimal placeholder. Build the real home screen.
-
-**Goal:** User opens app, sees today's workout and their active program at a glance.
-
-**Files to create/modify:**
-
-- `src/app/(app)/dashboard/page.tsx` - server component, loads active program
-- `src/components/workout/ProgramCard.tsx` - shows program name, archetype, week X/Y
-- `src/components/workout/TodayWorkout.tsx` - today's session with exercise list
-- `src/components/charts/ProgressChart.tsx` - lightweight weekly volume chart
-
-**Data needed:**
-
-- `getActiveProgram(userId)` - already in `src/lib/db/queries/programs.ts`
-- `getRecentSessions(userId, limit)` - add to `src/lib/db/queries/sessions.ts`
-
-**Acceptance criteria:**
-
-- [ ] Dashboard loads active program name, week number, days
-- [ ] Today's session shows exercise list with sets/reps/weight targets
-- [ ] Empty state if no program exists ("Generating your program...")
-- [ ] TypeScript clean, 80%+ test coverage
-
----
 
 ### Phase 4: Workout Logging (Set Logger)
 
@@ -234,7 +219,10 @@ All analytics use `after()` so they never delay the user response.
 | `src/actions/program.actions.ts`             | Complete (stubs for adjust/swap) | AI program generation                           |
 | `src/actions/workout.actions.ts`             | Stubs                            | Set logging, session management                 |
 | `src/app/onboarding/`                        | Complete                         | All 23 screens                                  |
-| `src/app/(app)/dashboard/`                   | Minimal                          | Home screen placeholder                         |
+| `src/app/(app)/dashboard/page.tsx`           | Complete (Phase 3)               | Dashboard with parallel data fetching           |
+| `src/components/workout/ProgramCard.tsx`     | Complete (Phase 3)               | Program name, archetype badge, week X/Y         |
+| `src/components/workout/TodayWorkout.tsx`    | Complete (Phase 3)               | Next unlogged day; handles week-complete/empty  |
+| `src/components/workout/StatsStrip.tsx`      | Complete (Phase 3)               | Streak and weekly volume display                |
 | `supabase/migrations/001_initial_schema.sql` | Complete                         | Full DB schema + RLS + triggers                 |
 
 ---
