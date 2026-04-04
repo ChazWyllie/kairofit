@@ -40,9 +40,10 @@ export function RestTimer({ className }: RestTimerProps) {
 
   if (!rest_timer.is_running) return null
 
-  const pct = rest_timer.total_seconds > 0
-    ? (rest_timer.seconds_remaining / rest_timer.total_seconds) * 100
-    : 0
+  const pct =
+    rest_timer.total_seconds > 0
+      ? (rest_timer.seconds_remaining / rest_timer.total_seconds) * 100
+      : 0
 
   const containerClass = `fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm ${className || ''}`
 

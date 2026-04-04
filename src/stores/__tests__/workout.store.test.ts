@@ -33,20 +33,22 @@ const PROGRAM_DAY_ID = 'day-abc'
 const PROGRAM_ID = 'program-abc'
 const EXERCISE_ID = 'exercise-abc'
 
-function makeSet(overrides: Partial<{
-  id: string
-  session_id: string
-  exercise_id: string
-  program_exercise_id: string | null
-  user_id: string
-  set_number: number
-  reps_completed: number
-  weight_kg: number | null
-  rpe: number | null
-  is_warmup: boolean
-  is_dropset: boolean
-  logged_at: string
-}> = {}) {
+function makeSet(
+  overrides: Partial<{
+    id: string
+    session_id: string
+    exercise_id: string
+    program_exercise_id: string | null
+    user_id: string
+    set_number: number
+    reps_completed: number
+    weight_kg: number | null
+    rpe: number | null
+    is_warmup: boolean
+    is_dropset: boolean
+    logged_at: string
+  }> = {}
+) {
   return {
     id: 'set-temp-1',
     session_id: SESSION_ID,

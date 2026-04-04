@@ -53,9 +53,7 @@ describe('StartWorkoutButton', () => {
     })
 
     it('renders without error with null IDs (freeform mode)', () => {
-      expect(() =>
-        StartWorkoutButton({ programDayId: null, programId: null })
-      ).not.toThrow()
+      expect(() => StartWorkoutButton({ programDayId: null, programId: null })).not.toThrow()
     })
 
     it('renders without error with only programDayId', () => {
@@ -67,7 +65,10 @@ describe('StartWorkoutButton', () => {
 
   describe('return value', () => {
     it('returns a React element (not null)', () => {
-      const result = StartWorkoutButton({ programDayId: VALID_PROGRAM_DAY_ID, programId: VALID_PROGRAM_ID })
+      const result = StartWorkoutButton({
+        programDayId: VALID_PROGRAM_DAY_ID,
+        programId: VALID_PROGRAM_ID,
+      })
       expect(result).not.toBeNull()
     })
   })

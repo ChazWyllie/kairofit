@@ -84,18 +84,30 @@ describe('ExerciseCard', () => {
 
     it('renders without error with a valid program exercise', () => {
       expect(() =>
-        ExerciseCard({ programExercise: MOCK_PROGRAM_EXERCISE, sessionId: 'session-abc', isActive: true })
+        ExerciseCard({
+          programExercise: MOCK_PROGRAM_EXERCISE,
+          sessionId: 'session-abc',
+          isActive: true,
+        })
       ).not.toThrow()
     })
 
     it('renders without error when not active', () => {
       expect(() =>
-        ExerciseCard({ programExercise: MOCK_PROGRAM_EXERCISE, sessionId: 'session-abc', isActive: false })
+        ExerciseCard({
+          programExercise: MOCK_PROGRAM_EXERCISE,
+          sessionId: 'session-abc',
+          isActive: false,
+        })
       ).not.toThrow()
     })
 
     it('returns a React element', () => {
-      const result = ExerciseCard({ programExercise: MOCK_PROGRAM_EXERCISE, sessionId: 'session-abc', isActive: true })
+      const result = ExerciseCard({
+        programExercise: MOCK_PROGRAM_EXERCISE,
+        sessionId: 'session-abc',
+        isActive: true,
+      })
       expect(result).not.toBeNull()
     })
   })

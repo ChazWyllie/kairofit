@@ -116,9 +116,7 @@ export function SetLogger({ programExercise, sessionId }: SetLoggerProps) {
                 {s.reps_completed} reps
                 {s.weight_kg ? ` @ ${s.weight_kg}kg` : ''}
               </span>
-              {s.isPending && (
-                <span className="text-xs text-[#6B6B68]">saving...</span>
-              )}
+              {s.isPending && <span className="text-xs text-[#6B6B68]">saving...</span>}
             </div>
           ))}
         </div>
@@ -128,7 +126,8 @@ export function SetLogger({ programExercise, sessionId }: SetLoggerProps) {
       {!allSetsLogged && (
         <div className="flex flex-col gap-3 rounded-xl bg-[#111113] p-4">
           <p className="text-xs text-[#6B6B68]">
-            Set {nextSetNumber} of {programExercise.sets} - target {programExercise.reps_min}-{programExercise.reps_max} reps
+            Set {nextSetNumber} of {programExercise.sets} - target {programExercise.reps_min}-
+            {programExercise.reps_max} reps
           </p>
 
           {/* Weight control */}
@@ -185,7 +184,9 @@ export function SetLogger({ programExercise, sessionId }: SetLoggerProps) {
       )}
 
       {allSetsLogged && (
-        <p className="text-center text-sm text-[#10B981]">All {programExercise.sets} sets complete</p>
+        <p className="text-center text-sm text-[#10B981]">
+          All {programExercise.sets} sets complete
+        </p>
       )}
     </div>
   )

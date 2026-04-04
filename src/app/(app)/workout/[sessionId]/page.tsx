@@ -24,9 +24,7 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
   }
 
   // Load the program day so WorkoutLogger can render exercises
-  const programDay = session.program_day_id
-    ? await getProgramDay(session.program_day_id)
-    : null
+  const programDay = session.program_day_id ? await getProgramDay(session.program_day_id) : null
 
   return (
     <div className="min-h-screen bg-[#0A0A0B] px-4 py-6">

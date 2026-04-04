@@ -23,9 +23,7 @@ export function ExerciseCard({ programExercise, sessionId, isActive }: ExerciseC
   return (
     <div
       className={`rounded-2xl border transition-colors ${
-        isActive
-          ? 'border-[#6366F1]/40 bg-[#111113]'
-          : 'border-[#1A1A1F] bg-[#0A0A0B]'
+        isActive ? 'border-[#6366F1]/40 bg-[#111113]' : 'border-[#1A1A1F] bg-[#0A0A0B]'
       }`}
     >
       <div className="p-4">
@@ -34,7 +32,8 @@ export function ExerciseCard({ programExercise, sessionId, isActive }: ExerciseC
           <div>
             <h3 className="font-semibold text-[#F5F5F4]">{exercise.name}</h3>
             <p className="mt-0.5 text-xs text-[#6B6B68]">
-              {programExercise.sets} sets - {programExercise.reps_min}-{programExercise.reps_max} reps - {programExercise.rest_seconds}s rest
+              {programExercise.sets} sets - {programExercise.reps_min}-{programExercise.reps_max}{' '}
+              reps - {programExercise.rest_seconds}s rest
             </p>
           </div>
 

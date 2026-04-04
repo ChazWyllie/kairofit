@@ -59,13 +59,22 @@ const MOCK_SET_ROW = {
 function buildSupabaseMock({
   sessionOwnershipRow = { id: VALID_SESSION_ID } as Record<string, unknown> | null,
   sessionOwnershipError = null as { message: string } | null,
-  insertSessionData = { id: VALID_SESSION_ID, started_at: new Date().toISOString(), status: 'in_progress' } as Record<string, unknown> | null,
+  insertSessionData = {
+    id: VALID_SESSION_ID,
+    started_at: new Date().toISOString(),
+    status: 'in_progress',
+  } as Record<string, unknown> | null,
   insertSessionError = null as { message: string } | null,
   insertSetData = MOCK_SET_ROW as Record<string, unknown> | null,
   insertSetError = null as { message: string } | null,
   fetchSessionData = MOCK_SESSION_ROW as Record<string, unknown> | null,
   fetchSessionError = null as { message: string } | null,
-  updateSessionData = { id: VALID_SESSION_ID, completed_at: new Date().toISOString(), duration_seconds: 3600, status: 'completed' } as Record<string, unknown> | null,
+  updateSessionData = {
+    id: VALID_SESSION_ID,
+    completed_at: new Date().toISOString(),
+    duration_seconds: 3600,
+    status: 'completed',
+  } as Record<string, unknown> | null,
   updateSessionError = null as { message: string } | null,
 } = {}) {
   return {
@@ -87,7 +96,9 @@ function buildSupabaseMock({
         const selectOwnershipChain = {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
-          single: vi.fn().mockResolvedValue({ data: sessionOwnershipRow, error: sessionOwnershipError }),
+          single: vi
+            .fn()
+            .mockResolvedValue({ data: sessionOwnershipRow, error: sessionOwnershipError }),
         }
 
         // complete session: .select(...).eq(...).eq(...).single()
@@ -115,7 +126,9 @@ function buildSupabaseMock({
           void data
           return Object.assign({}, insertChain, {
             select: vi.fn().mockReturnThis(),
-            single: vi.fn().mockResolvedValue({ data: insertSessionData, error: insertSessionError }),
+            single: vi
+              .fn()
+              .mockResolvedValue({ data: insertSessionData, error: insertSessionError }),
           })
         })
 
@@ -197,7 +210,10 @@ describe('startSessionAction', () => {
 
   it('returns serverError when Supabase insert fails', async () => {
     vi.mocked(createServerClient).mockResolvedValue(
-      buildSupabaseMock({ insertSessionData: null, insertSessionError: { message: 'DB error' } }) as never
+      buildSupabaseMock({
+        insertSessionData: null,
+        insertSessionError: { message: 'DB error' },
+      }) as never
     )
 
     const result = await startSessionAction({ program_day_id: VALID_PROGRAM_DAY_ID })
@@ -283,7 +299,10 @@ describe('logSetAction', () => {
 
   it('returns serverError when Supabase insert fails', async () => {
     vi.mocked(createServerClient).mockResolvedValue(
-      buildSupabaseMock({ insertSetData: null, insertSetError: { message: 'insert failed' } }) as never
+      buildSupabaseMock({
+        insertSetData: null,
+        insertSetError: { message: 'insert failed' },
+      }) as never
     )
 
     const result = await logSetAction(VALID_INPUT)

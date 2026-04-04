@@ -24,7 +24,12 @@ interface WorkoutLoggerProps {
   programDay: ProgramDay | null
 }
 
-export function WorkoutLogger({ sessionId, programDayId, programId, programDay }: WorkoutLoggerProps) {
+export function WorkoutLogger({
+  sessionId,
+  programDayId,
+  programId,
+  programDay,
+}: WorkoutLoggerProps) {
   const router = useRouter()
   const [activeIndex, setActiveIndex] = useState(0)
   const { startWorkout, endWorkout, is_active } = useWorkoutStore((s) => ({
@@ -56,9 +61,7 @@ export function WorkoutLogger({ sessionId, programDayId, programId, programDay }
         <div className="rounded-xl bg-[#111113] p-4">
           <h2 className="font-semibold text-[#F5F5F4]">{programDay.name}</h2>
           {programDay.focus_muscles.length > 0 && (
-            <p className="mt-0.5 text-xs text-[#6B6B68]">
-              {programDay.focus_muscles.join(', ')}
-            </p>
+            <p className="mt-0.5 text-xs text-[#6B6B68]">{programDay.focus_muscles.join(', ')}</p>
           )}
         </div>
       )}
