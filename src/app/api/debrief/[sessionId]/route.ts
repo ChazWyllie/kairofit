@@ -83,6 +83,6 @@ Provide a post-workout debrief following the debrief instructions. Reference act
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
     console.error('Debrief streaming error:', message)
-    return new Response(`Error: ${message}`, { status: 500 })
+    return new Response('Internal server error', { status: 500 })
   }
 }

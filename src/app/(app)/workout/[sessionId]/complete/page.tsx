@@ -12,6 +12,7 @@
  */
 
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { getCompletedSessionSummary } from '@/lib/db/queries/sessions'
 import { getMuscleRecovery } from '@/lib/db/queries/recovery'
 import { getStreakCount } from '@/lib/db/queries/sessions'
@@ -93,12 +94,12 @@ export default async function WorkoutCompletePage({
 
       {/* Continue to Dashboard */}
       <div className="mt-2 flex flex-col gap-2">
-        <a
+        <Link
           href="/dashboard"
           className="w-full rounded-lg bg-[#111113] px-4 py-3 text-center font-medium text-[#F5F5F4] transition-opacity hover:opacity-80"
         >
           Back to Dashboard
-        </a>
+        </Link>
       </div>
     </div>
   )

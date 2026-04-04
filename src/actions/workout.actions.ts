@@ -22,6 +22,7 @@ import {
   completeSessionSchema,
   RATE_LIMIT_KEYS,
 } from '@/lib/validation/schemas'
+import type { MuscleGroup } from '@/types'
 
 // ============================================================
 // AUTHENTICATED ACTION CLIENT WITH MIDDLEWARE
@@ -179,7 +180,7 @@ export const completeSessionAction = action
         // Calculate recovery updates for each muscle
         const recoveryUpdates = calculateRecoveryUpdates(
           Array.from(muscleSetCounts.entries()).map(([muscle, setCount]) => ({
-            muscle: muscle as any, // TypeScript will narrow this
+            muscle: muscle as MuscleGroup,
             sets: setCount,
           })),
           completedAt

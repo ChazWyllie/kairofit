@@ -10,8 +10,6 @@
  * - Large muscles (quads, hamstrings, glutes): 72 hours
  * - Heavy compound pattern (deadlift SRA): 96-120 hours
  *
- * TODO: Implement full recovery calculation
- * This is a typed stub. All types and constants are correct.
  */
 
 import type { MuscleGroup, MuscleRecovery } from '@/types'
@@ -87,14 +85,11 @@ export function calculateRecoveryPct(
  * Called after every session completion.
  *
  * Returns the updates to apply to the muscle_recovery table.
- *
- * TODO: Implement this function
  */
 export function calculateRecoveryUpdates(
   completedSessionMuscles: Array<{ muscle: MuscleGroup; sets: number }>,
   completedAt: Date
 ): Array<{ muscle_group: MuscleGroup; last_trained_at: string; estimated_recovery_pct: number }> {
-  // TODO: Implement
   return completedSessionMuscles.map(({ muscle }) => ({
     muscle_group: muscle,
     last_trained_at: completedAt.toISOString(),

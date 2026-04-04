@@ -13,7 +13,7 @@
 
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useCompletion } from 'ai/react'
 
 interface KiroDebriefProps {
@@ -26,10 +26,14 @@ export function KiroDebrief({ sessionId, onComplete }: KiroDebriefProps) {
     api: `/api/debrief/${sessionId}`,
   })
 
-  // Trigger debrief on mount
+  // Store latest complete in a ref so the effect dep array stays stable
+  const completeRef = useRef(complete)
+  completeRef.current = complete
+
+  // Trigger debrief whenever sessionId changes (once per session view)
   useEffect(() => {
-    complete('')
-  }, [sessionId]) // eslint-disable-line react-hooks/exhaustive-deps
+    completeRef.current('')
+  }, [sessionId])
 
   // Call onComplete when debrief finishes streaming
   useEffect(() => {
