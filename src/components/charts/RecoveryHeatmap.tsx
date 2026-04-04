@@ -89,7 +89,7 @@ export function RecoveryHeatmap({ recoveryData }: RecoveryHeatmapProps) {
       <div className="mb-4">
         <h3 className="text-sm font-semibold text-[#F5F5F4]">Muscle Recovery</h3>
         <p className="mt-0.5 text-xs text-[#6B6B68]">
-          How recovered each muscle group is from today's training
+          How recovered each muscle group is from today&apos;s training
         </p>
       </div>
 

@@ -36,7 +36,7 @@ describe('KiroDebrief', () => {
       completion: '',
       isLoading: true,
       complete: vi.fn(),
-    } as any)
+    } as unknown as ReturnType<typeof useCompletion>)
 
     render(<KiroDebrief sessionId="test-session-123" />)
     expect(screen.getByText('Analyzing your session...')).toBeInTheDocument()
@@ -57,7 +57,7 @@ describe('KiroDebrief', () => {
       completion: 'Test debrief',
       isLoading: false,
       complete: vi.fn(),
-    } as any)
+    } as unknown as ReturnType<typeof useCompletion>)
 
     render(<KiroDebrief sessionId="test-session-123" onComplete={mockOnComplete} />)
 
@@ -74,7 +74,7 @@ describe('KiroDebrief', () => {
       completion: '',
       isLoading: false,
       complete: mockComplete,
-    } as any)
+    } as unknown as ReturnType<typeof useCompletion>)
 
     render(<KiroDebrief sessionId="abc-123" />)
 
@@ -93,7 +93,7 @@ describe('KiroDebrief', () => {
       completion: '',
       isLoading: false,
       complete: vi.fn(),
-    } as any)
+    } as unknown as ReturnType<typeof useCompletion>)
 
     render(<KiroDebrief sessionId="test-session-123" />)
 

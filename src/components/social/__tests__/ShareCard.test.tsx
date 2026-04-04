@@ -106,7 +106,7 @@ describe('ShareCard', () => {
     const mockCapture = vi.fn()
     vi.mocked(usePostHog).mockReturnValue({
       capture: mockCapture,
-    } as any)
+    } as unknown as ReturnType<typeof usePostHog>)
 
     render(
       <ShareCard

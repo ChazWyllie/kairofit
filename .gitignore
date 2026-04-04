@@ -24,8 +24,9 @@ test-results/
 *.key
 Thumbs.db
 
-# Claude Code local settings
-.claude/
+# Claude Code local settings (machine-specific)
+# skills/ is committed so learned skills sync across devices - see scripts/sync-skills.sh
+.claude/settings.local.json
 
 # Debug logs
 npm-debug.log*
