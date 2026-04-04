@@ -319,12 +319,18 @@ src/
       webhooks/         # Stripe webhooks (auth via signature verification)
       sync/
         workout-sets/   # Offline sync endpoint - receives batched sets from service worker
+      debrief/
+        [sessionId]/    # Streaming debrief route (Vercel AI SDK streamText, rate-limited)
+    (app)/
+      workout/
+        [sessionId]/
+          complete/     # Post-workout experience (streak, heatmap, debrief, share card)
   actions/              # Server Actions (next-safe-action v7)
-    workout.actions.ts  # EXISTS
-    # program.actions.ts    <- TODO
-    # profile.actions.ts    <- TODO
-    # onboarding.actions.ts <- TODO
-    # social.actions.ts     <- TODO (requires NEXT_PUBLIC_SOCIAL_ENABLED=true)
+    workout.actions.ts  # Session logging, completeSessionAction, generateDebriefAction
+    program.actions.ts  # Program generation, adjustment
+    profile.actions.ts  # Profile read/write, kiro_persona toggle
+    onboarding.actions.ts # Onboarding data save, createAccountAction
+    social.actions.ts   # Requires NEXT_PUBLIC_SOCIAL_ENABLED=true
   components/
     ui/                 # shadcn/ui base - never modify directly
     workout/            # WorkoutCard, SetLogger, RestTimer, etc.
@@ -438,6 +444,30 @@ Layer 3 - LLM-as-judge (TODO): after generation, a secondary Haiku call evaluate
 Layer 4 - Snapshot regression (TODO): 50-100 expert-validated "golden profiles" with expected program outputs. New generation must match within acceptable deviation. File: src/lib/ai/**tests**/golden-profiles/
 
 Layer 5 - A/B production (TODO): workout completion rate as the quality proxy. Apps with >70% completion see 43% higher LTV. Track WORKOUT_COMPLETED / WORKOUT_STARTED ratio in PostHog per program generation model/prompt version.
+
+---
+
+## Learned Skills (Cross-Device Sync)
+
+Claude Code learns patterns from this project and saves them to `~/.claude/skills/learned/`.
+These are committed to `.claude/skills/learned/` so they sync across devices.
+
+**New device setup** (after cloning):
+```bash
+bash scripts/sync-skills.sh import
+```
+
+**After learning a new skill** (before committing):
+```bash
+bash scripts/sync-skills.sh export
+git add .claude/skills/learned/
+git commit -m "chore: add learned skill - <name>"
+```
+
+**Check what's out of sync:**
+```bash
+bash scripts/sync-skills.sh status
+```
 
 ---
 
