@@ -85,6 +85,7 @@ Deterministic next-session targets displayed inline on each exercise card during
 - `src/app/(app)/workout/[sessionId]/page.tsx` - parallel-fetches program day + progression suggestions server-side
 
 **Three progression models** (scheme set per-exercise by AI at generation time):
+
 - `linear` - add weight every session when all reps hit (levels 1-2 typical)
 - `double_progression` - increase reps within range, then bump weight and reset (level 3 typical)
 - `rpe_based` - maintain/increase/decrease based on average RPE vs. target zone 7-9 (levels 4-5 typical)
@@ -159,38 +160,38 @@ All analytics use `after()` so they never delay the user response.
 
 ## Key files reference
 
-| File                                         | Status                           | Purpose                                         |
-| -------------------------------------------- | -------------------------------- | ----------------------------------------------- |
-| `src/lib/ai/workout-generator.ts`            | Complete                         | AI generation with resilience chain             |
-| `src/lib/ai/workout-validator.ts`            | Complete                         | Post-generation constraint enforcement          |
-| `src/lib/ai/safety-filter.ts`                | Complete                         | Input safety check before every Claude call     |
-| `src/lib/utils/progressive-overload.ts`      | Complete                         | Deterministic overload calculations             |
-| `src/lib/utils/recovery-model.ts`            | Complete                         | SRA curve per muscle group                      |
-| `src/lib/db/supabase.ts`                     | Complete                         | Browser + server Supabase clients               |
-| `src/middleware.ts`                          | Complete                         | Auth route protection                           |
-| `src/stores/onboarding.store.ts`             | Complete                         | Onboarding quiz state with localStorage persist |
-| `src/stores/workout.store.ts`                | Complete                         | Active workout state                            |
-| `src/actions/onboarding.actions.ts`          | Complete                         | OTP send, persist onboarding state              |
-| `src/actions/program.actions.ts`             | Complete (stubs for adjust/swap) | AI program generation                           |
-| `src/actions/workout.actions.ts`             | Complete (Phase 4)               | startSession, logSet, completeSession           |
-| `src/app/onboarding/`                        | Complete                         | All 23 screens                                  |
-| `src/app/(app)/dashboard/page.tsx`           | Complete (Phase 3)               | Dashboard with parallel data fetching           |
-| `src/components/workout/ProgramCard.tsx`     | Complete (Phase 3)               | Program name, archetype badge, week X/Y         |
-| `src/components/workout/TodayWorkout.tsx`    | Complete (Phase 3)               | Next unlogged day; handles week-complete/empty  |
-| `src/components/workout/StatsStrip.tsx`      | Complete (Phase 3)               | Streak and weekly volume display                |
-| `src/app/(app)/workout/[sessionId]/`         | Complete (Phase 4)               | Active workout logger (page + WorkoutLogger)    |
-| `src/components/workout/SetLogger.tsx`       | Complete (Phase 4)               | Reps/weight +/- controls with optimistic UI     |
-| `src/components/workout/RestTimer.tsx`       | Complete (Phase 4)               | Countdown timer after each set                  |
-| `src/components/workout/ExerciseCard.tsx`    | Complete (Phase 4+6)             | Target vs actual display + progression hint     |
-| `src/app/(app)/workout/[sessionId]/complete/`| Complete (Phase 5)               | Post-workout experience server page             |
-| `src/components/workout/StreakMilestone.tsx` | Complete (Phase 5)               | Streak count + milestone animation              |
-| `src/components/charts/RecoveryHeatmap.tsx`  | Complete (Phase 5)               | 13-muscle recovery heatmap                      |
-| `src/components/ai/KiroDebrief.tsx`          | Complete (Phase 5)               | Streaming inline AI debrief                     |
-| `src/components/social/ShareCard.tsx`        | Complete (Phase 5)               | On-demand shareable workout card                |
-| `src/app/api/debrief/[sessionId]/route.ts`   | Complete (Phase 5)               | SSE streaming debrief endpoint                  |
-| `src/lib/db/queries/progression.ts`          | Complete (Phase 6)               | getProgressionSuggestionsForDay orchestrator    |
-| `src/app/(app)/workout/[sessionId]/page.tsx` | Complete (Phase 4+6)             | Parallel fetch: session + progression hints     |
-| `supabase/migrations/001_initial_schema.sql` | Complete                         | Full DB schema + RLS + triggers                 |
+| File                                          | Status                           | Purpose                                         |
+| --------------------------------------------- | -------------------------------- | ----------------------------------------------- |
+| `src/lib/ai/workout-generator.ts`             | Complete                         | AI generation with resilience chain             |
+| `src/lib/ai/workout-validator.ts`             | Complete                         | Post-generation constraint enforcement          |
+| `src/lib/ai/safety-filter.ts`                 | Complete                         | Input safety check before every Claude call     |
+| `src/lib/utils/progressive-overload.ts`       | Complete                         | Deterministic overload calculations             |
+| `src/lib/utils/recovery-model.ts`             | Complete                         | SRA curve per muscle group                      |
+| `src/lib/db/supabase.ts`                      | Complete                         | Browser + server Supabase clients               |
+| `src/middleware.ts`                           | Complete                         | Auth route protection                           |
+| `src/stores/onboarding.store.ts`              | Complete                         | Onboarding quiz state with localStorage persist |
+| `src/stores/workout.store.ts`                 | Complete                         | Active workout state                            |
+| `src/actions/onboarding.actions.ts`           | Complete                         | OTP send, persist onboarding state              |
+| `src/actions/program.actions.ts`              | Complete (stubs for adjust/swap) | AI program generation                           |
+| `src/actions/workout.actions.ts`              | Complete (Phase 4)               | startSession, logSet, completeSession           |
+| `src/app/onboarding/`                         | Complete                         | All 23 screens                                  |
+| `src/app/(app)/dashboard/page.tsx`            | Complete (Phase 3)               | Dashboard with parallel data fetching           |
+| `src/components/workout/ProgramCard.tsx`      | Complete (Phase 3)               | Program name, archetype badge, week X/Y         |
+| `src/components/workout/TodayWorkout.tsx`     | Complete (Phase 3)               | Next unlogged day; handles week-complete/empty  |
+| `src/components/workout/StatsStrip.tsx`       | Complete (Phase 3)               | Streak and weekly volume display                |
+| `src/app/(app)/workout/[sessionId]/`          | Complete (Phase 4)               | Active workout logger (page + WorkoutLogger)    |
+| `src/components/workout/SetLogger.tsx`        | Complete (Phase 4)               | Reps/weight +/- controls with optimistic UI     |
+| `src/components/workout/RestTimer.tsx`        | Complete (Phase 4)               | Countdown timer after each set                  |
+| `src/components/workout/ExerciseCard.tsx`     | Complete (Phase 4+6)             | Target vs actual display + progression hint     |
+| `src/app/(app)/workout/[sessionId]/complete/` | Complete (Phase 5)               | Post-workout experience server page             |
+| `src/components/workout/StreakMilestone.tsx`  | Complete (Phase 5)               | Streak count + milestone animation              |
+| `src/components/charts/RecoveryHeatmap.tsx`   | Complete (Phase 5)               | 13-muscle recovery heatmap                      |
+| `src/components/ai/KiroDebrief.tsx`           | Complete (Phase 5)               | Streaming inline AI debrief                     |
+| `src/components/social/ShareCard.tsx`         | Complete (Phase 5)               | On-demand shareable workout card                |
+| `src/app/api/debrief/[sessionId]/route.ts`    | Complete (Phase 5)               | SSE streaming debrief endpoint                  |
+| `src/lib/db/queries/progression.ts`           | Complete (Phase 6)               | getProgressionSuggestionsForDay orchestrator    |
+| `src/app/(app)/workout/[sessionId]/page.tsx`  | Complete (Phase 4+6)             | Parallel fetch: session + progression hints     |
+| `supabase/migrations/001_initial_schema.sql`  | Complete                         | Full DB schema + RLS + triggers                 |
 
 ---
 

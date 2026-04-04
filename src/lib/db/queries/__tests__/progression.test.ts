@@ -178,9 +178,7 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_max: 8,
       exercise: mockExercise({ primary_muscles: ['chest', 'triceps'] }),
     })
-    vi.mocked(getProgramDay).mockResolvedValue(
-      mockProgramDay({ exercises: [upperBodyExercise] })
-    )
+    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay({ exercises: [upperBodyExercise] }))
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 1 }))
     vi.mocked(getRecentPerformance).mockResolvedValue([
       mockWorkoutSet({ reps_completed: 8, weight_kg: 40 }),
@@ -199,9 +197,7 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_min: 4,
       reps_max: 6,
     })
-    vi.mocked(getProgramDay).mockResolvedValue(
-      mockProgramDay({ exercises: [rpeExercise] })
-    )
+    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay({ exercises: [rpeExercise] }))
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 4 }))
     vi.mocked(getRecentPerformance).mockResolvedValue([
       mockWorkoutSet({ reps_completed: 5, weight_kg: 100, rpe: 8 }),
@@ -222,9 +218,7 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_max: 5,
       exercise: mockExercise({ primary_muscles: ['quads', 'glutes', 'hamstrings'] }),
     })
-    vi.mocked(getProgramDay).mockResolvedValue(
-      mockProgramDay({ exercises: [squatExercise] })
-    )
+    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay({ exercises: [squatExercise] }))
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 2 }))
     vi.mocked(getRecentPerformance).mockResolvedValue([
       mockWorkoutSet({ reps_completed: 5, weight_kg: 80 }),
@@ -252,7 +246,9 @@ describe('getProgressionSuggestionsForDay', () => {
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 3 }))
     vi.mocked(getRecentPerformance)
       .mockResolvedValueOnce([]) // exercise-1: no data
-      .mockResolvedValueOnce([mockWorkoutSet({ exercise_id: 'exercise-2', weight_kg: 100, reps_completed: 8 })]) // exercise-2: data
+      .mockResolvedValueOnce([
+        mockWorkoutSet({ exercise_id: 'exercise-2', weight_kg: 100, reps_completed: 8 }),
+      ]) // exercise-2: data
 
     const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
 
@@ -267,9 +263,7 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_min: 8,
       reps_max: 8,
     })
-    vi.mocked(getProgramDay).mockResolvedValue(
-      mockProgramDay({ exercises: [upperBodyExercise] })
-    )
+    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay({ exercises: [upperBodyExercise] }))
     vi.mocked(getProfileForGeneration).mockResolvedValue(
       mockProfile({ experience_level: 1, preferred_units: 'imperial' })
     )
