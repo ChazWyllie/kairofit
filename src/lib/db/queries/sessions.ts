@@ -285,3 +285,55 @@ export async function getNextProgramDay(
   // All days are logged
   return null
 }
+
+/**
+ * Get a specific program day by ID, including its exercises.
+ * Used by the workout page Server Component to load the day being logged.
+ * Returns null if not found (RLS enforces ownership via program ownership).
+ */
+export async function getProgramDay(dayId: string): Promise<ProgramDay | null> {
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase
+    .from('program_days')
+    .select(
+      `
+      id, program_id, day_number, week_number, name, focus_muscles,
+      session_type, estimated_duration_minutes,
+      program_exercises (
+        id, program_day_id, exercise_id, user_id, order_index,
+        superset_group, sets, reps_min, reps_max, rest_seconds,
+        rpe_target, rir_target, rationale, progression_scheme,
+        modification_note, is_flagged_for_injury,
+        exercises (
+          id, name, slug, primary_muscles, secondary_muscles,
+          movement_pattern, is_compound, equipment_required,
+          research_rationale, form_cues, contraindicated_for
+        )
+      )
+    `
+    )
+    .eq('id', dayId)
+    .single()
+
+  if (error) {
+    if (error.code !== 'PGRST116') {
+      console.error('getProgramDay error:', error.message)
+    }
+    return null
+  }
+
+  if (!data) return null
+
+  return {
+    id: data.id,
+    program_id: data.program_id,
+    day_number: data.day_number,
+    week_number: data.week_number ?? 1,
+    name: data.name,
+    focus_muscles: data.focus_muscles ?? [],
+    session_type: (data.session_type as ProgramDay['session_type']) ?? null,
+    estimated_duration_minutes: data.estimated_duration_minutes,
+    exercises: data.program_exercises as unknown as ProgramDay['exercises'],
+  }
+}

@@ -6,6 +6,7 @@
  */
 
 import type { ProgramDay } from '@/types'
+import { StartWorkoutButton } from './StartWorkoutButton'
 
 interface TodayWorkoutProps {
   day: ProgramDay | null
@@ -51,14 +52,7 @@ export function TodayWorkout({ day, weeksComplete }: TodayWorkoutProps) {
           ))}
         </div>
 
-        <button
-          className="w-full cursor-not-allowed rounded-lg bg-[#6366F1] py-3 font-medium text-white opacity-50"
-          disabled
-          aria-disabled="true"
-          title="Workout logging coming soon"
-        >
-          Start Workout
-        </button>
+        <StartWorkoutButton programDayId={day.id} programId={day.program_id} />
       </div>
     )
   }
