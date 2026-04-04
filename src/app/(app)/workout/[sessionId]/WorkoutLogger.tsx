@@ -16,12 +16,14 @@ import { useWorkoutStore } from '@/stores/workout.store'
 import { ExerciseCard } from '@/components/workout/ExerciseCard'
 import { RestTimer } from '@/components/workout/RestTimer'
 import type { ProgramDay } from '@/types'
+import type { ProgressionResult } from '@/lib/utils/progressive-overload'
 
 interface WorkoutLoggerProps {
   sessionId: string
   programDayId: string | null
   programId: string | null
   programDay: ProgramDay | null
+  suggestions?: Record<string, ProgressionResult>
 }
 
 export function WorkoutLogger({
@@ -29,6 +31,7 @@ export function WorkoutLogger({
   programDayId,
   programId,
   programDay,
+  suggestions,
 }: WorkoutLoggerProps) {
   const router = useRouter()
   const [activeIndex, setActiveIndex] = useState(0)
@@ -82,6 +85,7 @@ export function WorkoutLogger({
                 programExercise={ex}
                 sessionId={sessionId}
                 isActive={i === activeIndex}
+                progression={suggestions?.[ex.exercise_id]}
               />
             </button>
           ))}

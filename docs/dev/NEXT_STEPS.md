@@ -1,6 +1,6 @@
 # KairoFit - Next Steps
 
-_Last updated: 2026-04-02. Reflects state after Phase 3 (dashboard UI) completion._
+_Last updated: 2026-04-04. Reflects state after Phase 6 (progressive overload) completion._
 
 ---
 
@@ -39,15 +39,9 @@ _Last updated: 2026-04-02. Reflects state after Phase 3 (dashboard UI) completio
 - `onboardingStateSchema.parse(state)` validates all client-supplied state at DB write boundary
 - RLS enforced on all tables; no service role key exposed to client
 
-### Test coverage (98/104 passing)
+### Test coverage (220/220 passing)
 
-- `src/lib/db/queries/__tests__/programs.test.ts` - saveProgramToDb coverage
-- `src/actions/__tests__/onboarding.actions.test.ts` - createAccountAction + persistOnboardingState
-- `src/stores/__tests__/onboarding.store.test.ts` - store state transitions (6 tests failing due to pre-existing jsdom `localStorage.clear` issue - unrelated to Phase 3)
-- `src/lib/ai/__tests__/workout-validator.test.ts` - constraint enforcement
-- `src/lib/utils/__tests__/progressive-overload.test.ts` - overload calculations
-- `src/components/workout/__tests__/ProgramCard.test.tsx` - ProgramCard component (17 tests)
-- `src/lib/db/queries/__tests__/sessions.test.ts` - getNextProgramDay query (11 tests)
+19 test files, 220 unit tests, all green.
 
 ### Dashboard UI (Phase 3)
 
@@ -59,86 +53,47 @@ Real home screen replacing the placeholder. Built on `feature/phase-3-dashboard`
 - `src/components/workout/StatsStrip.tsx` - streak (orange if >0) and weekly volume
 - `src/lib/db/queries/sessions.ts` - added `getNextProgramDay` (returns first unlogged day in current week)
 
+### Workout Logging (Phase 4)
+
+Full set-logging flow. Users start a session, log reps/weight per exercise, use the rest timer, and complete the session.
+
+- `src/app/(app)/workout/[sessionId]/page.tsx` + `WorkoutLogger.tsx` - active workout view
+- `src/components/workout/SetLogger.tsx`, `RestTimer.tsx`, `ExerciseCard.tsx`, `StartWorkoutButton.tsx`
+- `src/actions/workout.actions.ts` - `startSessionAction`, `logSetAction`, `completeSessionAction`
+- `completeSessionAction` uses `after()` to update muscle recovery non-blocking
+
+### Post-Workout Experience (Phase 5)
+
+Four-step post-workout sequence. Rendered at `/workout/[sessionId]/complete`.
+
+- `src/app/(app)/workout/[sessionId]/complete/page.tsx` - server component, loads session data
+- `src/components/workout/StreakMilestone.tsx` - streak count + milestone animation (Framer Motion)
+- `src/components/charts/RecoveryHeatmap.tsx` - 13-muscle recovery visualization
+- `src/components/ai/KiroDebrief.tsx` - streaming inline Kiro debrief via `useCompletion`
+- `src/components/social/ShareCard.tsx` - on-demand shareable workout card
+- `src/app/api/debrief/[sessionId]/route.ts` - SSE streaming endpoint, rate-limited
+- `src/lib/db/queries/sessions.ts` - `getCompletedSessionSummary` + `getStreakCount`
+
+### Progressive Overload (Phase 6)
+
+Deterministic next-session targets displayed inline on each exercise card during a workout.
+
+- `src/lib/db/queries/sessions.ts` - added `getRecentPerformance(userId, exerciseId, limit?)` - fetches last N work sets from completed sessions
+- `src/lib/db/queries/progression.ts` - NEW: `getProgressionSuggestionsForDay(userId, programDayId)` - orchestrates per-exercise suggestions using all three calculators
+- `src/components/workout/ExerciseCard.tsx` - added `progression?: ProgressionResult` prop + `ProgressionHint` sub-component
+- `src/app/(app)/workout/[sessionId]/WorkoutLogger.tsx` - threads `suggestions` prop from page through to each ExerciseCard
+- `src/app/(app)/workout/[sessionId]/page.tsx` - parallel-fetches program day + progression suggestions server-side
+
+**Three progression models** (scheme set per-exercise by AI at generation time):
+- `linear` - add weight every session when all reps hit (levels 1-2 typical)
+- `double_progression` - increase reps within range, then bump weight and reset (level 3 typical)
+- `rpe_based` - maintain/increase/decrease based on average RPE vs. target zone 7-9 (levels 4-5 typical)
+
+No DB migration required - suggestions are computed at render time and displayed as hints only.
+
 ---
 
 ## What to build next
-
-### Phase 4: Workout Logging (Set Logger)
-
-The core revenue-driving feature. Users log sets in real time.
-
-**Goal:** User can start a session, log each set with reps/weight, rest between sets, and complete the session.
-
-**Files to create:**
-
-- `src/app/(app)/workout/[sessionId]/page.tsx` - active workout view
-- `src/components/workout/SetLogger.tsx` - +/- controls for reps and weight
-- `src/components/workout/RestTimer.tsx` - countdown timer after each set
-- `src/components/workout/ExerciseCard.tsx` - shows target, logs actual
-
-**Actions to implement** (stubs exist in `workout.actions.ts`):
-
-- `startSessionAction` - creates session row, returns sessionId
-- `logSetAction` - inserts set into `workout_sets` with reps/weight/rpe
-- `completeSessionAction` - marks session complete, triggers `after()` hooks
-
-**Offline-first:** See `skills/offline-sync-pattern/` - sets queue to IndexedDB first, sync in background.
-
-**Acceptance criteria:**
-
-- [ ] Start workout from dashboard - session created in DB
-- [ ] Log sets with reps and weight - persisted (online) or queued (offline)
-- [ ] Rest timer countdown with haptic feedback on mobile
-- [ ] Complete workout - session marked done, redirect to post-workout
-
----
-
-### Phase 5: Post-Workout Experience
-
-The four-step post-workout sequence defined in CLAUDE.md.
-
-**Goal:** After completing a session, show streak animation, recovery heatmap update, Kiro debrief, and optional share card.
-
-**Files to create:**
-
-- `src/app/(app)/workout/complete/page.tsx` - post-workout flow container
-- `src/components/workout/StreakAnimation.tsx` - streak + milestone badge
-- `src/components/charts/RecoveryHeatmap.tsx` - muscle recovery visualization
-- `src/components/ai/KiroDebrief.tsx` - streaming inline AI debrief (not a popup)
-- `src/components/social/ShareCard.tsx` - shareable workout card (on demand)
-
-**Sequence:**
-
-1. Streak + milestone animation (Framer Motion, must be `'use client'`)
-2. Recovery heatmap update (SRA curve - see `src/lib/utils/recovery-model.ts`)
-3. Kiro AI debrief (streaming via Vercel AI SDK, inline text)
-4. Share card (on demand only - see `src/lib/utils/workout-share.ts`)
-
-**Kiro voice rules:** Direct, specific numbers, no motivational fluff. See `skills/kiro-output-auditor/`.
-
----
-
-### Phase 6: Progressive Overload + Adaptive Programming
-
-The intelligence that makes KairoFit defensible vs. FitBod.
-
-**Goal:** Program automatically adjusts based on logged performance. Next session targets are personalized.
-
-**Files to create/modify:**
-
-- `src/lib/utils/progressive-overload.ts` - deterministic overload calculations (exists, verify complete)
-- `src/lib/db/queries/sessions.ts` - add `getRecentPerformance(userId, exerciseId)` query
-- `src/actions/program.actions.ts` - add `adjustProgramAction` (stub exists)
-
-**Logic:**
-
-- If user hit all reps at top of range for 2+ sessions: increase weight by micro-increment
-- If user missed bottom of rep range: hold weight, flag for review
-- Deload trigger: 4 weeks of linear progression or explicit fatigue signal
-
-All calculations in `src/lib/utils/` - deterministic code owns programming logic, Kiro owns language.
-
----
 
 ### Phase 7: Testing Layers 2-5
 
@@ -217,12 +172,24 @@ All analytics use `after()` so they never delay the user response.
 | `src/stores/workout.store.ts`                | Complete                         | Active workout state                            |
 | `src/actions/onboarding.actions.ts`          | Complete                         | OTP send, persist onboarding state              |
 | `src/actions/program.actions.ts`             | Complete (stubs for adjust/swap) | AI program generation                           |
-| `src/actions/workout.actions.ts`             | Stubs                            | Set logging, session management                 |
+| `src/actions/workout.actions.ts`             | Complete (Phase 4)               | startSession, logSet, completeSession           |
 | `src/app/onboarding/`                        | Complete                         | All 23 screens                                  |
 | `src/app/(app)/dashboard/page.tsx`           | Complete (Phase 3)               | Dashboard with parallel data fetching           |
 | `src/components/workout/ProgramCard.tsx`     | Complete (Phase 3)               | Program name, archetype badge, week X/Y         |
 | `src/components/workout/TodayWorkout.tsx`    | Complete (Phase 3)               | Next unlogged day; handles week-complete/empty  |
 | `src/components/workout/StatsStrip.tsx`      | Complete (Phase 3)               | Streak and weekly volume display                |
+| `src/app/(app)/workout/[sessionId]/`         | Complete (Phase 4)               | Active workout logger (page + WorkoutLogger)    |
+| `src/components/workout/SetLogger.tsx`       | Complete (Phase 4)               | Reps/weight +/- controls with optimistic UI     |
+| `src/components/workout/RestTimer.tsx`       | Complete (Phase 4)               | Countdown timer after each set                  |
+| `src/components/workout/ExerciseCard.tsx`    | Complete (Phase 4+6)             | Target vs actual display + progression hint     |
+| `src/app/(app)/workout/[sessionId]/complete/`| Complete (Phase 5)               | Post-workout experience server page             |
+| `src/components/workout/StreakMilestone.tsx` | Complete (Phase 5)               | Streak count + milestone animation              |
+| `src/components/charts/RecoveryHeatmap.tsx`  | Complete (Phase 5)               | 13-muscle recovery heatmap                      |
+| `src/components/ai/KiroDebrief.tsx`          | Complete (Phase 5)               | Streaming inline AI debrief                     |
+| `src/components/social/ShareCard.tsx`        | Complete (Phase 5)               | On-demand shareable workout card                |
+| `src/app/api/debrief/[sessionId]/route.ts`   | Complete (Phase 5)               | SSE streaming debrief endpoint                  |
+| `src/lib/db/queries/progression.ts`          | Complete (Phase 6)               | getProgressionSuggestionsForDay orchestrator    |
+| `src/app/(app)/workout/[sessionId]/page.tsx` | Complete (Phase 4+6)             | Parallel fetch: session + progression hints     |
 | `supabase/migrations/001_initial_schema.sql` | Complete                         | Full DB schema + RLS + triggers                 |
 
 ---

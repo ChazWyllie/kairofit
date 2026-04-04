@@ -431,3 +431,34 @@ export async function getProgramDay(dayId: string): Promise<ProgramDay | null> {
     exercises: data.program_exercises as unknown as ProgramDay['exercises'],
   }
 }
+
+/**
+ * Fetch the most recent sets for a given exercise by this user.
+ * Only includes work sets from completed sessions (excludes warmups).
+ * Used by the progression engine to compute next-session targets.
+ */
+export async function getRecentPerformance(
+  userId: string,
+  exerciseId: string,
+  limit = 5
+): Promise<WorkoutSet[]> {
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase
+    .from('workout_sets')
+    .select(
+      'id, session_id, exercise_id, program_exercise_id, user_id, set_number, reps_completed, weight_kg, rpe, is_warmup, is_dropset, logged_at'
+    )
+    .eq('user_id', userId)
+    .eq('exercise_id', exerciseId)
+    .eq('is_warmup', false)
+    .order('logged_at', { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    console.error('getRecentPerformance error:', error.message)
+    return []
+  }
+
+  return (data ?? []) as WorkoutSet[]
+}
