@@ -20,6 +20,7 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     exclude: [],
+    setupFiles: ['./vitest.setup.ts'],
     coverage: {
       provider: 'v8',
       include: ['src/lib/**/*.ts', 'src/components/**/*.tsx'],

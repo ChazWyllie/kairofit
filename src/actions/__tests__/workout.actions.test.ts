@@ -13,6 +13,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 // Mocks (must be declared before imports that use them)
 // ---------------------------------------------------------------------------
 
+vi.mock('next/server', () => ({
+  after: vi.fn((_fn: () => Promise<void>) => {
+    // In tests, don't actually run the after() callback
+    // Just return a promise that resolves immediately
+    return Promise.resolve()
+  }),
+}))
+
 vi.mock('@/lib/db/supabase', () => ({
   createServerClient: vi.fn(),
 }))
@@ -144,12 +152,35 @@ function buildSupabaseMock({
       }
 
       if (table === 'workout_sets') {
+        // Support both insert and select chains
+        const insertChainSets = {
+          insert: vi.fn().mockReturnThis(),
+          select: vi.fn().mockReturnThis(),
+          single: vi.fn().mockResolvedValue({ data: insertSetData, error: insertSetError }),
+        }
+
+        // Support the after() recovery update query: select().eq().eq()
+        const selectChainSets = {
+          select: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          mockResolvedValue: vi.fn().mockResolvedValue({ data: [], error: null }),
+        }
+
         return {
-          insert: vi.fn().mockReturnValue({
-            select: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: insertSetData, error: insertSetError }),
+          insert: vi.fn().mockReturnValue(insertChainSets),
+          select: vi.fn().mockReturnValue({
+            ...selectChainSets,
+            eq: vi.fn().mockReturnValue({
+              eq: vi.fn().mockResolvedValue({ data: [], error: null }),
             }),
           }),
+        }
+      }
+
+      if (table === 'muscle_recovery') {
+        // Support upsert chain for after() recovery updates
+        return {
+          upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
         }
       }
 
