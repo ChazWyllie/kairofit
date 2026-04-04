@@ -1,6 +1,6 @@
 # KairoFit - Next Steps
 
-_Last updated: 2026-04-04. Reflects state after Phase 6 (progressive overload) completion._
+_Last updated: 2026-04-04. Reflects state after Phase 6 (progressive overload) + post-review fixes._
 
 ---
 
@@ -39,9 +39,9 @@ _Last updated: 2026-04-04. Reflects state after Phase 6 (progressive overload) c
 - `onboardingStateSchema.parse(state)` validates all client-supplied state at DB write boundary
 - RLS enforced on all tables; no service role key exposed to client
 
-### Test coverage (220/220 passing)
+### Test coverage (226/226 passing)
 
-19 test files, 220 unit tests, all green.
+19 test files, 226 unit tests, all green.
 
 ### Dashboard UI (Phase 3)
 
@@ -79,10 +79,11 @@ Four-step post-workout sequence. Rendered at `/workout/[sessionId]/complete`.
 Deterministic next-session targets displayed inline on each exercise card during a workout.
 
 - `src/lib/db/queries/sessions.ts` - added `getRecentPerformance(userId, exerciseId, limit?)` - fetches last N work sets from completed sessions
-- `src/lib/db/queries/progression.ts` - NEW: `getProgressionSuggestionsForDay(userId, programDayId)` - orchestrates per-exercise suggestions using all three calculators
-- `src/components/workout/ExerciseCard.tsx` - added `progression?: ProgressionResult` prop + `ProgressionHint` sub-component
+- `src/lib/db/queries/progression.ts` - NEW: `getProgressionSuggestionsForDay(userId, programDay)` - accepts ProgramDay directly (avoids N+1), orchestrates per-exercise suggestions
+- `src/lib/utils/progressive-overload.ts` - `ProgressionResult` now includes `units: 'metric' | 'imperial'` so the UI renders the correct weight suffix
+- `src/components/workout/ExerciseCard.tsx` - added `progression?: ProgressionResult` prop + `ProgressionHint` sub-component (uses `progression.units` for kg/lbs label)
 - `src/app/(app)/workout/[sessionId]/WorkoutLogger.tsx` - threads `suggestions` prop from page through to each ExerciseCard
-- `src/app/(app)/workout/[sessionId]/page.tsx` - parallel-fetches program day + progression suggestions server-side
+- `src/app/(app)/workout/[sessionId]/page.tsx` - fetches programDay then passes it to getProgressionSuggestionsForDay (no duplicate DB call)
 
 **Three progression models** (scheme set per-exercise by AI at generation time):
 
