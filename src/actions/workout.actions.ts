@@ -169,9 +169,8 @@ export const completeSessionAction = action
         // Extract muscle groups and count sets per muscle
         const muscleSetCounts = new Map<string, number>()
         for (const set of sets ?? []) {
-          const primaryMuscles = (
-            set.exercises as unknown as { primary_muscles: string[] }
-          ).primary_muscles
+          const primaryMuscles = (set.exercises as unknown as { primary_muscles: string[] })
+            .primary_muscles
           for (const muscle of primaryMuscles) {
             muscleSetCounts.set(muscle, (muscleSetCounts.get(muscle) ?? 0) + 1)
           }

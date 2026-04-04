@@ -453,11 +453,13 @@ Claude Code learns patterns from this project and saves them to `~/.claude/skill
 These are committed to `.claude/skills/learned/` so they sync across devices.
 
 **New device setup** (after cloning):
+
 ```bash
 bash scripts/sync-skills.sh import
 ```
 
 **After learning a new skill** (before committing):
+
 ```bash
 bash scripts/sync-skills.sh export
 git add .claude/skills/learned/
@@ -465,6 +467,7 @@ git commit -m "chore: add learned skill - <name>"
 ```
 
 **Check what's out of sync:**
+
 ```bash
 bash scripts/sync-skills.sh status
 ```

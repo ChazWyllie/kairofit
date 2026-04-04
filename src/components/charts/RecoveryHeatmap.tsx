@@ -118,7 +118,7 @@ export function RecoveryHeatmap({ recoveryData }: RecoveryHeatmapProps) {
                 </span>
               </div>
               <div className="text-center">
-                <p className="text-xs font-medium text-[#F5F5F4] capitalize">
+                <p className="text-xs font-medium capitalize text-[#F5F5F4]">
                   {recovery.muscle_group.replace('_', ' ')}
                 </p>
                 <p className="text-xs text-[#6B6B68]">{label}</p>

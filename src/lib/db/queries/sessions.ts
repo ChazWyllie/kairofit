@@ -70,9 +70,7 @@ export async function getSessionSets(sessionId: string): Promise<WorkoutSet[]> {
  *
  * Includes muscle groups trained by inferring from exercises' primary_muscles.
  */
-export async function getCompletedSessionSummary(
-  sessionId: string
-): Promise<{
+export async function getCompletedSessionSummary(sessionId: string): Promise<{
   id: string
   completed_at: string
   duration_seconds: number | null
@@ -114,15 +112,17 @@ export async function getCompletedSessionSummary(
   }
 
   // Process the session data
-  const sets = (session.workout_sets as unknown as Array<{
-    id: string
-    exercise_id: string
-    set_number: number
-    reps_completed: number
-    weight_kg: number | null
-    is_warmup: boolean
-    exercises: { id: string; name: string; primary_muscles: string[] }
-  }>)
+  const sets = (
+    session.workout_sets as unknown as Array<{
+      id: string
+      exercise_id: string
+      set_number: number
+      reps_completed: number
+      weight_kg: number | null
+      is_warmup: boolean
+      exercises: { id: string; name: string; primary_muscles: string[] }
+    }>
+  )
     .filter((s) => !s.is_warmup)
     .map((s) => ({
       id: s.id,
@@ -145,7 +145,7 @@ export async function getCompletedSessionSummary(
   }
 
   // Calculate total volume
-  const totalVolume = sets.reduce((acc, s) => acc + ((s.weight_kg ?? 0) * s.reps_completed), 0)
+  const totalVolume = sets.reduce((acc, s) => acc + (s.weight_kg ?? 0) * s.reps_completed, 0)
 
   return {
     id: session.id,

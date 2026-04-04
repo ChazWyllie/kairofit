@@ -18,10 +18,7 @@ import { getKiroSystemPrompt } from '@/lib/ai/kiro-voice'
 import { getCompletedSessionSummary } from '@/lib/db/queries/sessions'
 import { RATE_LIMIT_KEYS } from '@/lib/validation/schemas'
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ sessionId: string }> }
-) {
+export async function GET(_req: Request, { params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = await params
 
   try {
