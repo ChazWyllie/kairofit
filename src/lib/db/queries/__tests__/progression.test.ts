@@ -12,9 +12,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getProgressionSuggestionsForDay } from '../progression'
 import type { ProgramDay, ProgramExercise, UserProfile, WorkoutSet, Exercise } from '@/types'
 
-// Mock all sub-functions so this test is pure orchestration logic
+// Mock DB sub-functions so this test is pure orchestration logic.
+// getProgressionSuggestionsForDay now accepts ProgramDay directly,
+// so only getRecentPerformance and getProfileForGeneration need mocking.
 vi.mock('../sessions', () => ({
-  getProgramDay: vi.fn(),
   getRecentPerformance: vi.fn(),
 }))
 
@@ -22,7 +23,7 @@ vi.mock('../profiles', () => ({
   getProfileForGeneration: vi.fn(),
 }))
 
-import { getProgramDay, getRecentPerformance } from '../sessions'
+import { getRecentPerformance } from '../sessions'
 import { getProfileForGeneration } from '../profiles'
 
 // ============================================================
@@ -125,29 +126,26 @@ describe('getProgressionSuggestionsForDay', () => {
   })
 
   it('returns empty object when program day not found', async () => {
-    vi.mocked(getProgramDay).mockResolvedValue(null)
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile())
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-missing')
+    const result = await getProgressionSuggestionsForDay('user-1', null)
 
     expect(result).toEqual({})
   })
 
   it('returns empty object when profile not found', async () => {
-    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay())
     vi.mocked(getProfileForGeneration).mockResolvedValue(null)
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
+    const result = await getProgressionSuggestionsForDay('user-1', mockProgramDay())
 
     expect(result).toEqual({})
   })
 
   it('returns maintain suggestion when no recent sets exist', async () => {
-    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay())
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 3 }))
     vi.mocked(getRecentPerformance).mockResolvedValue([])
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
+    const result = await getProgressionSuggestionsForDay('user-1', mockProgramDay())
 
     expect(result['exercise-1']).toBeDefined()
     expect(result['exercise-1']!.action).toBe('maintain')
@@ -155,7 +153,6 @@ describe('getProgressionSuggestionsForDay', () => {
   })
 
   it('applies double_progression for level 3 when all sets hit reps_max', async () => {
-    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay())
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 3 }))
     // 3 sets all hitting reps_max (12)
     vi.mocked(getRecentPerformance).mockResolvedValue([
@@ -164,7 +161,7 @@ describe('getProgressionSuggestionsForDay', () => {
       mockWorkoutSet({ id: 's3', reps_completed: 12, weight_kg: 60 }),
     ])
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
+    const result = await getProgressionSuggestionsForDay('user-1', mockProgramDay())
 
     expect(result['exercise-1']!.action).toBe('increase_weight')
     expect(result['exercise-1']!.suggested_weight).toBeGreaterThan(60)
@@ -178,13 +175,15 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_max: 8,
       exercise: mockExercise({ primary_muscles: ['chest', 'triceps'] }),
     })
-    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay({ exercises: [upperBodyExercise] }))
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 1 }))
     vi.mocked(getRecentPerformance).mockResolvedValue([
       mockWorkoutSet({ reps_completed: 8, weight_kg: 40 }),
     ])
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
+    const result = await getProgressionSuggestionsForDay(
+      'user-1',
+      mockProgramDay({ exercises: [upperBodyExercise] })
+    )
 
     expect(result['exercise-1']!.action).toBe('increase_weight')
     // Upper body linear: +2.5 kg
@@ -197,14 +196,16 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_min: 4,
       reps_max: 6,
     })
-    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay({ exercises: [rpeExercise] }))
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 4 }))
     vi.mocked(getRecentPerformance).mockResolvedValue([
       mockWorkoutSet({ reps_completed: 5, weight_kg: 100, rpe: 8 }),
       mockWorkoutSet({ reps_completed: 5, weight_kg: 100, rpe: 8 }),
     ])
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
+    const result = await getProgressionSuggestionsForDay(
+      'user-1',
+      mockProgramDay({ exercises: [rpeExercise] })
+    )
 
     // RPE 8 is in target zone (7-9) -> maintain
     expect(result['exercise-1']!.action).toBe('maintain')
@@ -218,13 +219,15 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_max: 5,
       exercise: mockExercise({ primary_muscles: ['quads', 'glutes', 'hamstrings'] }),
     })
-    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay({ exercises: [squatExercise] }))
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 2 }))
     vi.mocked(getRecentPerformance).mockResolvedValue([
       mockWorkoutSet({ reps_completed: 5, weight_kg: 80 }),
     ])
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
+    const result = await getProgressionSuggestionsForDay(
+      'user-1',
+      mockProgramDay({ exercises: [squatExercise] })
+    )
 
     expect(result['exercise-1']!.action).toBe('increase_weight')
     // Lower body linear: +5 kg
@@ -240,9 +243,6 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_min: 5,
       reps_max: 8,
     })
-    vi.mocked(getProgramDay).mockResolvedValue(
-      mockProgramDay({ exercises: [mockProgramExercise(), exercise2] })
-    )
     vi.mocked(getProfileForGeneration).mockResolvedValue(mockProfile({ experience_level: 3 }))
     vi.mocked(getRecentPerformance)
       .mockResolvedValueOnce([]) // exercise-1: no data
@@ -250,7 +250,10 @@ describe('getProgressionSuggestionsForDay', () => {
         mockWorkoutSet({ exercise_id: 'exercise-2', weight_kg: 100, reps_completed: 8 }),
       ]) // exercise-2: data
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
+    const result = await getProgressionSuggestionsForDay(
+      'user-1',
+      mockProgramDay({ exercises: [mockProgramExercise(), exercise2] })
+    )
 
     expect(result['exercise-1']).toBeDefined()
     expect(result['exercise-2']).toBeDefined()
@@ -263,7 +266,6 @@ describe('getProgressionSuggestionsForDay', () => {
       reps_min: 8,
       reps_max: 8,
     })
-    vi.mocked(getProgramDay).mockResolvedValue(mockProgramDay({ exercises: [upperBodyExercise] }))
     vi.mocked(getProfileForGeneration).mockResolvedValue(
       mockProfile({ experience_level: 1, preferred_units: 'imperial' })
     )
@@ -271,7 +273,10 @@ describe('getProgressionSuggestionsForDay', () => {
       mockWorkoutSet({ reps_completed: 8, weight_kg: 100 }),
     ])
 
-    const result = await getProgressionSuggestionsForDay('user-1', 'day-1')
+    const result = await getProgressionSuggestionsForDay(
+      'user-1',
+      mockProgramDay({ exercises: [upperBodyExercise] })
+    )
 
     expect(result['exercise-1']!.action).toBe('increase_weight')
     // Upper body imperial: +5 lbs (not 2.5 kg)

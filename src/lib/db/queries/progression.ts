@@ -10,7 +10,7 @@
  * logic that combines multiple queries lives here in its own module.
  */
 
-import { getProgramDay, getRecentPerformance } from './sessions'
+import { getRecentPerformance } from './sessions'
 import { getProfileForGeneration } from './profiles'
 import {
   calculateLinearProgression,
@@ -18,7 +18,7 @@ import {
   calculateRPEProgression,
   type ProgressionResult,
 } from '@/lib/utils/progressive-overload'
-import type { ProgramExercise } from '@/types'
+import type { ProgramDay, ProgramExercise } from '@/types'
 
 // Lower-body muscles - used to select the correct weight increment.
 // Source: NSCA classification of lower extremity musculature.
@@ -46,8 +46,11 @@ export function isLowerBodyExercise(exercise: ProgramExercise['exercise']): bool
 /**
  * Compute next-session weight and rep targets for every exercise in a program day.
  *
+ * Accepts the already-fetched ProgramDay to avoid a redundant DB round-trip -
+ * the caller (page.tsx) already loads it for the workout UI.
+ *
  * Returns an empty object when:
- * - The program day does not exist (wrong dayId or RLS denied)
+ * - programDay is null (caller's responsibility to guard)
  * - The user profile cannot be loaded
  *
  * Per exercise, the result is 'maintain' with suggested_weight=null when there is
@@ -55,14 +58,13 @@ export function isLowerBodyExercise(exercise: ProgramExercise['exercise']): bool
  */
 export async function getProgressionSuggestionsForDay(
   userId: string,
-  programDayId: string
+  programDay: ProgramDay | null
 ): Promise<Record<string, ProgressionResult>> {
-  const [programDay, profile] = await Promise.all([
-    getProgramDay(programDayId),
-    getProfileForGeneration(userId),
-  ])
+  if (!programDay) return {}
 
-  if (!programDay || !profile) return {}
+  const profile = await getProfileForGeneration(userId)
+
+  if (!profile) return {}
 
   const units = profile.preferred_units ?? 'metric'
 

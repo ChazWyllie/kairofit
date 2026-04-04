@@ -24,15 +24,14 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     notFound()
   }
 
-  // Load program day and progression suggestions in parallel.
-  // Progression suggestions are best-effort - a failure returns an empty object
-  // so the rest of the page still renders normally.
-  const [programDay, suggestions] = await Promise.all([
-    session.program_day_id ? getProgramDay(session.program_day_id) : null,
-    session.program_day_id && session.user_id
-      ? getProgressionSuggestionsForDay(session.user_id, session.program_day_id)
-      : Promise.resolve({}),
-  ])
+  // Load program day first - suggestions reuse it to avoid a second DB round-trip.
+  const programDay = session.program_day_id ? await getProgramDay(session.program_day_id) : null
+
+  // Progression suggestions are best-effort - failure returns an empty object.
+  const suggestions =
+    programDay && session.user_id
+      ? await getProgressionSuggestionsForDay(session.user_id, programDay)
+      : {}
 
   return (
     <div className="min-h-screen bg-[#0A0A0B] px-4 py-6">

@@ -102,8 +102,11 @@ function ProgressionHint({ progression }: { progression: ProgressionResult }) {
   const label = ACTION_LABEL[progression.action]
   const color = ACTION_COLOR[progression.action]
 
+  const unitLabel = progression.units === 'metric' ? 'kg' : 'lbs'
   const weightHint =
-    progression.suggested_weight !== null ? `${progression.suggested_weight} kg` : null
+    progression.suggested_weight !== null
+      ? `${progression.suggested_weight} ${unitLabel}`
+      : null
 
   return (
     <div className="mt-2 flex items-center gap-2 rounded-lg bg-[#1A1A1F] px-3 py-2">
