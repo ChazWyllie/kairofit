@@ -10,15 +10,19 @@
 
 'use server'
 
+import { after } from 'next/server'
 import { createSafeActionClient } from 'next-safe-action'
 import { createServerClient } from '@/lib/db/supabase'
 import { checkRateLimit } from '@/lib/utils/rate-limit'
+import { calculateRecoveryUpdates } from '@/lib/utils/recovery-model'
+import { updateMuscleRecovery } from '@/lib/db/queries/recovery'
 import {
   logSetSchema,
   startSessionSchema,
   completeSessionSchema,
   RATE_LIMIT_KEYS,
 } from '@/lib/validation/schemas'
+import type { MuscleGroup } from '@/types'
 
 // ============================================================
 // AUTHENTICATED ACTION CLIENT WITH MIDDLEWARE
@@ -141,12 +145,59 @@ export const completeSessionAction = action
 
     if (error) throw new Error(`Failed to complete session: ${error.message}`)
 
-    // TODO: Use after() API for non-blocking post-completion work:
-    // import { after } from 'next/server'
-    // after(async () => {
-    //   await updateMuscleRecovery(session.id, user.id)
-    //   await checkForNewPRs(session.id, user.id)
-    // })
+    // Update muscle recovery asynchronously after response is sent
+    // This runs non-blocking: user sees the complete page before recovery updates finish
+    after(async () => {
+      try {
+        // Fetch all sets from this session to extract muscles worked
+        const { data: sets, error: setsError } = await supabase
+          .from('workout_sets')
+          .select(
+            `
+            id, exercise_id, is_warmup,
+            exercises (id, primary_muscles)
+          `
+          )
+          .eq('session_id', parsedInput.session_id)
+          .eq('is_warmup', false)
+
+        if (setsError) {
+          console.error('Failed to fetch sets for recovery update:', setsError.message)
+          return
+        }
+
+        // Extract muscle groups and count sets per muscle
+        const muscleSetCounts = new Map<string, number>()
+        for (const set of sets ?? []) {
+          const primaryMuscles = (set.exercises as unknown as { primary_muscles: string[] })
+            .primary_muscles
+          for (const muscle of primaryMuscles) {
+            muscleSetCounts.set(muscle, (muscleSetCounts.get(muscle) ?? 0) + 1)
+          }
+        }
+
+        // Calculate recovery updates for each muscle
+        const recoveryUpdates = calculateRecoveryUpdates(
+          Array.from(muscleSetCounts.entries()).map(([muscle, setCount]) => ({
+            muscle: muscle as MuscleGroup,
+            sets: setCount,
+          })),
+          completedAt
+        )
+
+        // Upsert each muscle's recovery data
+        for (const update of recoveryUpdates) {
+          await updateMuscleRecovery(user.id, update.muscle_group, {
+            estimated_recovery_pct: update.estimated_recovery_pct,
+            last_trained_at: update.last_trained_at,
+            sets_this_week: 0, // Will be calculated separately in a weekly reset
+          })
+        }
+      } catch (err) {
+        console.error('Recovery update failed (non-blocking):', err)
+        // Silently fail - this runs after response, should not affect user experience
+      }
+    })
 
     return data
   })

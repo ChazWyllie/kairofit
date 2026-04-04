@@ -48,7 +48,7 @@ export function WorkoutLogger({
   const { execute: complete, isPending: isCompleting } = useAction(completeSessionAction, {
     onSuccess: () => {
       endWorkout()
-      router.push('/dashboard')
+      router.push(`/workout/${sessionId}/complete`)
     },
   })
 

@@ -65,6 +65,100 @@ export async function getSessionSets(sessionId: string): Promise<WorkoutSet[]> {
 }
 
 /**
+ * Get a completed session with all its sets and exercises, ready for the post-workout UI.
+ * Returns null if session not found, not completed, or not owned by caller (RLS enforces).
+ *
+ * Includes muscle groups trained by inferring from exercises' primary_muscles.
+ */
+export async function getCompletedSessionSummary(sessionId: string): Promise<{
+  id: string
+  completed_at: string
+  duration_seconds: number | null
+  sets: Array<{
+    id: string
+    exercise_id: string
+    exercise_name: string
+    set_number: number
+    reps_completed: number
+    weight_kg: number | null
+    is_warmup: boolean
+  }>
+  muscles_worked: string[]
+  total_sets: number
+  total_volume_kg: number
+} | null> {
+  const supabase = await createServerClient()
+
+  const { data: session, error: sessionError } = await supabase
+    .from('workout_sessions')
+    .select(
+      `
+      id, completed_at, duration_seconds, status,
+      workout_sets (
+        id, exercise_id, set_number, reps_completed, weight_kg, is_warmup,
+        exercises (id, name, primary_muscles)
+      )
+    `
+    )
+    .eq('id', sessionId)
+    .eq('status', 'completed')
+    .single()
+
+  if (sessionError || !session) {
+    if (sessionError && sessionError.code !== 'PGRST116') {
+      console.error('getCompletedSessionSummary error:', sessionError.message)
+    }
+    return null
+  }
+
+  // Process the session data
+  const sets = (
+    session.workout_sets as unknown as Array<{
+      id: string
+      exercise_id: string
+      set_number: number
+      reps_completed: number
+      weight_kg: number | null
+      is_warmup: boolean
+      exercises: { id: string; name: string; primary_muscles: string[] }
+    }>
+  )
+    .filter((s) => !s.is_warmup)
+    .map((s) => ({
+      id: s.id,
+      exercise_id: s.exercise_id,
+      exercise_name: s.exercises.name,
+      set_number: s.set_number,
+      reps_completed: s.reps_completed,
+      weight_kg: s.weight_kg,
+      is_warmup: s.is_warmup,
+    }))
+
+  // Collect unique muscles trained
+  const musclesWorked = new Set<string>()
+  for (const workout_set of session.workout_sets as unknown as Array<{
+    exercises: { primary_muscles: string[] }
+  }>) {
+    for (const muscle of workout_set.exercises.primary_muscles) {
+      musclesWorked.add(muscle)
+    }
+  }
+
+  // Calculate total volume
+  const totalVolume = sets.reduce((acc, s) => acc + (s.weight_kg ?? 0) * s.reps_completed, 0)
+
+  return {
+    id: session.id,
+    completed_at: session.completed_at ?? new Date().toISOString(),
+    duration_seconds: session.duration_seconds,
+    sets,
+    muscles_worked: Array.from(musclesWorked),
+    total_sets: sets.length,
+    total_volume_kg: totalVolume,
+  }
+}
+
+/**
  * Get the user's most recent completed sessions.
  * Used by the Kiro debrief for context and by the progress chart.
  */
