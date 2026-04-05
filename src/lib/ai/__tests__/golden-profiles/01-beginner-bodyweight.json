@@ -1,0 +1,182 @@
+{
+  "description": "Beginner, bodyweight only, 3-day full body. Level 1. No injuries. All exercises are bodyweight - no heavy compound rest requirement.",
+  "profile": {
+    "experience_level": 1,
+    "injuries": [],
+    "equipment": ["bodyweight"]
+  },
+  "program": {
+    "name": "Bodyweight Foundation - 3-Day Full Body",
+    "description": "3-day full body program using only bodyweight. Builds foundational movement patterns before adding load.",
+    "ai_rationale": "For a complete beginner with no equipment, full body sessions 3x/week hit each muscle group at the minimum effective frequency. Bodyweight training builds motor patterns that transfer directly to loaded training later.",
+    "weeks_duration": 6,
+    "progression_scheme": "double_progression",
+    "projected_weeks_to_goal": 8,
+    "projected_outcome_description": "6 weeks of consistent training builds the foundational strength and movement patterns needed to progress to loaded training.",
+    "days": [
+      {
+        "day_number": 1,
+        "name": "Full Body A",
+        "focus_muscles": ["chest", "back", "quads", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 35,
+        "exercises": [
+          {
+            "exercise_name": "Push-up",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Primary pushing pattern. Trains chest, triceps and anterior shoulders together.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Pull-up",
+            "sets": 3,
+            "reps_min": 3,
+            "reps_max": 8,
+            "rest_seconds": 90,
+            "rpe_target": 8,
+            "rationale": "Primary vertical pull. The single best bodyweight back exercise available.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Bodyweight Squat",
+            "sets": 3,
+            "reps_min": 15,
+            "reps_max": 25,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Quad-dominant lower body pattern. Builds the movement quality needed for loaded squats.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Glute Bridge",
+            "sets": 3,
+            "reps_min": 15,
+            "reps_max": 25,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Hip extension pattern. Targets glutes and hamstrings safely without any spinal loading.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 2,
+        "name": "Full Body B",
+        "focus_muscles": ["back", "quads", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 35,
+        "exercises": [
+          {
+            "exercise_name": "Inverted Row",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Horizontal pull pattern. Trains upper back and biceps with a different angle than pull-ups.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Push-up",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Horizontal push. Maintains pushing volume and training density across the week.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Bulgarian Split Squat",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 8,
+            "rationale": "Unilateral quad and glute work. Addresses leg symmetry and builds single-leg stability.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Hip Thrust",
+            "sets": 3,
+            "reps_min": 15,
+            "reps_max": 25,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Glute isolation at full hip extension. Higher rep range maximises glute activation without load.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 3,
+        "name": "Full Body C",
+        "focus_muscles": ["chest", "back", "quads", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 35,
+        "exercises": [
+          {
+            "exercise_name": "Pull-up",
+            "sets": 3,
+            "reps_min": 3,
+            "reps_max": 8,
+            "rest_seconds": 90,
+            "rpe_target": 8,
+            "rationale": "Vertical pull. Second weekly exposure reinforces the motor pattern and adds back volume.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Push-up",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 20,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Horizontal push. Slightly higher rep target than Day 1 for metabolic adaptation.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Bodyweight Squat",
+            "sets": 3,
+            "reps_min": 15,
+            "reps_max": 25,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Second weekly squat exposure. Same pattern, same load - frequency drives beginners.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Glute Bridge",
+            "sets": 3,
+            "reps_min": 15,
+            "reps_max": 25,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Hip extension pattern. Second weekly exposure builds glute endurance and neuromuscular efficiency.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      }
+    ]
+  },
+  "expectations": {
+    "valid": true,
+    "error_count": 0
+  }
+}
