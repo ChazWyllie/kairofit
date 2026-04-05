@@ -31,7 +31,6 @@ vi.mock('@anthropic-ai/sdk', () => ({
 // ============================================================
 
 import { judgeWorkoutQuality } from '../quality-judge'
-import type { QualityScore } from '../quality-judge'
 import type { GeneratedProgram } from '@/types'
 import validProgram from './fixtures/valid-program.json'
 
@@ -81,10 +80,11 @@ describe('judgeWorkoutQuality - score parsing', () => {
       })
     )
 
-    const result = await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    const result = await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     expect(result.safety).toBe(5)
     expect(result.scientific_accuracy).toBe(4)
@@ -104,10 +104,11 @@ describe('judgeWorkoutQuality - score parsing', () => {
       })
     )
 
-    const result = await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    const result = await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     // (5 + 3 + 4 + 4 + 4) / 5 = 4.0
     expect(result.average).toBeCloseTo(4.0)
@@ -124,10 +125,11 @@ describe('judgeWorkoutQuality - score parsing', () => {
       })
     )
 
-    const result = await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    const result = await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     expect(typeof result.raw_response).toBe('string')
     expect(result.raw_response.length).toBeGreaterThan(0)
@@ -154,10 +156,11 @@ describe('judgeWorkoutQuality - pass threshold', () => {
       })
     )
 
-    const result = await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    const result = await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     expect(result.passed).toBe(true)
   })
@@ -173,10 +176,11 @@ describe('judgeWorkoutQuality - pass threshold', () => {
       })
     )
 
-    const result = await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    const result = await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     expect(result.passed).toBe(true)
     expect(result.average).toBe(5)
@@ -193,10 +197,11 @@ describe('judgeWorkoutQuality - pass threshold', () => {
       })
     )
 
-    const result = await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    const result = await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     // (3 + 3 + 3 + 4 + 3) / 5 = 3.2
     expect(result.passed).toBe(false)
@@ -215,10 +220,11 @@ describe('judgeWorkoutQuality - pass threshold', () => {
       })
     )
 
-    const result = await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    const result = await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     // Average = (1+5+5+5+5)/5 = 4.2, but safety = 1 should force passed = false
     expect(result.passed).toBe(false)
@@ -247,10 +253,11 @@ describe('judgeWorkoutQuality - warning logging', () => {
       })
     )
 
-    const result = await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    const result = await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     expect(result.passed).toBe(false)
     expect(warnSpy).toHaveBeenCalledOnce()
@@ -273,10 +280,11 @@ describe('judgeWorkoutQuality - warning logging', () => {
       })
     )
 
-    await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     expect(warnSpy).not.toHaveBeenCalled()
 
@@ -304,10 +312,11 @@ describe('judgeWorkoutQuality - SDK usage', () => {
       })
     )
 
-    await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     expect(mockMessagesCreate).toHaveBeenCalledOnce()
     const callArgs = mockMessagesCreate.mock.calls[0]?.[0]
@@ -325,10 +334,11 @@ describe('judgeWorkoutQuality - SDK usage', () => {
       })
     )
 
-    await judgeWorkoutQuality(
-      validProgram as GeneratedProgram,
-      { experienceLevel: 3, goals: ['muscle'], injuries: [] }
-    )
+    await judgeWorkoutQuality(validProgram as GeneratedProgram, {
+      experienceLevel: 3,
+      goals: ['muscle'],
+      injuries: [],
+    })
 
     expect(mockMessagesCreate).toHaveBeenCalledTimes(1)
   })

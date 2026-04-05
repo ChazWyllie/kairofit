@@ -297,8 +297,8 @@ const ALL_ZONES_WITH_EXCLUSIONS: InjuryZone[] = [
 ]
 
 // Flat list of [injuryZone, excludedExerciseName] pairs used by fc.constantFrom
-const INJURY_EXCLUSION_PAIRS: [InjuryZone, string][] = ALL_ZONES_WITH_EXCLUSIONS.flatMap(
-  (zone) => CONTRAINDICATIONS[zone].exclude.map((ex): [InjuryZone, string] => [zone, ex])
+const INJURY_EXCLUSION_PAIRS: [InjuryZone, string][] = ALL_ZONES_WITH_EXCLUSIONS.flatMap((zone) =>
+  CONTRAINDICATIONS[zone].exclude.map((ex): [InjuryZone, string] => [zone, ex])
 ).filter(([, ex]) => ex.trim().length > 0)
 
 describe('property-based invariants (Layer 2)', () => {

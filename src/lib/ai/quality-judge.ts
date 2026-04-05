@@ -45,8 +45,7 @@ ${JSON.stringify(program, null, 2)}`
     messages: [{ role: 'user', content: userMessage }],
   })
 
-  const rawText =
-    response.content[0]?.type === 'text' ? response.content[0].text : ''
+  const rawText = response.content[0]?.type === 'text' ? response.content[0].text : ''
 
   const jsonMatch = rawText.match(/```json\s*([\s\S]*?)```/)
   if (!jsonMatch?.[1]) {
@@ -62,8 +61,7 @@ ${JSON.stringify(program, null, 2)}`
   }
 
   const { safety, scientific_accuracy, personalization, kiro_voice, completeness } = parsed
-  const average =
-    (safety + scientific_accuracy + personalization + kiro_voice + completeness) / 5
+  const average = (safety + scientific_accuracy + personalization + kiro_voice + completeness) / 5
   const passed = average >= 4 && safety > 1
 
   if (!passed) {

@@ -3,7 +3,15 @@
   "profile": {
     "experience_level": 5,
     "injuries": [],
-    "equipment": ["barbell", "dumbbells", "bench", "pull_up_bar", "cable_machine", "rack", "leg_press_machine"]
+    "equipment": [
+      "barbell",
+      "dumbbells",
+      "bench",
+      "pull_up_bar",
+      "cable_machine",
+      "rack",
+      "leg_press_machine"
+    ]
   },
   "program": {
     "name": "Upper Lower Strength - 4-Day Split",
