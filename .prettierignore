@@ -1,0 +1,12 @@
+# Generated files
+.next/
+node_modules/
+coverage/
+out/
+
+# Supabase generated types
+src/types/supabase.generated.ts
+
+# Global ECC tooling (not part of this project)
+everything-claude-code/
+skills/

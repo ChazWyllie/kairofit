@@ -12,6 +12,7 @@ Phase 6 was scoped via `/plan review Phase 6: Progressive Overload + Adaptive Pr
 The planner agent analyzed the existing codebase and produced the following scope:
 
 **What already existed:**
+
 - `src/lib/utils/progressive-overload.ts` - Complete: all three progression calculators
   (`calculateLinearProgression`, `calculateDoubleProgression`, `calculateRPEProgression`),
   plus `recommendSplit` and `shouldDeload`. Fully implemented with level-specific logic.
@@ -19,12 +20,14 @@ The planner agent analyzed the existing codebase and produced the following scop
 - `src/lib/validation/schemas.ts` - `adjustProgramSchema` already defined
 
 **What needed building:**
+
 1. `getRecentPerformance(userId, exerciseId)` - DB query to fetch last N sets per exercise
 2. `getProgressionSuggestionsForDay(userId, programDayId)` - orchestrator query
 3. `ExerciseCard` modification to accept and render a `ProgressionResult` prop
 4. Wire the workout page server component to fetch suggestions and thread them down
 
 **Explicitly out of scope:**
+
 - `adjustProgramAction` implementation (this mutates `program_exercises` rows, a larger change)
 - Deload detection UI
 - Split recommendation changes
@@ -122,6 +125,7 @@ main
 ```
 
 **Commit discipline observed:**
+
 - Feature work in one atomic commit (`feat`): all new files and modifications together
 - Format fixes as separate `fix` commits so diffs stay readable
 - Post-review fixes (code-reviewer findings) in a dedicated `fix` commit with explicit
@@ -133,12 +137,12 @@ collapses differently than the manual edit. See Section 5.
 
 ### Integration Points
 
-| Dependency | Why | Contract |
-|---|---|---|
-| `progressive-overload.ts` | The calculators already existed - Phase 6 wires them to live DB data | Imported types: `ProgressionResult` |
-| `getProfileForGeneration` (profiles.ts) | Need `preferred_units` to pass to calculators | Returns `UserProfile \| null` |
-| `createServerClient` (supabase.ts) | All DB reads go through the server client | Always `await`ed at call site |
-| `WorkoutLogger.tsx` | Thread suggestions from page to cards | Props-only, no store involvement |
+| Dependency                              | Why                                                                  | Contract                            |
+| --------------------------------------- | -------------------------------------------------------------------- | ----------------------------------- |
+| `progressive-overload.ts`               | The calculators already existed - Phase 6 wires them to live DB data | Imported types: `ProgressionResult` |
+| `getProfileForGeneration` (profiles.ts) | Need `preferred_units` to pass to calculators                        | Returns `UserProfile \| null`       |
+| `createServerClient` (supabase.ts)      | All DB reads go through the server client                            | Always `await`ed at call site       |
+| `WorkoutLogger.tsx`                     | Thread suggestions from page to cards                                | Props-only, no store involvement    |
 
 ---
 
@@ -170,6 +174,7 @@ export async function getRecentPerformance(
 ```
 
 **Design decisions:**
+
 - `.eq('is_warmup', false)` - warmup sets must not influence progression calculations.
   Including them would artificially lower the average RPE and distort weight suggestions.
 - `limit = 5` default - enough to distinguish "building reps" from "hit plateau" without
@@ -232,8 +237,15 @@ than throwing.
 
 ```typescript
 const LOWER_BODY_MUSCLES = new Set([
-  'quads', 'quadriceps', 'hamstrings', 'glutes', 'gluteus_maximus',
-  'calves', 'adductors', 'abductors', 'hip_flexors',
+  'quads',
+  'quadriceps',
+  'hamstrings',
+  'glutes',
+  'gluteus_maximus',
+  'calves',
+  'adductors',
+  'abductors',
+  'hip_flexors',
 ])
 
 export function isLowerBodyExercise(exercise: ProgramExercise['exercise']): boolean {
@@ -279,7 +291,7 @@ export interface ProgressionResult {
   suggested_weight: number | null
   suggested_reps: number
   reason: string
-  units: 'metric' | 'imperial'  // propagated from user profile
+  units: 'metric' | 'imperial' // propagated from user profile
 }
 ```
 
@@ -298,7 +310,7 @@ interface ExerciseCardProps {
   programExercise: ProgramExercise
   sessionId: string
   isActive: boolean
-  progression?: ProgressionResult | undefined  // new optional prop
+  progression?: ProgressionResult | undefined // new optional prop
 }
 ```
 
@@ -329,12 +341,12 @@ function ProgressionHint({ progression }: { progression: ProgressionResult }) {
 
 **Color coding (action -> visual signal):**
 
-| Action | Color | Meaning |
-|---|---|---|
-| `increase_weight` | Emerald `#10B981` | Progress - go heavier |
-| `increase_reps` | Indigo `#6366F1` | Progress - add reps at current weight |
-| `decrease_weight` | Orange `#F97316` | Back off - RPE too high |
-| `maintain` | Muted `#A1A19E` | Hold current load |
+| Action            | Color             | Meaning                               |
+| ----------------- | ----------------- | ------------------------------------- |
+| `increase_weight` | Emerald `#10B981` | Progress - go heavier                 |
+| `increase_reps`   | Indigo `#6366F1`  | Progress - add reps at current weight |
+| `decrease_weight` | Orange `#F97316`  | Back off - RPE too high               |
+| `maintain`        | Muted `#A1A19E`   | Hold current load                     |
 
 Colors match the KairoFit design system: emerald for success, indigo for brand actions,
 orange for warnings, muted for neutral. Red (`#EF4444`) is reserved for injury flags.
@@ -395,6 +407,7 @@ fetching their recent performance in parallel inside `Promise.all`).
 ### Database Schema Changes
 
 **None.** Phase 6 is entirely computed from existing tables:
+
 - `workout_sets` - read by `getRecentPerformance`
 - `program_exercises` - embedded in `ProgramDay` via `getProgramDay`
 - `profiles` - read by `getProfileForGeneration` for `preferred_units`
@@ -459,11 +472,11 @@ Before merging:
 
 **Test files modified or added:**
 
-| File | Tests | New | Notes |
-|---|---|---|---|
-| `sessions.test.ts` | +4 | `getRecentPerformance` coverage |
-| `progression.test.ts` | 9 | 9 | New file, written before implementation |
-| `ExerciseCard.test.tsx` | 7 | - | Existing tests validated against new prop |
+| File                    | Tests | New                             | Notes                                     |
+| ----------------------- | ----- | ------------------------------- | ----------------------------------------- |
+| `sessions.test.ts`      | +4    | `getRecentPerformance` coverage |
+| `progression.test.ts`   | 9     | 9                               | New file, written before implementation   |
+| `ExerciseCard.test.tsx` | 7     | -                               | Existing tests validated against new prop |
 
 **Total across project:** 226/226 passing across 19 test files (up from 220 in Phase 4+5).
 
@@ -474,14 +487,14 @@ tests remained green throughout).
 
 ### Edge Cases Identified and Handled
 
-| Edge Case | Handling |
-|---|---|
-| First session (no previous data) | Returns `maintain` with `suggested_weight: null` |
-| Profile not found | `getProgressionSuggestionsForDay` returns `{}` - UI shows no hints |
-| `programDay` is null | Early return `{}` - no DB calls made |
-| Exercise with no progression_scheme set | `default` in switch falls to `double_progression` |
-| Warmup sets included in RPE data | `.eq('is_warmup', false)` filter on query level |
-| Imperial user sees kg suffix | Fixed: `progression.units` drives the suffix |
+| Edge Case                                              | Handling                                                           |
+| ------------------------------------------------------ | ------------------------------------------------------------------ |
+| First session (no previous data)                       | Returns `maintain` with `suggested_weight: null`                   |
+| Profile not found                                      | `getProgressionSuggestionsForDay` returns `{}` - UI shows no hints |
+| `programDay` is null                                   | Early return `{}` - no DB calls made                               |
+| Exercise with no progression_scheme set                | `default` in switch falls to `double_progression`                  |
+| Warmup sets included in RPE data                       | `.eq('is_warmup', false)` filter on query level                    |
+| Imperial user sees kg suffix                           | Fixed: `progression.units` drives the suffix                       |
 | `progression` prop missing (card renders without hint) | `progression?.[id]` is `undefined`, `ProgressionHint` not rendered |
 
 ---
@@ -495,23 +508,23 @@ The project uses a multi-job workflow (pre-existing from Phase 1). Phase 6 ran a
 ```yaml
 jobs:
   quality:
-    - npm run format:check    # Prettier dry-run
-    - npm run lint             # ESLint
-    - npm run typecheck        # tsc --noEmit
+    - npm run format:check # Prettier dry-run
+    - npm run lint # ESLint
+    - npm run typecheck # tsc --noEmit
   test:
-    - npm test                 # Vitest unit suite
+    - npm test # Vitest unit suite
   e2e:
-    - npm run test:e2e         # Playwright (skips gracefully if STAGING_URL unset)
+    - npm run test:e2e # Playwright (skips gracefully if STAGING_URL unset)
 ```
 
 ### Environment Variables Required
 
 Phase 6 does not introduce any new environment variables. The existing set is sufficient:
 
-| Variable | Required For |
-|---|---|
-| `SUPABASE_URL` | All DB queries |
-| `SUPABASE_ANON_KEY` | `createServerClient` |
+| Variable            | Required For                                       |
+| ------------------- | -------------------------------------------------- |
+| `SUPABASE_URL`      | All DB queries                                     |
+| `SUPABASE_ANON_KEY` | `createServerClient`                               |
 | `ANTHROPIC_API_KEY` | Not used in Phase 6 (progression is deterministic) |
 
 ### Build Failures Encountered
@@ -524,9 +537,7 @@ Phase 6 does not introduce any new environment variables. The existing set is su
 ```typescript
 // What I wrote (3-line format)
 const weightHint =
-  progression.suggested_weight !== null
-    ? `${progression.suggested_weight} ${unitLabel}`
-    : null
+  progression.suggested_weight !== null ? `${progression.suggested_weight} ${unitLabel}` : null
 
 // What Prettier expects (2-line - fits within 100 char print width)
 const weightHint =
@@ -574,6 +585,7 @@ git push origin feat/phase-6-progressive-overload
 ### Updated Documentation
 
 `docs/dev/NEXT_STEPS.md` updated via `/update-docs`:
+
 - Date line updated to reflect Phase 6 + post-review state
 - Phase 6 section added with full description of the three progression models
 - Test count updated: 220 -> 226
@@ -626,6 +638,7 @@ caused by manual formatting divergence. See Section 5 for details.
 **Improvement 2: PR template for code review findings**
 The two HIGH issues from code review were not caught before the initial commit push because
 the `/code-review` agent was not run until after PR creation. The workflow should be:
+
 1. Write feature + tests
 2. Run `/code-review` locally (before `git push`)
 3. Fix CRITICAL/HIGH findings
@@ -670,13 +683,13 @@ Prettier failures which are cheap to fix but cause an extra CI round-trip.
 
 ### Commit Timeline
 
-| Commit | What | Phase |
-|---|---|---|
-| `6c93224` | Full feature: 6 files changed | Implementation |
-| `c5cb458` | Prettier format fix on 3 files | Format CI |
+| Commit    | What                                   | Phase             |
+| --------- | -------------------------------------- | ----------------- |
+| `6c93224` | Full feature: 6 files changed          | Implementation    |
+| `c5cb458` | Prettier format fix on 3 files         | Format CI         |
 | `9719a10` | Post-review: units + N+1 fix (5 files) | Code review fixes |
-| `b75d6ca` | Second Prettier fix (1 file) | Format CI again |
-| `e21ca74` | Docs update | Documentation |
+| `b75d6ca` | Second Prettier fix (1 file)           | Format CI again   |
+| `e21ca74` | Docs update                            | Documentation     |
 
 **5 commits total for a Phase that was initially planned as 1 feature commit + 1 test commit.**
 The extra commits were 2x Prettier (hook not running) and 1x code review fixes (not caught
@@ -684,13 +697,13 @@ pre-push).
 
 ### Issues Found and Resolved
 
-| Issue | Found When | Severity | Time to Fix |
-|---|---|---|---|
-| Prettier format divergence (ternary) | CI on initial push | Low | 1 commit |
-| `units` not in `ProgressionResult` | Code review after PR | HIGH | 1 commit (5 files) |
-| N+1 `getProgramDay` call | Code review after PR | HIGH | Same commit as above |
-| Prettier divergence on post-review changes | CI on fix commit | Low | 1 commit |
-| Hook not running in standard mode | Retrospective | Process | Fixed in settings.json |
+| Issue                                      | Found When           | Severity | Time to Fix            |
+| ------------------------------------------ | -------------------- | -------- | ---------------------- |
+| Prettier format divergence (ternary)       | CI on initial push   | Low      | 1 commit               |
+| `units` not in `ProgressionResult`         | Code review after PR | HIGH     | 1 commit (5 files)     |
+| N+1 `getProgramDay` call                   | Code review after PR | HIGH     | Same commit as above   |
+| Prettier divergence on post-review changes | CI on fix commit     | Low      | 1 commit               |
+| Hook not running in standard mode          | Retrospective        | Process  | Fixed in settings.json |
 
 ### Test Coverage Percentage
 
@@ -700,12 +713,12 @@ notes that Layer 1 (structural) exists; Layers 2-5 are planned for Phase 7.
 
 **Per-file assessment for Phase 6 additions:**
 
-| File | Test Count | Coverage Assessment |
-|---|---|---|
-| `getRecentPerformance` | 4 | Good: empty, ordering, warmup exclusion, limit |
-| `getProgressionSuggestionsForDay` | 9 | Good: all 3 schemes, both units, multi-exercise, edge cases |
-| `ProgressionHint` rendering | In ExerciseCard.test.tsx | Covered as part of ExerciseCard suite |
-| `isLowerBodyExercise` | Via progression tests (implicit) | Adequate |
+| File                              | Test Count                       | Coverage Assessment                                         |
+| --------------------------------- | -------------------------------- | ----------------------------------------------------------- |
+| `getRecentPerformance`            | 4                                | Good: empty, ordering, warmup exclusion, limit              |
+| `getProgressionSuggestionsForDay` | 9                                | Good: all 3 schemes, both units, multi-exercise, edge cases |
+| `ProgressionHint` rendering       | In ExerciseCard.test.tsx         | Covered as part of ExerciseCard suite                       |
+| `isLowerBodyExercise`             | Via progression tests (implicit) | Adequate                                                    |
 
 ### Performance Impact
 
