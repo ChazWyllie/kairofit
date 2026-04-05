@@ -15,6 +15,8 @@
 
 import { useEffect, useRef } from 'react'
 import { useCompletion } from 'ai/react'
+import { usePostHog } from 'posthog-js/react'
+import { EVENTS } from '@/lib/utils/event-names'
 
 interface KiroDebriefProps {
   sessionId: string
@@ -22,6 +24,7 @@ interface KiroDebriefProps {
 }
 
 export function KiroDebrief({ sessionId, onComplete }: KiroDebriefProps) {
+  const posthog = usePostHog()
   const { completion, isLoading, complete } = useCompletion({
     api: `/api/debrief/${sessionId}`,
   })
@@ -33,6 +36,9 @@ export function KiroDebrief({ sessionId, onComplete }: KiroDebriefProps) {
   // Trigger debrief whenever sessionId changes (once per session view)
   useEffect(() => {
     completeRef.current('')
+    posthog?.capture(EVENTS.KIRO_DEBRIEF_VIEWED, { session_id: sessionId })
+    // posthog is a stable instance - safe dep
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionId])
 
   // Call onComplete when debrief finishes streaming

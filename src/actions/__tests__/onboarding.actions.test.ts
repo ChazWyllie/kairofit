@@ -39,6 +39,14 @@ vi.mock('next/headers', () => ({
   })),
 }))
 
+vi.mock('next/server', () => ({
+  after: vi.fn(),
+}))
+
+vi.mock('@/lib/utils/analytics', () => ({
+  trackServer: vi.fn(),
+}))
+
 import { createServerClient } from '@/lib/db/supabase'
 import { checkRateLimit } from '@/lib/utils/rate-limit'
 import { generateProgram } from '@/lib/ai/workout-generator'

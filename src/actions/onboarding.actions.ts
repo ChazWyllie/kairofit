@@ -11,10 +11,13 @@
 
 'use server'
 
+import { after } from 'next/server'
 import { createSafeActionClient } from 'next-safe-action'
 import { headers } from 'next/headers'
 import { createServerClient } from '@/lib/db/supabase'
 import { checkRateLimit } from '@/lib/utils/rate-limit'
+import { trackServer } from '@/lib/utils/analytics'
+import { EVENTS } from '@/lib/utils/event-names'
 import {
   onboardingEmailSchema,
   onboardingStateSchema,
@@ -100,6 +103,14 @@ export const generateProgramAction = action
       generation_model: source,
       generation_prompt_version: '1.0',
       experience_level_target: profile.experience_level ?? 1,
+    })
+
+    after(() => {
+      void trackServer(user.id, EVENTS.PROGRAM_GENERATION_COMPLETED, {
+        program_id: saved.id,
+        generation_model: source,
+        experience_level: profile.experience_level ?? 1,
+      })
     })
 
     return { programId: saved.id }

@@ -9,6 +9,7 @@
  * Response: text/event-stream (Server-Sent Events)
  */
 
+import { after } from 'next/server'
 import { streamText } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
 import { createServerClient } from '@/lib/db/supabase'
@@ -17,6 +18,8 @@ import { checkInputSafety } from '@/lib/ai/safety-filter'
 import { getKiroSystemPrompt } from '@/lib/ai/kiro-voice'
 import { getCompletedSessionSummary } from '@/lib/db/queries/sessions'
 import { RATE_LIMIT_KEYS } from '@/lib/validation/schemas'
+import { trackServer } from '@/lib/utils/analytics'
+import { EVENTS } from '@/lib/utils/event-names'
 
 export async function GET(_req: Request, { params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = await params
@@ -41,6 +44,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ session
     if (!session) {
       return new Response('Session not found', { status: 404 })
     }
+
+    after(() => {
+      void trackServer(user.id, EVENTS.KIRO_DEBRIEF_VIEWED, { session_id: sessionId })
+    })
 
     // Build debrief prompt
     const debriefPrompt = `Here is a completed workout session to debrief:
