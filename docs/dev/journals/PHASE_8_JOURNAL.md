@@ -77,6 +77,7 @@ in-memory state for the same reason). Both are documented in skills/ai-resilienc
 #### Decision 4: Client-side events via `posthog-js/react` (not trackServer)
 
 Three events are client-side only because they require browser context:
+
 - `ARCHETYPE_REVEALED` - computed from `psych_scores` in a client component
 - `EMAIL_GATE_REACHED` - page mount event (no server action involved)
 - `EMAIL_GATE_SUBMITTED` - fires after action success, before navigation
@@ -109,6 +110,7 @@ event and ignores it for the DB insert. No DB schema change required.
 Wrote all tests before writing any implementation:
 
 **`src/lib/utils/__tests__/event-names.test.ts`** (13 tests)
+
 - Non-empty object
 - All values are strings
 - No duplicate values (Map deduplication check)
@@ -116,6 +118,7 @@ Wrote all tests before writing any implementation:
 - All 9 Phase 8 required events present by name
 
 **`src/lib/utils/__tests__/analytics.test.ts`** (5 tests)
+
 - No-ops when `NEXT_PUBLIC_POSTHOG_KEY` is absent
 - Calls `PostHog.capture()` with correct distinctId, event, properties
 - Calls `shutdownAsync()` after capture
@@ -128,25 +131,25 @@ All 18 new tests failed (RED) before implementation existed.
 
 Files created:
 
-| File | Purpose |
-|------|---------|
-| `src/lib/utils/event-names.ts` | 35 canonical events, 6 categories |
-| `src/lib/utils/analytics.ts` | `trackServer()` - serverless-safe posthog-node wrapper |
-| `src/components/providers/PostHogProvider.tsx` | Client-side PostHog init + `PHProvider` wrapper |
-| `src/hooks/useAnalytics.ts` | `useAnalytics()` hook typed against `keyof typeof EVENTS` |
+| File                                           | Purpose                                                   |
+| ---------------------------------------------- | --------------------------------------------------------- |
+| `src/lib/utils/event-names.ts`                 | 35 canonical events, 6 categories                         |
+| `src/lib/utils/analytics.ts`                   | `trackServer()` - serverless-safe posthog-node wrapper    |
+| `src/components/providers/PostHogProvider.tsx` | Client-side PostHog init + `PHProvider` wrapper           |
+| `src/hooks/useAnalytics.ts`                    | `useAnalytics()` hook typed against `keyof typeof EVENTS` |
 
 Files modified:
 
-| File | Change |
-|------|--------|
-| `src/actions/onboarding.actions.ts` | `after()` + `PROGRAM_GENERATION_COMPLETED` in `generateProgramAction` |
-| `src/actions/workout.actions.ts` | `after()` for `SET_LOGGED`, `WORKOUT_STARTED`, `WORKOUT_COMPLETED` |
-| `src/app/api/debrief/[sessionId]/route.ts` | `after()` for `KIRO_DEBRIEF_VIEWED` |
-| `src/app/layout.tsx` | Wrap with `PostHogProvider` |
-| `src/app/onboarding/archetype-reveal/page.tsx` | `ARCHETYPE_REVEALED` on mount |
-| `src/app/onboarding/email-gate/page.tsx` | `EMAIL_GATE_REACHED` on mount, `EMAIL_GATE_SUBMITTED` on success |
-| `src/components/ai/KiroDebrief.tsx` | `KIRO_DEBRIEF_VIEWED` in sessionId effect |
-| `src/lib/validation/schemas.ts` | `exercise_name` analytics field in `logSetSchema` |
+| File                                           | Change                                                                |
+| ---------------------------------------------- | --------------------------------------------------------------------- |
+| `src/actions/onboarding.actions.ts`            | `after()` + `PROGRAM_GENERATION_COMPLETED` in `generateProgramAction` |
+| `src/actions/workout.actions.ts`               | `after()` for `SET_LOGGED`, `WORKOUT_STARTED`, `WORKOUT_COMPLETED`    |
+| `src/app/api/debrief/[sessionId]/route.ts`     | `after()` for `KIRO_DEBRIEF_VIEWED`                                   |
+| `src/app/layout.tsx`                           | Wrap with `PostHogProvider`                                           |
+| `src/app/onboarding/archetype-reveal/page.tsx` | `ARCHETYPE_REVEALED` on mount                                         |
+| `src/app/onboarding/email-gate/page.tsx`       | `EMAIL_GATE_REACHED` on mount, `EMAIL_GATE_SUBMITTED` on success      |
+| `src/components/ai/KiroDebrief.tsx`            | `KIRO_DEBRIEF_VIEWED` in sessionId effect                             |
+| `src/lib/validation/schemas.ts`                | `exercise_name` analytics field in `logSetSchema`                     |
 
 ### Phase C: Test Fix - The `next/server` Mock Gap
 
@@ -200,17 +203,17 @@ Net: +17 tests vs Phase 7 baseline of 251.
 
 ## 4. Events Coverage Summary
 
-| Event | Where | Mechanism |
-|-------|-------|-----------|
-| `EMAIL_GATE_REACHED` | email-gate/page.tsx | client `posthog.capture` on mount |
-| `EMAIL_GATE_SUBMITTED` | email-gate/page.tsx | client `posthog.capture` after action success |
-| `ARCHETYPE_REVEALED` | archetype-reveal/page.tsx | client `posthog.capture` on mount |
-| `PROGRAM_GENERATION_COMPLETED` | generateProgramAction | server `after() + trackServer()` |
-| `WORKOUT_STARTED` | startSessionAction | server `after() + trackServer()` |
-| `SET_LOGGED` | logSetAction | server `after() + trackServer()` |
-| `WORKOUT_COMPLETED` | completeSessionAction | server `after() + trackServer()` |
-| `KIRO_DEBRIEF_VIEWED` | /api/debrief/[sessionId] | server `after() + trackServer()` |
-| `KIRO_DEBRIEF_VIEWED` | KiroDebrief.tsx | client `posthog.capture` (dual-track) |
+| Event                          | Where                     | Mechanism                                     |
+| ------------------------------ | ------------------------- | --------------------------------------------- |
+| `EMAIL_GATE_REACHED`           | email-gate/page.tsx       | client `posthog.capture` on mount             |
+| `EMAIL_GATE_SUBMITTED`         | email-gate/page.tsx       | client `posthog.capture` after action success |
+| `ARCHETYPE_REVEALED`           | archetype-reveal/page.tsx | client `posthog.capture` on mount             |
+| `PROGRAM_GENERATION_COMPLETED` | generateProgramAction     | server `after() + trackServer()`              |
+| `WORKOUT_STARTED`              | startSessionAction        | server `after() + trackServer()`              |
+| `SET_LOGGED`                   | logSetAction              | server `after() + trackServer()`              |
+| `WORKOUT_COMPLETED`            | completeSessionAction     | server `after() + trackServer()`              |
+| `KIRO_DEBRIEF_VIEWED`          | /api/debrief/[sessionId]  | server `after() + trackServer()`              |
+| `KIRO_DEBRIEF_VIEWED`          | KiroDebrief.tsx           | client `posthog.capture` (dual-track)         |
 
 ---
 
