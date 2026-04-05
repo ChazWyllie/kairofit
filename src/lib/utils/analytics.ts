@@ -22,10 +22,14 @@ export async function trackServer(
     flushInterval: 0,
   })
 
-  client.capture({ distinctId, event, properties })
+  client.capture({
+    distinctId,
+    event,
+    ...(properties !== undefined && { properties }),
+  })
 
   try {
-    await client.shutdownAsync()
+    await client.shutdown()
   } catch {
     // Flush failure is non-fatal - analytics must never block the user
   }

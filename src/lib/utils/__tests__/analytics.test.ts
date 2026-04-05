@@ -6,7 +6,7 @@
  * Key behaviors:
  * - No-ops gracefully when NEXT_PUBLIC_POSTHOG_KEY is absent (CI, tests)
  * - Calls client.capture with correct event name and properties
- * - Calls client.shutdownAsync() to flush before the serverless function ends
+ * - Calls client.shutdown() to flush before the serverless function ends
  * - Returns void (fire-and-forget pattern - caller wraps in after())
  */
 
@@ -17,12 +17,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 // ---------------------------------------------------------------------------
 
 const mockCapture = vi.fn()
-const mockShutdownAsync = vi.fn().mockResolvedValue(undefined)
+const mockShutdown = vi.fn().mockResolvedValue(undefined)
 
 vi.mock('posthog-node', () => ({
   PostHog: vi.fn().mockImplementation(() => ({
     capture: mockCapture,
-    shutdownAsync: mockShutdownAsync,
+    shutdown: mockShutdown,
   })),
 }))
 
@@ -51,7 +51,7 @@ describe('trackServer', () => {
     await trackServer('user-123', 'WORKOUT_STARTED', { program_id: 'abc' })
 
     expect(mockCapture).not.toHaveBeenCalled()
-    expect(mockShutdownAsync).not.toHaveBeenCalled()
+    expect(mockShutdown).not.toHaveBeenCalled()
   })
 
   it('calls client.capture with the correct distinctId and event', async () => {
@@ -67,12 +67,12 @@ describe('trackServer', () => {
     })
   })
 
-  it('calls client.shutdownAsync() to flush the event', async () => {
+  it('calls client.shutdown() to flush the event', async () => {
     process.env.NEXT_PUBLIC_POSTHOG_KEY = 'phc_testkey'
 
     await trackServer('user-789', 'SET_LOGGED', { reps: 8 })
 
-    expect(mockShutdownAsync).toHaveBeenCalledOnce()
+    expect(mockShutdown).toHaveBeenCalledOnce()
   })
 
   it('works without properties (optional arg)', async () => {
@@ -83,13 +83,12 @@ describe('trackServer', () => {
     expect(mockCapture).toHaveBeenCalledWith({
       distinctId: 'user-abc',
       event: 'KIRO_DEBRIEF_VIEWED',
-      properties: undefined,
     })
   })
 
-  it('does not throw when shutdownAsync rejects (non-blocking)', async () => {
+  it('does not throw when shutdown rejects (non-blocking)', async () => {
     process.env.NEXT_PUBLIC_POSTHOG_KEY = 'phc_testkey'
-    mockShutdownAsync.mockRejectedValueOnce(new Error('flush failed'))
+    mockShutdown.mockRejectedValueOnce(new Error('flush failed'))
 
     await expect(trackServer('user-xyz', 'WORKOUT_STARTED')).resolves.toBeUndefined()
   })
