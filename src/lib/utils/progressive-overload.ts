@@ -34,6 +34,7 @@ export function calculateLinearProgression(
       suggested_weight: null,
       suggested_reps: targetReps,
       reason: 'No previous data - start with a comfortable weight.',
+      units,
     }
   }
 
@@ -47,6 +48,7 @@ export function calculateLinearProgression(
       suggested_weight: lastWeight,
       suggested_reps: Math.round(avgReps) + 1,
       reason: `Did not hit all ${targetReps} target reps. Keep weight and aim for ${Math.round(avgReps) + 1} reps.`,
+      units,
     }
   }
 
@@ -59,6 +61,7 @@ export function calculateLinearProgression(
     suggested_weight: lastWeight + increment,
     suggested_reps: Math.max(targetReps - 2, 1),
     reason: `Hit all ${targetReps} reps. Adding ${increment}${units === 'metric' ? 'kg' : 'lbs'}.`,
+    units,
   }
 }
 
@@ -91,6 +94,7 @@ export function calculateDoubleProgression(
       suggested_reps: targetRepsMin,
       reason:
         'No previous data - start with a comfortable weight targeting the bottom of the rep range.',
+      units,
     }
   }
 
@@ -113,6 +117,7 @@ export function calculateDoubleProgression(
       suggested_weight: newWeight,
       suggested_reps: targetRepsMin,
       reason: `Hit ${targetRepsMax} reps on all sets at ${lastWeight}${units === 'metric' ? 'kg' : 'lbs'}. Increasing to ${newWeight.toFixed(1)}${units === 'metric' ? 'kg' : 'lbs'} and resetting to ${targetRepsMin} reps.`,
+      units,
     }
   }
 
@@ -123,6 +128,7 @@ export function calculateDoubleProgression(
     suggested_weight: lastWeight,
     suggested_reps: suggestedReps,
     reason: `Averaged ${avgRepsCompleted.toFixed(1)} reps. Aim for ${suggestedReps} reps at the same weight.`,
+    units,
   }
 }
 
@@ -155,6 +161,7 @@ export function calculateRPEProgression(
       suggested_weight: null,
       suggested_reps: Math.round((targetRepsMin + targetRepsMax) / 2),
       reason: 'No RPE data. Focus on the middle of your rep range with good form first.',
+      units,
     }
   }
 
@@ -173,6 +180,7 @@ export function calculateRPEProgression(
       suggested_weight: lastWeight + increase,
       suggested_reps: targetReps,
       reason: `Average RPE ${avgRPE.toFixed(1)} is below target zone (7-9). Adding ~2.5% load.`,
+      units,
     }
   }
 
@@ -186,6 +194,7 @@ export function calculateRPEProgression(
       suggested_weight: Math.max(lastWeight - decrease, 0),
       suggested_reps: targetRepsMin,
       reason: `Average RPE ${avgRPE.toFixed(1)} exceeds target zone. Reducing load ~5%. Consider a deload if this persists.`,
+      units,
     }
   }
 
@@ -194,6 +203,7 @@ export function calculateRPEProgression(
     suggested_weight: lastWeight,
     suggested_reps: targetReps,
     reason: `Average RPE ${avgRPE.toFixed(1)} is in the target zone (7-9). Maintain current load.`,
+    units,
   }
 }
 
@@ -335,6 +345,7 @@ export interface ProgressionResult {
   suggested_weight: number | null
   suggested_reps: number
   reason: string
+  units: 'metric' | 'imperial'
 }
 
 export interface SplitRecommendation {

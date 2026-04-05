@@ -6,8 +6,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getNextProgramDay } from '../sessions'
-import type { ProgramDay, ProgramExercise, SessionType } from '@/types'
+import { getNextProgramDay, getRecentPerformance } from '../sessions'
+import type { ProgramDay, ProgramExercise, SessionType, WorkoutSet } from '@/types'
 
 // Mock the Supabase client
 vi.mock('@/lib/db/supabase', () => ({
@@ -283,5 +283,117 @@ describe('getNextProgramDay', () => {
       const daysCalls = mock.from.mock.calls.filter((c) => c[0] === 'program_days')
       expect(daysCalls.length).toBeGreaterThan(0)
     })
+  })
+})
+
+// ============================================================
+// getRecentPerformance Tests
+// ============================================================
+
+const mockWorkoutSet = (overrides: Partial<WorkoutSet> = {}): WorkoutSet => ({
+  id: 'set-1',
+  session_id: 'session-1',
+  exercise_id: 'exercise-1',
+  program_exercise_id: 'pe-1',
+  user_id: 'user-1',
+  set_number: 1,
+  reps_completed: 10,
+  weight_kg: 60,
+  rpe: null,
+  is_warmup: false,
+  is_dropset: false,
+  logged_at: '2024-01-01T10:00:00Z',
+  ...overrides,
+})
+
+function createRecentPerformanceMock(
+  config: {
+    data?: WorkoutSet[] | null
+    error?: { message: string } | null
+  } = {}
+) {
+  const { data = [], error = null } = config
+
+  const builder = {
+    select: vi.fn(),
+    eq: vi.fn(),
+    order: vi.fn(),
+    limit: vi.fn().mockResolvedValue({ data, error }),
+  }
+  builder.select.mockReturnValue(builder)
+  builder.eq.mockReturnValue(builder)
+  builder.order.mockReturnValue(builder)
+
+  return {
+    from: vi.fn().mockReturnValue(builder),
+    _builder: builder,
+  }
+}
+
+describe('getRecentPerformance', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('returns sets ordered by logged_at when data exists', async () => {
+    const sets = [
+      mockWorkoutSet({ id: 'set-3', logged_at: '2024-01-15T10:00:00Z', weight_kg: 65 }),
+      mockWorkoutSet({ id: 'set-2', logged_at: '2024-01-08T10:00:00Z', weight_kg: 62.5 }),
+      mockWorkoutSet({ id: 'set-1', logged_at: '2024-01-01T10:00:00Z', weight_kg: 60 }),
+    ]
+
+    const mock = createRecentPerformanceMock({ data: sets })
+    vi.mocked(createServerClient).mockResolvedValue(mock as never)
+
+    const result = await getRecentPerformance('user-1', 'exercise-1')
+
+    expect(result).toHaveLength(3)
+    expect(result[0]!.id).toBe('set-3')
+    expect(result[0]!.weight_kg).toBe(65)
+  })
+
+  it('returns empty array when no sets exist', async () => {
+    const mock = createRecentPerformanceMock({ data: [] })
+    vi.mocked(createServerClient).mockResolvedValue(mock as never)
+
+    const result = await getRecentPerformance('user-1', 'exercise-1')
+
+    expect(result).toEqual([])
+  })
+
+  it('returns empty array on DB error', async () => {
+    const mock = createRecentPerformanceMock({ error: { message: 'DB error' } })
+    vi.mocked(createServerClient).mockResolvedValue(mock as never)
+
+    const result = await getRecentPerformance('user-1', 'exercise-1')
+
+    expect(result).toEqual([])
+  })
+
+  it('queries workout_sets table', async () => {
+    const mock = createRecentPerformanceMock({ data: [] })
+    vi.mocked(createServerClient).mockResolvedValue(mock as never)
+
+    await getRecentPerformance('user-1', 'exercise-1')
+
+    expect(mock.from).toHaveBeenCalledWith('workout_sets')
+  })
+
+  it('uses default limit of 5', async () => {
+    const mock = createRecentPerformanceMock({ data: [] })
+    vi.mocked(createServerClient).mockResolvedValue(mock as never)
+
+    await getRecentPerformance('user-1', 'exercise-1')
+
+    expect(mock._builder.limit).toHaveBeenCalledWith(5)
+  })
+
+  it('respects custom limit parameter', async () => {
+    const mock = createRecentPerformanceMock({ data: [] })
+    vi.mocked(createServerClient).mockResolvedValue(mock as never)
+
+    await getRecentPerformance('user-1', 'exercise-1', 3)
+
+    expect(mock._builder.limit).toHaveBeenCalledWith(3)
   })
 })
