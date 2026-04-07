@@ -10,6 +10,7 @@
 
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { PostHogProvider } from '@/components/providers/PostHogProvider'
 import './globals.css'
 
 const geistSans = Geist({
@@ -33,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-[#0A0A0B] text-[#F5F5F4] antialiased`}
       >
-        {children}
+        <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
   )

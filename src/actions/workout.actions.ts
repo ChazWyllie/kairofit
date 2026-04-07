@@ -16,6 +16,8 @@ import { createServerClient } from '@/lib/db/supabase'
 import { checkRateLimit } from '@/lib/utils/rate-limit'
 import { calculateRecoveryUpdates } from '@/lib/utils/recovery-model'
 import { updateMuscleRecovery } from '@/lib/db/queries/recovery'
+import { trackServer } from '@/lib/utils/analytics'
+import { EVENTS } from '@/lib/utils/event-names'
 import {
   logSetSchema,
   startSessionSchema,
@@ -78,6 +80,16 @@ export const logSetAction = action
     if (error) throw new Error(`Failed to log set: ${error.message}`)
 
     // TODO: Check for new PR and update personal_records
+
+    after(() => {
+      void trackServer(user.id, EVENTS.SET_LOGGED, {
+        session_id: parsedInput.session_id,
+        exercise_name: parsedInput.exercise_name,
+        reps: parsedInput.reps_completed,
+        weight_kg: parsedInput.weight_kg,
+      })
+    })
+
     return data
   })
 
@@ -103,6 +115,14 @@ export const startSessionAction = action
       .single()
 
     if (error) throw new Error(`Failed to start session: ${error.message}`)
+
+    after(() => {
+      void trackServer(user.id, EVENTS.WORKOUT_STARTED, {
+        session_id: data.id,
+        program_id: parsedInput.program_id ?? null,
+      })
+    })
+
     return data
   })
 
@@ -144,6 +164,14 @@ export const completeSessionAction = action
       .single()
 
     if (error) throw new Error(`Failed to complete session: ${error.message}`)
+
+    after(() => {
+      void trackServer(user.id, EVENTS.WORKOUT_COMPLETED, {
+        session_id: parsedInput.session_id,
+        duration_seconds: durationSeconds,
+        perceived_effort: parsedInput.perceived_effort,
+      })
+    })
 
     // Update muscle recovery asynchronously after response is sent
     // This runs non-blocking: user sees the complete page before recovery updates finish

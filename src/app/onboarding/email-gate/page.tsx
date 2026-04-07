@@ -1,14 +1,17 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
+import { usePostHog } from 'posthog-js/react'
 import { useOnboardingStore } from '@/stores/onboarding.store'
 import { OnboardingLayout } from '@/components/onboarding/OnboardingLayout'
 import { TOTAL_STEPS } from '@/lib/onboarding/flow-config'
 import { ARCHETYPES } from '@/lib/onboarding/archetypes'
 import { createAccountAction } from '@/actions/onboarding.actions'
+import { EVENTS } from '@/lib/utils/event-names'
 
 export default function EmailGatePage() {
+  const posthog = usePostHog()
   const { archetype, setEmail, setAuthReady, nextStep } = useOnboardingStore()
   const router = useRouter()
 
@@ -18,6 +21,11 @@ export default function EmailGatePage() {
 
   const archetypeName = archetype ? ARCHETYPES[archetype].name : 'Your'
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(localEmail)
+
+  useEffect(() => {
+    posthog?.capture(EVENTS.EMAIL_GATE_REACHED, { archetype })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function handleSubmit() {
     setError(null)
@@ -33,6 +41,8 @@ export default function EmailGatePage() {
         setError('Please enter a valid email address.')
         return
       }
+
+      posthog?.capture(EVENTS.EMAIL_GATE_SUBMITTED, { archetype })
 
       setEmail(localEmail)
       setAuthReady(false)

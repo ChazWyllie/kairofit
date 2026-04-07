@@ -31,6 +31,7 @@ export const logSetSchema = z.object({
   rpe: rpe.optional(),
   is_warmup: z.boolean().default(false),
   is_dropset: z.boolean().default(false),
+  exercise_name: z.string().max(100).optional(), // analytics only - not written to DB
 })
 
 export const startSessionSchema = z.object({
