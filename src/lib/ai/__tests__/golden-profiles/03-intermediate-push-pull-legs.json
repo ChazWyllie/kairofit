@@ -1,0 +1,171 @@
+{
+  "description": "Intermediate, full gym, 3-day Push/Pull/Legs. Level 3. No injuries. Barbell compounds present - 120s+ rest applies.",
+  "profile": {
+    "experience_level": 3,
+    "injuries": [],
+    "equipment": ["barbell", "dumbbells", "bench", "pull_up_bar", "cable_machine", "rack"]
+  },
+  "program": {
+    "name": "Push Pull Legs - 3-Day Split",
+    "description": "Classic 3-day PPL split for intermediate trainees. Each session is dedicated to a movement pattern, allowing higher per-session volume before fatigue accumulates.",
+    "ai_rationale": "PPL is the first split where per-session specialisation justifies the increased volume. At level 3, 7-10 sets per muscle group per session is within the adaptive range.",
+    "weeks_duration": 8,
+    "progression_scheme": "double_progression",
+    "projected_weeks_to_goal": 10,
+    "projected_outcome_description": "8 weeks of PPL with double progression builds a reliable strength base across all major patterns.",
+    "days": [
+      {
+        "day_number": 1,
+        "name": "Push",
+        "focus_muscles": ["chest", "shoulders", "triceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 55,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Bench Press",
+            "sets": 4,
+            "reps_min": 6,
+            "reps_max": 10,
+            "rest_seconds": 180,
+            "rpe_target": 8,
+            "rationale": "Primary horizontal push. Barbell allows the most load - the foundation of chest development.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Shoulder Press",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Vertical push. Builds shoulder width and overhead strength as a secondary pattern.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Incline Dumbbell Press",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Upper chest emphasis. A different angle from flat bench provides complementary stimulus.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 2,
+        "name": "Pull",
+        "focus_muscles": ["back", "biceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 55,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Row",
+            "sets": 4,
+            "reps_min": 6,
+            "reps_max": 10,
+            "rest_seconds": 180,
+            "rpe_target": 8,
+            "rationale": "Primary horizontal pull. Barbell row builds the thickest back of any rowing variation.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Pull-up",
+            "sets": 3,
+            "reps_min": 6,
+            "reps_max": 10,
+            "rest_seconds": 90,
+            "rpe_target": 8,
+            "rationale": "Vertical pull. Builds lat width and scapular retraction strength.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Lat Pulldown",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Second vertical pull. Allows controlled loading to extend back volume beyond pull-up capacity.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Curl",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Bicep isolation. Supination through the range of motion maximises long head recruitment.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 3,
+        "name": "Legs",
+        "focus_muscles": ["quads", "hamstrings", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 55,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Squat",
+            "sets": 4,
+            "reps_min": 6,
+            "reps_max": 10,
+            "rest_seconds": 180,
+            "rpe_target": 8,
+            "rationale": "Primary quad and glute driver. The most effective loaded squat variation available.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Romanian Deadlift",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Hip hinge. Trains hamstrings and glutes through the stretch-shortening cycle.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Leg Press",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Quad-dominant accessory. Extends quad volume without additional spinal loading.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Lying Leg Curl",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Hamstring isolation. Targets the biceps femoris at peak contraction through full ROM.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      }
+    ]
+  },
+  "expectations": {
+    "valid": true,
+    "error_count": 0
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "description": "Early intermediate, dumbbells + cable machine + bench, 3-day full body, lower_back injury. Level 2. Caution exercises have modification notes.",
+  "profile": {
+    "experience_level": 2,
+    "injuries": ["lower_back"],
+    "equipment": ["dumbbells", "bench", "cable_machine"]
+  },
+  "program": {
+    "name": "Low-Impact Full Body - 3-Day",
+    "description": "3-day full body program designed around a lower back injury. Avoids all spinal loading under fatigue while maintaining full-body stimulus.",
+    "ai_rationale": "Lower back injuries require removing axial loading. Goblet squats and hip hinges with dumbbells keep the spine neutral. All caution exercises are included with cues to protect the injury site.",
+    "weeks_duration": 8,
+    "progression_scheme": "double_progression",
+    "projected_weeks_to_goal": 10,
+    "projected_outcome_description": "8 weeks training around the injury maintains fitness and builds pain-free movement capacity.",
+    "days": [
+      {
+        "day_number": 1,
+        "name": "Full Body A",
+        "focus_muscles": ["chest", "back", "quads", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 45,
+        "exercises": [
+          {
+            "exercise_name": "Dumbbell Bench Press",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Horizontal push with no spinal loading. Safe primary chest exercise.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Seated Cable Row",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Supported horizontal pull. Seated position eliminates lower back stress entirely.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Goblet Squat",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Goblet position keeps the torso upright and reduces lower back moment arm.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Hip Thrust",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 20,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Hip extension with the spine fully supported. The safest glute builder for lower back injuries.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 2,
+        "name": "Full Body B",
+        "focus_muscles": ["shoulders", "back", "hamstrings", "biceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 45,
+        "exercises": [
+          {
+            "exercise_name": "Dumbbell Shoulder Press",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Seated vertical push. Supported position prevents lower back compensation.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Lat Pulldown",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Vertical pull in a seated, supported position. No lower back stress.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Romanian Deadlift",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 6,
+            "rationale": "Hip hinge with controlled loading. Lighter dumbbell load reduces spinal stress versus barbell.",
+            "progression_scheme": "double_progression",
+            "modification_note": "Maintain neutral spine throughout. Limit range of motion to just below knee height. Stop immediately if lower back pain occurs."
+          },
+          {
+            "exercise_name": "Dumbbell Curl",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Bicep isolation with no spinal involvement.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 3,
+        "name": "Full Body C",
+        "focus_muscles": ["back", "quads", "glutes", "triceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 45,
+        "exercises": [
+          {
+            "exercise_name": "Cable Row",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Second horizontal pull. Cable provides constant tension and supported positioning.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Bulgarian Split Squat",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Unilateral quad and glute work. More upright torso than bilateral squats reduces lumbar stress.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Glute Bridge",
+            "sets": 3,
+            "reps_min": 15,
+            "reps_max": 25,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Hip extension flat on the floor. No spinal compression - the safest glute exercise.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Overhead Tricep Extension",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Tricep isolation at the lengthened position. No lower back involvement.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      }
+    ]
+  },
+  "expectations": {
+    "valid": true,
+    "error_count": 0
+  }
+}

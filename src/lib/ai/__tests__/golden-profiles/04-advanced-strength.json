@@ -1,0 +1,221 @@
+{
+  "description": "Advanced, full gym, 4-day Upper/Lower strength split. Level 5. No injuries. Heavy barbell compounds throughout.",
+  "profile": {
+    "experience_level": 5,
+    "injuries": [],
+    "equipment": [
+      "barbell",
+      "dumbbells",
+      "bench",
+      "pull_up_bar",
+      "cable_machine",
+      "rack",
+      "leg_press_machine"
+    ]
+  },
+  "program": {
+    "name": "Upper Lower Strength - 4-Day Split",
+    "description": "4-day upper/lower split with a strength emphasis. Heavy barbell work at low rep ranges with sufficient volume to drive hypertrophy.",
+    "ai_rationale": "At level 5, frequency and specificity matter more than volume novelty. Upper/lower 4x/week places each pattern on a 72-hour recovery cycle - the minimum needed for advanced trainees to consolidate strength.",
+    "weeks_duration": 10,
+    "progression_scheme": "linear_periodization",
+    "projected_weeks_to_goal": 12,
+    "projected_outcome_description": "10 weeks of submaximal linear loading builds a strength foundation that transfers to all subsequent training blocks.",
+    "days": [
+      {
+        "day_number": 1,
+        "name": "Upper A",
+        "focus_muscles": ["chest", "back", "shoulders"],
+        "session_type": "strength",
+        "estimated_duration_minutes": 70,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Bench Press",
+            "sets": 5,
+            "reps_min": 3,
+            "reps_max": 5,
+            "rest_seconds": 240,
+            "rpe_target": 8,
+            "rationale": "Primary horizontal push. Low rep range with heavy load drives maximal strength adaptations.",
+            "progression_scheme": "linear_periodization",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Barbell Row",
+            "sets": 5,
+            "reps_min": 4,
+            "reps_max": 6,
+            "rest_seconds": 240,
+            "rpe_target": 8,
+            "rationale": "Horizontal pull to balance pressing volume. Heavy barbell row builds posterior chain thickness.",
+            "progression_scheme": "linear_periodization",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Shoulder Press",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 120,
+            "rpe_target": 7,
+            "rationale": "Accessory vertical push. Moderate rep range supports shoulder volume without additional neural fatigue.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 2,
+        "name": "Lower A",
+        "focus_muscles": ["quads", "hamstrings", "glutes"],
+        "session_type": "strength",
+        "estimated_duration_minutes": 70,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Squat",
+            "sets": 5,
+            "reps_min": 3,
+            "reps_max": 5,
+            "rest_seconds": 240,
+            "rpe_target": 8,
+            "rationale": "Primary squat pattern. The foundation of lower body strength development.",
+            "progression_scheme": "linear_periodization",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Romanian Deadlift",
+            "sets": 3,
+            "reps_min": 6,
+            "reps_max": 8,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Accessory hip hinge. Keeps hamstring volume high without competing with the squat neurally.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Leg Press",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Quad accessory. Extends quad volume without adding spinal load on an already heavy day.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 3,
+        "name": "Upper B",
+        "focus_muscles": ["shoulders", "back", "biceps", "triceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 65,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Overhead Press",
+            "sets": 4,
+            "reps_min": 4,
+            "reps_max": 6,
+            "rest_seconds": 180,
+            "rpe_target": 8,
+            "rationale": "Primary vertical push. Builds shoulder strength and tricep mass in the overhead pattern.",
+            "progression_scheme": "linear_periodization",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Lat Pulldown",
+            "sets": 4,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Vertical pull. Controlled loading for lat hypertrophy to complement the strength day.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Pull-up",
+            "sets": 3,
+            "reps_min": 5,
+            "reps_max": 8,
+            "rest_seconds": 90,
+            "rpe_target": 8,
+            "rationale": "Second vertical pull. Bodyweight provides a different stimulus than machine pulling.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Curl",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Bicep isolation. Supination emphasis maximises peak contraction.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Tricep Pushdown",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Tricep isolation. Cable keeps constant tension through the full range.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 4,
+        "name": "Lower B",
+        "focus_muscles": ["hamstrings", "glutes"],
+        "session_type": "strength",
+        "estimated_duration_minutes": 65,
+        "exercises": [
+          {
+            "exercise_name": "Conventional Deadlift",
+            "sets": 4,
+            "reps_min": 3,
+            "reps_max": 5,
+            "rest_seconds": 240,
+            "rpe_target": 9,
+            "rationale": "Primary hip hinge. The deadlift is the highest-load posterior chain driver available.",
+            "progression_scheme": "linear_periodization",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Hip Thrust",
+            "sets": 4,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 120,
+            "rpe_target": 7,
+            "rationale": "Glute isolation at full hip extension. Complements the deadlift with peak-contraction glute emphasis.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Lying Leg Curl",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Hamstring isolation. Completes hamstring volume after the heavy deadlift pattern.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      }
+    ]
+  },
+  "expectations": {
+    "valid": true,
+    "error_count": 0
+  }
+}

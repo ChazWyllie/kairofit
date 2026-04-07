@@ -1,0 +1,182 @@
+{
+  "description": "Early intermediate, resistance_bands + dumbbells + pull_up_bar, 3-day full body. Level 2. No injuries.",
+  "profile": {
+    "experience_level": 2,
+    "injuries": [],
+    "equipment": ["resistance_bands", "dumbbells", "pull_up_bar"]
+  },
+  "program": {
+    "name": "Minimal Equipment Full Body - 3-Day",
+    "description": "3-day full body program using only resistance bands, dumbbells, and a pull-up bar. Full-pattern coverage with limited equipment.",
+    "ai_rationale": "Resistance bands and dumbbells cover every movement pattern. At level 2, 3 sets per pattern 3x/week is sufficient stimulus for continued linear progress.",
+    "weeks_duration": 8,
+    "progression_scheme": "double_progression",
+    "projected_weeks_to_goal": 10,
+    "projected_outcome_description": "8 weeks of consistent full-body training builds the foundation for gym-based training.",
+    "days": [
+      {
+        "day_number": 1,
+        "name": "Full Body A",
+        "focus_muscles": ["chest", "back", "quads", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 45,
+        "exercises": [
+          {
+            "exercise_name": "Dumbbell Bench Press",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Primary horizontal push. Dumbbell bench allows free ROM with available equipment.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Resistance Band Row",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Horizontal pull with band resistance. Constant tension through the full range.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Goblet Squat",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Loaded squat pattern. Goblet position improves depth and torso angle.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Glute Bridge",
+            "sets": 3,
+            "reps_min": 15,
+            "reps_max": 25,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Hip extension pattern. Safe, effective glute and hamstring exercise with no load.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 2,
+        "name": "Full Body B",
+        "focus_muscles": ["back", "shoulders", "quads", "biceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 45,
+        "exercises": [
+          {
+            "exercise_name": "Pull-up",
+            "sets": 3,
+            "reps_min": 3,
+            "reps_max": 8,
+            "rest_seconds": 90,
+            "rpe_target": 8,
+            "rationale": "Vertical pull. The most effective bodyweight back exercise available.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Shoulder Press",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Vertical push. Builds shoulder width and overhead pressing strength.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Bulgarian Split Squat",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 8,
+            "rationale": "Unilateral quad and glute work. Addresses left-right imbalances and builds single-leg stability.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Curl",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Bicep isolation. Supination through the range of motion maximises peak contraction.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 3,
+        "name": "Full Body C",
+        "focus_muscles": ["back", "hamstrings", "glutes", "triceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 45,
+        "exercises": [
+          {
+            "exercise_name": "Dumbbell Bent-Over Row",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Second weekly horizontal pull. Bilateral row builds back thickness and grip strength.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Push-up",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 20,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Horizontal push variation. Bodyweight load provides metabolic stimulus to complement dumbbell work.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Romanian Deadlift",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Hip hinge pattern. Dumbbell RDL trains hamstrings and glutes through a full stretch.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Overhead Tricep Extension",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Tricep isolation at the lengthened position. Long head is maximally stretched overhead.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      }
+    ]
+  },
+  "expectations": {
+    "valid": true,
+    "error_count": 0
+  }
+}
