@@ -32,18 +32,9 @@ vi.mock('@/stores/workout.store', () => ({
   })),
 }))
 
-// Mock next-safe-action hooks
-vi.mock('next-safe-action/hooks', () => ({
-  useAction: vi.fn(() => ({
-    execute: vi.fn(),
-    isPending: false,
-    result: {},
-  })),
-}))
-
-// Mock the action
-vi.mock('@/actions/workout.actions', () => ({
-  logSetAction: vi.fn(),
+// Mock offline sync (SetLogger uses logSetOffline, not logSetAction)
+vi.mock('@/lib/offline/sync', () => ({
+  logSetOffline: vi.fn().mockResolvedValue(undefined),
 }))
 
 const MOCK_EXERCISE: Exercise = {
@@ -101,12 +92,20 @@ describe('SetLogger', () => {
 
     it('renders without error with a program exercise', () => {
       expect(() =>
-        SetLogger({ programExercise: MOCK_PROGRAM_EXERCISE, sessionId: 'session-abc' })
+        SetLogger({
+          programExercise: MOCK_PROGRAM_EXERCISE,
+          sessionId: 'session-abc',
+          userId: 'user-test-id',
+        })
       ).not.toThrow()
     })
 
     it('returns a React element', () => {
-      const result = SetLogger({ programExercise: MOCK_PROGRAM_EXERCISE, sessionId: 'session-abc' })
+      const result = SetLogger({
+        programExercise: MOCK_PROGRAM_EXERCISE,
+        sessionId: 'session-abc',
+        userId: 'user-test-id',
+      })
       expect(result).not.toBeNull()
     })
   })
@@ -114,7 +113,11 @@ describe('SetLogger', () => {
   describe('prop variations', () => {
     it('renders without error for compound exercises', () => {
       expect(() =>
-        SetLogger({ programExercise: MOCK_PROGRAM_EXERCISE, sessionId: 'session-abc' })
+        SetLogger({
+          programExercise: MOCK_PROGRAM_EXERCISE,
+          sessionId: 'session-abc',
+          userId: 'user-test-id',
+        })
       ).not.toThrow()
     })
 
@@ -127,7 +130,11 @@ describe('SetLogger', () => {
         rest_seconds: 60,
       }
       expect(() =>
-        SetLogger({ programExercise: isolationExercise, sessionId: 'session-abc' })
+        SetLogger({
+          programExercise: isolationExercise,
+          sessionId: 'session-abc',
+          userId: 'user-test-id',
+        })
       ).not.toThrow()
     })
   })

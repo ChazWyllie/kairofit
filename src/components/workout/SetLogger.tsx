@@ -6,27 +6,31 @@
  * Per-exercise set logging controls. Renders the target sets/reps,
  * already-logged sets, and +/- controls for reps and weight.
  *
- * Flow per set:
- * 1. addOptimisticSet (isPending: true) - immediate UI update
- * 2. logSetAction server call
- * 3. confirmSet (isPending: false) on success, removeSet on error
- * 4. startRestTimer after successful log
+ * Offline-first flow per set:
+ * 1. Generate a stable UUID (crypto.randomUUID) for dedup
+ * 2. addOptimisticSet (isPending: true) - immediate UI update
+ * 3. logSetOffline() - writes to IndexedDB, triggers background sync
+ * 4. confirmSet (isPending: false) - saved locally, sync is background
+ * 5. startRestTimer
+ *
+ * If the Dexie write fails (e.g. storage full), the optimistic set is removed.
  */
 
 import { useState } from 'react'
-import { useAction } from 'next-safe-action/hooks'
-import { logSetAction } from '@/actions/workout.actions'
+import { logSetOffline } from '@/lib/offline/sync'
 import { useWorkoutStore } from '@/stores/workout.store'
 import type { ProgramExercise, OptimisticWorkoutSet } from '@/types'
 
 interface SetLoggerProps {
   programExercise: ProgramExercise
   sessionId: string
+  userId: string
 }
 
-export function SetLogger({ programExercise, sessionId }: SetLoggerProps) {
+export function SetLogger({ programExercise, sessionId, userId }: SetLoggerProps) {
   const [reps, setReps] = useState(programExercise.reps_max)
   const [weightKg, setWeightKg] = useState<number | null>(null)
+  const [isLogging, setIsLogging] = useState(false)
 
   const { addOptimisticSet, confirmSet, removeSet, startRestTimer, logged_sets } = useWorkoutStore(
     (s) => ({
@@ -42,59 +46,39 @@ export function SetLogger({ programExercise, sessionId }: SetLoggerProps) {
     (logged_sets[programExercise.exercise_id] as OptimisticWorkoutSet[]) ?? []
   const nextSetNumber = exerciseSets.length + 1
 
-  const { execute, isPending } = useAction(logSetAction, {
-    onSuccess: ({ data }) => {
-      if (!data) return
-      confirmSet(programExercise.exercise_id, `temp-${nextSetNumber - 1}`, {
-        id: data.id,
-        session_id: sessionId,
-        exercise_id: programExercise.exercise_id,
-        program_exercise_id: programExercise.id,
-        user_id: '',
-        set_number: data.set_number,
-        reps_completed: data.reps_completed,
-        weight_kg: data.weight_kg ?? null,
-        rpe: data.rpe ?? null,
-        is_warmup: false,
-        is_dropset: false,
-        logged_at: data.logged_at ?? new Date().toISOString(),
-      })
-      startRestTimer(programExercise.rest_seconds, programExercise.exercise.name)
-    },
-    onError: () => {
-      removeSet(programExercise.exercise_id, `temp-${nextSetNumber - 1}`)
-    },
-  })
+  async function handleLogSet() {
+    const setId = crypto.randomUUID()
+    const now = new Date().toISOString()
 
-  function handleLogSet() {
-    const tempId = `temp-${nextSetNumber}`
-    const tempSet = {
-      id: tempId,
+    const set = {
+      id: setId,
       session_id: sessionId,
       exercise_id: programExercise.exercise_id,
       program_exercise_id: programExercise.id,
-      user_id: '',
+      user_id: userId,
       set_number: nextSetNumber,
       reps_completed: reps,
       weight_kg: weightKg,
       rpe: null,
       is_warmup: false,
       is_dropset: false,
-      logged_at: new Date().toISOString(),
+      logged_at: now,
     }
 
-    addOptimisticSet(programExercise.exercise_id, tempSet)
+    addOptimisticSet(programExercise.exercise_id, set)
+    setIsLogging(true)
 
-    execute({
-      session_id: sessionId,
-      exercise_id: programExercise.exercise_id,
-      program_exercise_id: programExercise.id,
-      set_number: nextSetNumber,
-      reps_completed: reps,
-      weight_kg: weightKg ?? undefined,
-      is_warmup: false,
-      is_dropset: false,
-    })
+    try {
+      // Writes to IndexedDB and triggers background sync (or direct sync fallback)
+      await logSetOffline(set)
+      confirmSet(programExercise.exercise_id, setId, set)
+      startRestTimer(programExercise.rest_seconds, programExercise.exercise.name)
+    } catch {
+      // IndexedDB write failed (storage full?) - remove the optimistic set
+      removeSet(programExercise.exercise_id, setId)
+    } finally {
+      setIsLogging(false)
+    }
   }
 
   const allSetsLogged = exerciseSets.length >= programExercise.sets
@@ -174,11 +158,11 @@ export function SetLogger({ programExercise, sessionId }: SetLoggerProps) {
 
           {/* Log button */}
           <button
-            onClick={handleLogSet}
-            disabled={isPending}
+            onClick={() => void handleLogSet()}
+            disabled={isLogging}
             className="mt-1 w-full rounded-lg bg-[#6366F1] py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {isPending ? 'Logging...' : `Log Set ${nextSetNumber}`}
+            {isLogging ? 'Logging...' : `Log Set ${nextSetNumber}`}
           </button>
         </div>
       )}

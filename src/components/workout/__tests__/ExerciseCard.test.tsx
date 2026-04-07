@@ -87,6 +87,7 @@ describe('ExerciseCard', () => {
         ExerciseCard({
           programExercise: MOCK_PROGRAM_EXERCISE,
           sessionId: 'session-abc',
+          userId: 'user-test-id',
           isActive: true,
         })
       ).not.toThrow()
@@ -97,6 +98,7 @@ describe('ExerciseCard', () => {
         ExerciseCard({
           programExercise: MOCK_PROGRAM_EXERCISE,
           sessionId: 'session-abc',
+          userId: 'user-test-id',
           isActive: false,
         })
       ).not.toThrow()
@@ -106,6 +108,7 @@ describe('ExerciseCard', () => {
       const result = ExerciseCard({
         programExercise: MOCK_PROGRAM_EXERCISE,
         sessionId: 'session-abc',
+        userId: 'user-test-id',
         isActive: true,
       })
       expect(result).not.toBeNull()
@@ -116,7 +119,12 @@ describe('ExerciseCard', () => {
     it('renders without error when exercise is flagged for injury', () => {
       const flagged: ProgramExercise = { ...MOCK_PROGRAM_EXERCISE, is_flagged_for_injury: true }
       expect(() =>
-        ExerciseCard({ programExercise: flagged, sessionId: 'session-abc', isActive: true })
+        ExerciseCard({
+          programExercise: flagged,
+          sessionId: 'session-abc',
+          userId: 'user-test-id',
+          isActive: true,
+        })
       ).not.toThrow()
     })
   })
@@ -125,7 +133,12 @@ describe('ExerciseCard', () => {
     it('renders without error when rationale is null', () => {
       const noRationale: ProgramExercise = { ...MOCK_PROGRAM_EXERCISE, rationale: null }
       expect(() =>
-        ExerciseCard({ programExercise: noRationale, sessionId: 'session-abc', isActive: true })
+        ExerciseCard({
+          programExercise: noRationale,
+          sessionId: 'session-abc',
+          userId: 'user-test-id',
+          isActive: true,
+        })
       ).not.toThrow()
     })
 
@@ -135,7 +148,12 @@ describe('ExerciseCard', () => {
         rationale: 'A'.repeat(300),
       }
       expect(() =>
-        ExerciseCard({ programExercise: longRationale, sessionId: 'session-abc', isActive: true })
+        ExerciseCard({
+          programExercise: longRationale,
+          sessionId: 'session-abc',
+          userId: 'user-test-id',
+          isActive: true,
+        })
       ).not.toThrow()
     })
   })

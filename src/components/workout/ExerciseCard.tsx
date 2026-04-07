@@ -15,6 +15,7 @@ import type { ProgressionResult } from '@/lib/utils/progressive-overload'
 interface ExerciseCardProps {
   programExercise: ProgramExercise
   sessionId: string
+  userId: string
   isActive: boolean
   progression?: ProgressionResult | undefined
 }
@@ -22,6 +23,7 @@ interface ExerciseCardProps {
 export function ExerciseCard({
   programExercise,
   sessionId,
+  userId,
   isActive,
   progression,
 }: ExerciseCardProps) {
@@ -73,7 +75,7 @@ export function ExerciseCard({
       {/* Set logger - only shown when active */}
       {isActive && (
         <div className="border-t border-[#1A1A1F] p-4">
-          <SetLogger programExercise={programExercise} sessionId={sessionId} />
+          <SetLogger programExercise={programExercise} sessionId={sessionId} userId={userId} />
         </div>
       )}
     </div>
