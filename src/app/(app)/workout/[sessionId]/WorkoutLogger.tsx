@@ -15,11 +15,14 @@ import { completeSessionAction } from '@/actions/workout.actions'
 import { useWorkoutStore } from '@/stores/workout.store'
 import { ExerciseCard } from '@/components/workout/ExerciseCard'
 import { RestTimer } from '@/components/workout/RestTimer'
+import { OfflineBanner } from '@/components/workout/OfflineBanner'
+import { SyncStatusDot } from '@/components/workout/SyncStatusDot'
 import type { ProgramDay } from '@/types'
 import type { ProgressionResult } from '@/lib/utils/progressive-overload'
 
 interface WorkoutLoggerProps {
   sessionId: string
+  userId: string
   programDayId: string | null
   programId: string | null
   programDay: ProgramDay | null
@@ -28,6 +31,7 @@ interface WorkoutLoggerProps {
 
 export function WorkoutLogger({
   sessionId,
+  userId,
   programDayId,
   programId,
   programDay,
@@ -59,6 +63,8 @@ export function WorkoutLogger({
 
   return (
     <div className="flex flex-col gap-4 pb-24">
+      <OfflineBanner />
+
       {/* Day header */}
       {programDay && (
         <div className="rounded-xl bg-[#111113] p-4">
@@ -84,6 +90,7 @@ export function WorkoutLogger({
               <ExerciseCard
                 programExercise={ex}
                 sessionId={sessionId}
+                userId={userId}
                 isActive={i === activeIndex}
                 progression={suggestions?.[ex.exercise_id]}
               />
@@ -97,13 +104,16 @@ export function WorkoutLogger({
 
       {/* Complete workout - sticky at bottom */}
       <div className="fixed bottom-0 left-0 right-0 border-t border-[#1A1A1F] bg-[#0A0A0B] p-4">
-        <button
-          onClick={() => complete({ session_id: sessionId })}
-          disabled={isCompleting}
-          className="w-full rounded-lg bg-[#10B981] py-3 font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-        >
-          {isCompleting ? 'Finishing...' : 'Complete Workout'}
-        </button>
+        <div className="flex items-center justify-between gap-3">
+          <SyncStatusDot />
+          <button
+            onClick={() => complete({ session_id: sessionId })}
+            disabled={isCompleting}
+            className="flex-1 rounded-lg bg-[#10B981] py-3 font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+          >
+            {isCompleting ? 'Finishing...' : 'Complete Workout'}
+          </button>
+        </div>
       </div>
     </div>
   )
