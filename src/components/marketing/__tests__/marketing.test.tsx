@@ -30,6 +30,7 @@ vi.mock('next/link', () => ({
 }))
 import { ScienceHookSection } from '../ScienceHookSection'
 import { HowItWorksSection } from '../HowItWorksSection'
+import { ArchetypeSection } from '../ArchetypeSection'
 import { FeaturesGrid } from '../FeaturesGrid'
 import { LandingCTA } from '../LandingCTA'
 import { LandingNav } from '../LandingNav'
@@ -94,6 +95,10 @@ describe('marketing component exports', () => {
   it('exports LandingCTA as a function', () => {
     expect(typeof LandingCTA).toBe('function')
   })
+
+  it('exports ArchetypeSection as a function', () => {
+    expect(typeof ArchetypeSection).toBe('function')
+  })
 })
 
 // --- Server Component renders ------------------------------------------------
@@ -154,6 +159,18 @@ describe('HowItWorksSection', () => {
     expect(json).toContain('5-minute intake quiz')
   })
 
+  it('references Kiro, not Claude, for program analysis', () => {
+    const json = JSON.stringify(HowItWorksSection())
+    expect(json).toContain('Kiro analyzes your intake')
+    expect(json).not.toContain('Claude analyzes')
+  })
+
+  it('mentions injury and sleep data collection', () => {
+    const json = JSON.stringify(HowItWorksSection())
+    expect(json).toContain('injury')
+    expect(json).toContain('sleep')
+  })
+
   it('contains no em dashes', () => {
     const json = JSON.stringify(HowItWorksSection())
     expect(json).not.toContain('\u2014')
@@ -176,11 +193,44 @@ describe('FeaturesGrid', () => {
     expect(json).toContain('Offline-first')
     expect(json).toContain('Progressive overload')
     expect(json).toContain('Adaptive volume')
-    expect(json).toContain('Science citations')
+    expect(json).toContain('Injury-aware programming')
+  })
+
+  it('does not contain Science citations tile', () => {
+    const json = JSON.stringify(FeaturesGrid())
+    expect(json).not.toContain('Science citations')
   })
 
   it('contains no em dashes', () => {
     const json = JSON.stringify(FeaturesGrid())
+    expect(json).not.toContain('\u2014')
+  })
+})
+
+describe('ArchetypeSection', () => {
+  it('renders without throwing', () => {
+    expect(() => ArchetypeSection()).not.toThrow()
+  })
+
+  it('contains all eight archetype names', () => {
+    const json = JSON.stringify(ArchetypeSection())
+    expect(json).toContain('The System Builder')
+    expect(json).toContain('The Milestone Chaser')
+    expect(json).toContain('The Explorer')
+    expect(json).toContain('The Pragmatist')
+    expect(json).toContain('The Comeback Kid')
+    expect(json).toContain('The Optimizer')
+    expect(json).toContain('The Challenger')
+    expect(json).toContain('The Understander')
+  })
+
+  it('contains the section headline', () => {
+    const json = JSON.stringify(ArchetypeSection())
+    expect(json).toContain('Your archetype, your program')
+  })
+
+  it('contains no em dashes', () => {
+    const json = JSON.stringify(ArchetypeSection())
     expect(json).not.toContain('\u2014')
   })
 })

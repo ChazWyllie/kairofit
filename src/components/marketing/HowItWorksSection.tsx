@@ -3,13 +3,13 @@ const steps = [
     number: '01',
     title: '5-minute intake quiz',
     description:
-      'Answer questions about your experience level, available equipment, schedule, and goals. Kiro uses this to calibrate volume, intensity, and split selection - not to generate a template.',
+      'Answer 22 focused questions covering experience level, equipment, schedule, goals, injury history, sleep quality, body composition, and work schedule. Kiro uses this to calibrate volume, intensity, and split selection - not to generate a template.',
   },
   {
     number: '02',
     title: 'Kiro builds your program',
     description:
-      'Claude analyzes your intake and applies exercise science principles: progressive overload, recovery windows, muscle balance, and contraindication matching. The result is a program built for you, with every choice explained.',
+      'Kiro analyzes your intake and applies exercise science principles: progressive overload, recovery windows, muscle balance, and contraindication matching. The result is a program built for you, with every choice explained.',
   },
   {
     number: '03',

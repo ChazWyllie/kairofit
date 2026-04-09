@@ -1,4 +1,4 @@
-import { Brain, Activity, WifiOff, TrendingUp, BarChart2, FlaskConical } from 'lucide-react'
+import { Brain, Activity, WifiOff, TrendingUp, BarChart2, ShieldAlert } from 'lucide-react'
 
 const features = [
   {
@@ -32,10 +32,10 @@ const features = [
       'Weekly sets per muscle group adjust based on your experience level. Beginners cap at 16 sets. Level 5 athletes train up to 25.',
   },
   {
-    icon: <FlaskConical className="h-5 w-5 text-[#10B981]" />,
-    title: 'Science citations',
+    icon: <ShieldAlert className="h-5 w-5 text-[#EF4444]" />,
+    title: 'Injury-aware programming',
     description:
-      'Every exercise selection references the research behind it. Schoenfeld, Israetel, and the MEV/MAV/MRV literature, not gym folklore.',
+      'Your intake includes your full injury history. Kiro flags contraindicated movements and adapts exercise selection to keep you training safely while making progress.',
   },
 ]
 
