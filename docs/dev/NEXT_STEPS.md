@@ -1,6 +1,6 @@
 # KairoFit - Next Steps
 
-_Last updated: 2026-04-04. Reflects state after Phase 6 (progressive overload) + post-review fixes._
+_Last updated: 2026-04-08. Reflects state after Phase 9 (PWA + offline-first). Phase 10 (landing page) in progress._
 
 ---
 
@@ -39,9 +39,28 @@ _Last updated: 2026-04-04. Reflects state after Phase 6 (progressive overload) +
 - `onboardingStateSchema.parse(state)` validates all client-supplied state at DB write boundary
 - RLS enforced on all tables; no service role key exposed to client
 
-### Test coverage (226/226 passing)
+### Test coverage (289/289 passing)
 
-19 test files, 226 unit tests, all green.
+Test suite expanded through Phases 7-9. All 289 unit tests green.
+
+### Analytics (Phase 8)
+
+PostHog instrumentation across all critical user flows. Events fire via `after()` so they never delay responses.
+
+- `ONBOARDING_STEP_COMPLETED`, `PROGRAM_GENERATED`, `WORKOUT_STARTED`, `SET_LOGGED`, `WORKOUT_COMPLETED`, `KIRO_DEBRIEF_VIEWED`
+- `src/components/providers/PostHogProvider.tsx` - client-side PostHog init with pageview tracking
+- All events use taxonomy defined in `skills/posthog-event-taxonomy/`
+
+### PWA + Offline (Phase 9)
+
+App installs to home screen and works offline during workouts.
+
+- `@serwist/next` service worker (NOT next-pwa - incompatible with Turbopack)
+- `src/lib/offline/db.ts` - Dexie.js IndexedDB schema for queued sets
+- `src/components/workout/OfflineBanner.tsx` - network status indicator
+- `src/components/workout/SyncStatusDot.tsx` - per-set sync state indicator
+- `SetLogger` always writes via `logSetOffline()` first; background sync handles server persistence
+- `public/sw.js` - compiled service worker asset
 
 ### Dashboard UI (Phase 3)
 
@@ -97,7 +116,41 @@ No DB migration required - suggestions are computed at render time and displayed
 
 ## What to build next
 
-### Phase 7: Testing Layers 2-5
+### Phase 10: Landing Page (in progress)
+
+**Goal:** Public marketing page at `/` that converts new visitors into onboarding starters. Currently unauthenticated visitors at `/` are redirected to `/auth/login` - this phase adds a real entry point.
+
+**Sections (top to bottom):**
+
+1. `LandingNav` - sticky header: wordmark left, "Sign in" + "Get started" right
+2. `HeroSection` - full-viewport headline + sub + CTA -> `/onboarding`
+3. `ScienceHookSection` - "Know why every rep" - visual mockup of 3-layer science transparency
+4. `HowItWorksSection` - 3-step numbered flow: quiz -> Kiro builds program -> train with purpose
+5. `FeaturesGrid` - 6 feature tiles (AI Coach, Recovery heatmap, Offline-first, Progressive overload, Adaptive volume, Science citations)
+6. `LandingCTA` - bottom full-width CTA section with trust line
+
+**Files to create:**
+
+- `src/app/page.tsx` - landing page shell (Server Component)
+- `src/components/marketing/LandingNav.tsx` - sticky nav (Client Component for scroll state)
+- `src/components/marketing/HeroSection.tsx` - hero (Client Component for Framer Motion)
+- `src/components/marketing/ScienceHookSection.tsx` - science section
+- `src/components/marketing/HowItWorksSection.tsx` - how it works
+- `src/components/marketing/FeaturesGrid.tsx` - features grid
+- `src/components/marketing/LandingCTA.tsx` - final CTA
+
+**Middleware change:** Add `'/'` to `PUBLIC_ROUTES` in `src/middleware.ts`.
+
+**Constraints:**
+- No em dashes anywhere in copy
+- No motivational fluff ("crush it", "you've got this")
+- Dark theme only - all design tokens from CLAUDE.md
+- `framer-motion` only in Client Components
+- All CTAs route to `/onboarding`; sign-in links to `/auth/login`
+
+---
+
+### Phase 11: Testing Layers 2-5 (deferred)
 
 CLAUDE.md defines a 5-layer testing roadmap. Only Layer 1 exists.
 
@@ -122,40 +175,6 @@ CLAUDE.md defines a 5-layer testing roadmap. Only Layer 1 exists.
 
 - PostHog `WORKOUT_COMPLETED` / `WORKOUT_STARTED` ratio per prompt version
 - See `skills/posthog-event-taxonomy/` for event naming
-
----
-
-### Phase 8: Analytics + PostHog
-
-**Goal:** Instrument all critical user events before revenue launch.
-
-**Events to implement** (see `skills/posthog-event-taxonomy/` for exact names):
-
-- `ONBOARDING_STEP_COMPLETED` - with step name + archetype at reveal
-- `PROGRAM_GENERATED` - with generation_model, experience_level
-- `WORKOUT_STARTED` - with program_id, session_day_number
-- `SET_LOGGED` - with exercise_name, reps, weight
-- `WORKOUT_COMPLETED` - with session_duration, total_sets
-- `KIRO_DEBRIEF_VIEWED` - with session_id
-
-All analytics use `after()` so they never delay the user response.
-
----
-
-### Phase 9: PWA + Offline
-
-**Goal:** App installs to home screen, works offline during workouts.
-
-**Already configured:** `@serwist/next` in `next.config.ts` (NOT `next-pwa`).
-
-**To implement:**
-
-- `src/lib/offline/db.ts` - Dexie.js schema for queued sets (see `skills/offline-sync-pattern/`)
-- `src/lib/offline/sync.ts` - background sync queue with retry logic
-- Service worker caches: exercise library, active program, static assets
-- Offline banner component when network is unavailable
-
-**Key constraint:** `framer-motion` components must be `'use client'`. LazyMotion with `domAnimation` bundle reduces bundle size.
 
 ---
 
