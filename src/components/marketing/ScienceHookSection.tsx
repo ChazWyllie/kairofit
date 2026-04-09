@@ -5,22 +5,28 @@ const layers = [
     icon: <BookOpen className="h-4 w-4 text-[#6366F1]" />,
     label: 'Layer 1',
     title: 'One-line rationale',
-    description: 'Every exercise card shows a single sentence explaining why it is in your program.',
-    example: 'Romanian deadlifts target hip-hinge mechanics and posterior chain hypertrophy at your current volume (12 sets/week).',
+    description:
+      'Every exercise card shows a single sentence explaining why it is in your program.',
+    example:
+      'Romanian deadlifts target hip-hinge mechanics and posterior chain hypertrophy at your current volume (12 sets/week).',
   },
   {
     icon: <FileText className="h-4 w-4 text-[#F97316]" />,
     label: 'Layer 2',
     title: 'Full program rationale',
-    description: 'Your program overview contains a detailed paragraph from Kiro explaining the entire training block.',
-    example: 'This 4-day upper/lower split is built around your intermediate experience (level 3) and 3-hour weekly availability. Volume is set at 14 working sets per muscle group - within the maximum adaptive range for your level...',
+    description:
+      'Your program overview contains a detailed paragraph from Kiro explaining the entire training block.',
+    example:
+      'This 4-day upper/lower split is built around your intermediate experience (level 3) and 3-hour weekly availability. Volume is set at 14 working sets per muscle group - within the maximum adaptive range for your level...',
   },
   {
     icon: <ChevronDown className="h-4 w-4 text-[#10B981]" />,
     label: 'Layer 3',
     title: 'Research notes',
-    description: 'Expand any exercise to read the full science behind the selection - study references included.',
-    example: 'Schoenfeld (2010) established that mechanical tension is the primary driver of hypertrophy. This exercise creates peak tension in the 60-120 degree range of hip flexion...',
+    description:
+      'Expand any exercise to read the full science behind the selection - study references included.',
+    example:
+      'Schoenfeld (2010) established that mechanical tension is the primary driver of hypertrophy. This exercise creates peak tension in the 60-120 degree range of hip flexion...',
   },
 ]
 
@@ -45,10 +51,7 @@ export function ScienceHookSection() {
         {/* Layer cards */}
         <div className="grid gap-4 sm:grid-cols-3">
           {layers.map((layer) => (
-            <div
-              key={layer.label}
-              className="rounded-2xl border border-white/5 bg-[#1A1A1F] p-6"
-            >
+            <div key={layer.label} className="rounded-2xl border border-white/5 bg-[#1A1A1F] p-6">
               <div className="mb-4 flex items-center gap-2">
                 {layer.icon}
                 <span className="text-xs font-medium text-[#6B6B68]">{layer.label}</span>

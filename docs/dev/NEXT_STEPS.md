@@ -142,6 +142,7 @@ No DB migration required - suggestions are computed at render time and displayed
 **Middleware change:** Add `'/'` to `PUBLIC_ROUTES` in `src/middleware.ts`.
 
 **Constraints:**
+
 - No em dashes anywhere in copy
 - No motivational fluff ("crush it", "you've got this")
 - Dark theme only - all design tokens from CLAUDE.md

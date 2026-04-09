@@ -9,17 +9,24 @@ export function HeroSection() {
   const ctaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = []
     const els = [headlineRef.current, subRef.current, ctaRef.current]
     els.forEach((el, i) => {
       if (!el) return
       el.style.opacity = '0'
       el.style.transform = 'translateY(20px)'
-      setTimeout(() => {
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease'
-        el.style.opacity = '1'
-        el.style.transform = 'translateY(0)'
-      }, 100 + i * 120)
+      timers.push(
+        setTimeout(
+          () => {
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease'
+            el.style.opacity = '1'
+            el.style.transform = 'translateY(0)'
+          },
+          100 + i * 120
+        )
+      )
     })
+    return () => timers.forEach(clearTimeout)
   }, [])
 
   return (
@@ -29,7 +36,7 @@ export function HeroSection() {
         aria-hidden
         className="pointer-events-none absolute inset-0 flex items-center justify-center"
       >
-        <div className="h-[500px] w-[700px] rounded-full bg-[#6366F1]/8 blur-[120px]" />
+        <div className="bg-[#6366F1]/8 h-[500px] w-[700px] rounded-full blur-[120px]" />
       </div>
 
       <div className="relative z-10 max-w-3xl">
@@ -61,7 +68,10 @@ export function HeroSection() {
         </p>
 
         {/* CTA row */}
-        <div ref={ctaRef} className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <div
+          ref={ctaRef}
+          className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
+        >
           <Link
             href="/onboarding"
             className="w-full rounded-xl bg-[#6366F1] px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-[#5558E6] sm:w-auto"
@@ -77,9 +87,7 @@ export function HeroSection() {
         </div>
 
         {/* Trust line */}
-        <p className="mt-6 text-xs text-[#6B6B68]">
-          5-minute quiz. No credit card. Works offline.
-        </p>
+        <p className="mt-6 text-xs text-[#6B6B68]">5-minute quiz. No credit card. Works offline.</p>
       </div>
 
       {/* Scroll indicator */}

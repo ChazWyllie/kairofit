@@ -17,7 +17,7 @@ export function LandingNav() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-200 ${
-        scrolled ? 'bg-[#0A0A0B]/95 backdrop-blur-sm border-b border-white/5' : 'bg-transparent'
+        scrolled ? 'border-b border-white/5 bg-[#0A0A0B]/95 backdrop-blur-sm' : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
