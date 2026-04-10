@@ -107,11 +107,11 @@ Test Files  27 passed (27)
 
 ## Quality Checks
 
-| Check | Result |
-| ----- | ------ |
-| `npm run typecheck` | Clean |
-| `npm run lint` | Clean |
-| `npm run lint:kiro` | Clean |
+| Check                  | Result                                      |
+| ---------------------- | ------------------------------------------- |
+| `npm run typecheck`    | Clean                                       |
+| `npm run lint`         | Clean                                       |
+| `npm run lint:kiro`    | Clean                                       |
 | `npm run format:check` | Clean (UI_DESIGN.md needed one format pass) |
 
 ---
