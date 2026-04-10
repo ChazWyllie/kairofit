@@ -30,7 +30,7 @@ import {
 import { recommendSplit } from '@/lib/utils/progressive-overload'
 import { getExcludedExercises } from '@/lib/utils/contraindications'
 import { createServerClient } from '@/lib/db/supabase'
-import type { UserProfile, GeneratedProgram } from '@/types'
+import type { UserProfile, GeneratedProgram, Program } from '@/types'
 
 const client = new Anthropic()
 
@@ -300,6 +300,103 @@ function buildStaticFallback(): GeneratedProgram {
     projected_outcome_description: 'Full analysis available when AI service resumes.',
     days: [],
   }
+}
+
+// ============================================================
+// PROGRAM ADJUSTMENT
+// ============================================================
+
+const ADJUSTMENT_TASK_INSTRUCTIONS = `
+Adjust the existing KairoFit workout program based on the user's feedback.
+Output the complete updated program JSON - include ALL days and exercises, not just the changed parts.
+
+Critical constraints (must hold in adjusted program):
+- Heavy compounds (squat, deadlift, bench, overhead press): minimum 120 seconds rest
+- Do NOT pair heavy squat + heavy deadlift on the same day
+- Do NOT pair heavy bench + heavy overhead press on the same day
+- Every exercise must have a rationale explaining why it is in this session
+- Only use equipment the user already has in their program
+- Honour any injury contraindications already present in the program
+`
+
+/**
+ * Adjust an existing program based on free-text user feedback.
+ *
+ * Resilience: Sonnet -> Haiku. No static fallback - caller decides how to handle failure.
+ * Unlike generateProgram, adjustProgram CAN throw. The caller (adjustProgramAction)
+ * wraps it with circuit breaker and recordFailure on error.
+ */
+export async function adjustProgram(
+  program: Program,
+  feedback: string
+): Promise<GenerationResult> {
+  // Try Sonnet first
+  try {
+    const adjusted = await adjustWithModel(program, feedback, 'claude-sonnet-4-20250514', 4096)
+    return { program: adjusted, source: 'ai_sonnet' }
+  } catch (sonnetErr) {
+    console.error('adjustProgram: Sonnet failed, trying Haiku:', sonnetErr)
+  }
+
+  // Haiku fallback
+  const adjusted = await adjustWithModel(program, feedback, 'claude-haiku-4-5-20251001', 3000)
+  return { program: adjusted, source: 'ai_haiku' }
+}
+
+async function adjustWithModel(
+  program: Program,
+  feedback: string,
+  model: 'claude-sonnet-4-20250514' | 'claude-haiku-4-5-20251001',
+  maxTokens: number
+): Promise<GeneratedProgram> {
+  const systemBlocks: (Anthropic.TextBlockParam & { cache_control?: { type: 'ephemeral' } })[] = [
+    {
+      type: 'text',
+      text: KIRO_BASE_SYSTEM_PROMPT,
+      cache_control: { type: 'ephemeral' },
+    },
+    {
+      type: 'text',
+      text: ADJUSTMENT_TASK_INSTRUCTIONS,
+    },
+  ]
+
+  const programSummary = `
+Current program: ${program.name}
+Description: ${program.description}
+Duration: ${program.weeks_duration} weeks
+Current week: ${program.current_week}
+`.trim()
+
+  const response = await client.messages.create({
+    model,
+    max_tokens: maxTokens,
+    system: systemBlocks as Anthropic.TextBlockParam[],
+    messages: [
+      {
+        role: 'user',
+        content: `${programSummary}\n\nUser feedback: ${feedback}\n\nPlease adjust the program accordingly.`,
+      },
+    ],
+    tools: [PROGRAM_TOOL],
+    tool_choice: { type: 'tool', name: 'create_workout_program' },
+  })
+
+  const toolUse = response.content.find((b) => b.type === 'tool_use')
+  if (!toolUse || toolUse.type !== 'tool_use') {
+    throw new Error(`${model} did not call the program tool`)
+  }
+
+  const rawProgram = toolUse.input as GeneratedProgram
+  // Validate numerical constraints - Structured Outputs guarantees shape, NOT bounds.
+  // Profile data (injuries, equipment) not available here; use conservative intermediate
+  // defaults so egregious violations (e.g. 300 sets, 0s rest) are caught before DB write.
+  const validation = validateWorkoutProgram(rawProgram, 3, [], [])
+  if (!validation.valid) {
+    throw new Error(`Adjusted program failed validation: ${validation.errors[0]?.message}`)
+  }
+
+  return rawProgram
 }
 
 // NOTE: buildCachedSystemMessage was removed.
