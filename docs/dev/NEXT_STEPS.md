@@ -1,6 +1,6 @@
 # KairoFit - Next Steps
 
-_Last updated: 2026-04-08. Reflects state after Phase 9 (PWA + offline-first). Phase 10 (landing page) in progress._
+_Last updated: 2026-04-09. Reflects state after Phase 10 (public landing page). 327/327 tests passing._
 
 ---
 
@@ -39,9 +39,9 @@ _Last updated: 2026-04-08. Reflects state after Phase 9 (PWA + offline-first). P
 - `onboardingStateSchema.parse(state)` validates all client-supplied state at DB write boundary
 - RLS enforced on all tables; no service role key exposed to client
 
-### Test coverage (289/289 passing)
+### Test coverage (327/327 passing)
 
-Test suite expanded through Phases 7-9. All 289 unit tests green.
+Test suite expanded through Phases 7-10. All 327 unit tests green. Includes property-based tests (Layer 2), quality-judge tests (Layer 3), and golden-profile regression tests (Layer 4).
 
 ### Analytics (Phase 8)
 
@@ -61,6 +61,32 @@ App installs to home screen and works offline during workouts.
 - `src/components/workout/SyncStatusDot.tsx` - per-set sync state indicator
 - `SetLogger` always writes via `logSetOffline()` first; background sync handles server persistence
 - `public/sw.js` - compiled service worker asset
+
+### Public Landing Page (Phase 10)
+
+Marketing page at `/` converts new visitors to onboarding starters. Merged as PR #49 (commit 2659e34).
+
+- `src/app/page.tsx` - landing page shell (Server Component)
+- `src/components/marketing/LandingNav.tsx` - sticky nav with scroll state
+- `src/components/marketing/HeroSection.tsx` - full-viewport hero with Framer Motion
+- `src/components/marketing/ScienceHookSection.tsx` - 3-layer science transparency visual
+- `src/components/marketing/HowItWorksSection.tsx` - 3-step numbered flow
+- `src/components/marketing/FeaturesGrid.tsx` - 6 feature tiles
+- `src/components/marketing/LandingCTA.tsx` - bottom full-width CTA
+- `src/middleware.ts` - `'/'` added to `PUBLIC_ROUTES`
+- axios patched to 1.15.0 (GHSA-3p68-rc4w-qgx5 SSRF fix)
+
+### Testing Layers 2-4 (Phase 11 partial)
+
+Completed in commit c674c3f alongside Phase 9 work.
+
+- `src/lib/ai/__tests__/workout-validator.test.ts` - property-based tests via `fast-check` (Layer 2)
+- `src/lib/ai/quality-judge.ts` - Haiku secondary-judge for 5 quality dimensions (Layer 3)
+- `src/lib/ai/__tests__/quality-judge.test.ts` - 11 tests for quality judge (Layer 3)
+- `src/lib/ai/__tests__/golden-profiles/` - expert-validated profile fixtures (Layer 4)
+- `src/lib/ai/__tests__/golden-profiles.test.ts` - 8 snapshot regression tests (Layer 4)
+
+Layer 5 (A/B production via PostHog ratio tracking) remains deferred.
 
 ### Dashboard UI (Phase 3)
 
@@ -116,61 +142,42 @@ No DB migration required - suggestions are computed at render time and displayed
 
 ## What to build next
 
-### Phase 10: Landing Page (in progress)
+### Milestone B: Unblock stubbed Server Actions
 
-**Goal:** Public marketing page at `/` that converts new visitors into onboarding starters. Currently unauthenticated visitors at `/` are redirected to `/auth/login` - this phase adds a real entry point.
+Three stubs remain in the action layer. Each ships as its own focused PR.
 
-**Sections (top to bottom):**
+**B1 - Program adjustment** (`src/actions/program.actions.ts:104`):
 
-1. `LandingNav` - sticky header: wordmark left, "Sign in" + "Get started" right
-2. `HeroSection` - full-viewport headline + sub + CTA -> `/onboarding`
-3. `ScienceHookSection` - "Know why every rep" - visual mockup of 3-layer science transparency
-4. `HowItWorksSection` - 3-step numbered flow: quiz -> Kiro builds program -> train with purpose
-5. `FeaturesGrid` - 6 feature tiles (AI Coach, Recovery heatmap, Offline-first, Progressive overload, Adaptive volume, Science citations)
-6. `LandingCTA` - bottom full-width CTA section with trust line
+- Implement `adjustProgramAction` via Claude (currently returns a stub)
+- Rate-limited, same resilience chain as `generateProgramAction`
+- Branch: `feat/adjust-program-action`
 
-**Files to create:**
+**B2 - Exercise swap** (`src/actions/program.actions.ts:123`):
 
-- `src/app/page.tsx` - landing page shell (Server Component)
-- `src/components/marketing/LandingNav.tsx` - sticky nav (Client Component for scroll state)
-- `src/components/marketing/HeroSection.tsx` - hero (Client Component for Framer Motion)
-- `src/components/marketing/ScienceHookSection.tsx` - science section
-- `src/components/marketing/HowItWorksSection.tsx` - how it works
-- `src/components/marketing/FeaturesGrid.tsx` - features grid
-- `src/components/marketing/LandingCTA.tsx` - final CTA
+- Implement `swapExerciseAction` - substitution reasoning via Kiro
+- Passes through `safety-filter.ts` and `workout-validator.ts`
+- Branch: `feat/swap-exercise-action`
 
-**Middleware change:** Add `'/'` to `PUBLIC_ROUTES` in `src/middleware.ts`.
+**B3 - Account deletion** (`src/actions/profile.actions.ts:93`):
 
-**Constraints:**
-
-- No em dashes anywhere in copy
-- No motivational fluff ("crush it", "you've got this")
-- Dark theme only - all design tokens from CLAUDE.md
-- `framer-motion` only in Client Components
-- All CTAs route to `/onboarding`; sign-in links to `/auth/login`
+- Implement full account deletion (profile + program + sessions cascade via DB triggers)
+- Branch: `feat/delete-account-action`
 
 ---
 
-### Phase 11: Testing Layers 2-5 (deferred)
+### Milestone E: Health data encryption + measurement logging
 
-CLAUDE.md defines a 5-layer testing roadmap. Only Layer 1 exists.
+- `supabase/migrations/003_health_data_encryption.sql` - column-level encryption for health fields
+- `logMeasurementAction` - implement stub at `src/actions/profile.actions.ts:69`
+- `src/components/profile/MeasurementLogger.tsx` - UI for logging weight/body fat
+- `src/components/profile/MeasurementHistory.tsx` - chart of measurements over time
+- See `skills/health-data-encryption/SKILL.md`
 
-**Layer 2 - Property-based testing:**
+---
 
-- Install `fast-check`
-- `src/lib/ai/workout-validator.test.ts` - generate random `UserProfile` objects, verify invariants
-- Invariants: no program exceeds volume caps, no contraindicated exercises, all rest periods valid
+### Phase 11: Testing Layer 5 (remaining)
 
-**Layer 3 - LLM-as-judge:**
-
-- `src/lib/ai/quality-judge.ts` - secondary Haiku call evaluates generation quality
-- 5 dimensions: safety, scientific accuracy, personalization, Kiro voice, completeness
-- Threshold: 4/5 minimum to accept
-
-**Layer 4 - Snapshot regression:**
-
-- `src/lib/ai/__tests__/golden-profiles/` - 50 expert-validated profiles
-- Run generation against each, verify output is within acceptable deviation
+Layers 2-4 are complete (see "What is built and working" above). Layer 5 remains:
 
 **Layer 5 - A/B production:**
 
@@ -213,6 +220,12 @@ CLAUDE.md defines a 5-layer testing roadmap. Only Layer 1 exists.
 | `src/lib/db/queries/progression.ts`           | Complete (Phase 6)               | getProgressionSuggestionsForDay orchestrator    |
 | `src/app/(app)/workout/[sessionId]/page.tsx`  | Complete (Phase 4+6)             | Parallel fetch: session + progression hints     |
 | `supabase/migrations/001_initial_schema.sql`  | Complete                         | Full DB schema + RLS + triggers                 |
+| `src/app/page.tsx`                            | Complete (Phase 10)              | Public landing page shell                       |
+| `src/components/marketing/LandingNav.tsx`     | Complete (Phase 10)              | Sticky nav with scroll state                    |
+| `src/components/marketing/HeroSection.tsx`    | Complete (Phase 10)              | Full-viewport hero with Framer Motion           |
+| `src/components/marketing/FeaturesGrid.tsx`   | Complete (Phase 10)              | 6-tile feature showcase                         |
+| `src/lib/ai/quality-judge.ts`                 | Complete (Phase 11 Layer 3)      | Haiku secondary judge for generation quality    |
+| `src/lib/ai/__tests__/golden-profiles/`       | Complete (Phase 11 Layer 4)      | Expert-validated profile fixtures               |
 
 ---
 

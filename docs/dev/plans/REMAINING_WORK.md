@@ -1,6 +1,15 @@
 # Plan: Remaining Work in KairoFit Codebase
 
-_Authored: 2026-04-09. Baseline: `feat/phase-10-landing-page` @ c9f25e3, 289/289 tests passing._
+_Authored: 2026-04-09. Last updated: 2026-04-09 (Milestone A merged)._
+_Baseline: `main` @ 2659e34, 327/327 tests passing._
+
+## Status
+
+- [x] **Milestone A** - Phase 10 landing page merged as PR #49 (commit 2659e34)
+- [ ] **Milestone B** - Unblock stubbed Server Actions (B1 adjust, B2 swap, B3 delete)
+- [x] **Milestone C** - Testing Layer 2 (property-based) completed in commit c674c3f
+- [x] **Milestone D** - Testing Layers 3+4 (quality-judge + golden profiles) completed in commit c674c3f
+- [ ] **Milestone E** - Health data encryption + measurement logging
 
 ---
 
@@ -52,20 +61,22 @@ No new public API routes. `/api/debrief/[sessionId]` already ships a full `strea
 
 Each milestone is an independently deployable PR, branched from `main` (except Milestone A which finishes the in-flight Phase 10 branch).
 
-### Milestone A: Finalize Phase 10 Landing Page
+### Milestone A: Finalize Phase 10 Landing Page [COMPLETE]
 
-- **Deliverables**
-  - Run `/verify` on `feat/phase-10-landing-page` (typecheck, lint, `lint:kiro`, tests, format:check)
-  - Fix any verification findings
-  - Remove orphaned `generateDebrief()` stub from `src/lib/ai/workout-generator.ts` (dead code cleanup, single commit)
-  - Push branch, open PR against `main`, monitor CI
-  - Merge + generate PHASE_10_JOURNAL.md, update NEXT_STEPS.md
-- **Acceptance criteria**
-  - `/` renders landing page for unauthenticated users (no redirect to `/auth/login`)
-  - All 6 landing sections (Nav, Hero, ScienceHook, HowItWorks, FeaturesGrid, CTA) present and responsive
-  - `npm run lint:kiro` passes (no em dashes, no banned phrases)
-  - 289+ tests green, no new console.log warnings
-  - PR merged to `main`
+Merged as PR #49 (commit 2659e34) on 2026-04-09.
+
+- **Deliverables** (all complete)
+  - [x] `/verify` passed on `feat/phase-10-landing-page`
+  - [x] Orphaned `generateDebrief()` stub removed from `src/lib/ai/workout-generator.ts`
+  - [x] CI green (typecheck, lint, lint:kiro, unit tests, build, E2E)
+  - [x] Axios SSRF (GHSA-3p68-rc4w-qgx5) patched via `npm audit fix`
+  - [x] PR #49 squash-merged to `main`; feature branch deleted
+  - [x] `docs/dev/journals/PHASE_10_JOURNAL.md` published
+- **Acceptance criteria** (all met)
+  - [x] `/` renders landing page for unauthenticated users
+  - [x] All 6 landing sections present and responsive
+  - [x] `npm run lint:kiro` passes
+  - [x] 327/327 tests green
 
 ### Milestone B: Unblock Stubbed Server Actions
 
@@ -79,27 +90,23 @@ Each milestone is an independently deployable PR, branched from `main` (except M
   - No stubs remain in `program.actions.ts` or `profile.actions.ts` (except `logMeasurementAction` which is gated on Milestone E)
   - All 3 PRs merged, 289+ tests green
 
-### Milestone C: Testing Layer 2 — Property-Based
+### Milestone C: Testing Layer 2 — Property-Based [COMPLETE]
 
-- **Deliverables**
-  - Install `fast-check` as dev dependency
-  - `src/lib/ai/__tests__/workout-validator.property.test.ts` — generators for `UserProfile`, run 1000 iterations per invariant
-  - Invariants: (a) no program exceeds level-specific volume cap, (b) no contraindicated exercise assigned given injury list, (c) all rest periods within 30-300s, (d) rep ranges match scheme, (e) archetype-specific rules preserved
-  - Document property-test patterns in `skills/property-based-testing/SKILL.md` (new skill)
-- **Acceptance criteria**
-  - 5 invariant properties green, each with ≥500 iterations
-  - `npm run test:coverage` shows workout-validator.ts at ≥90% branch coverage
-  - Zero new `any` types; all generators typed with `fast-check`'s `fc.Arbitrary<T>`
+Completed in commit c674c3f (`test(ai): add Phase 7 testing layers 2-4`).
 
-### Milestone D: Testing Layers 3 + 4 — LLM Judge + Snapshot Regression
+- **Delivered**
+  - `fast-check` installed as dev dependency
+  - `src/lib/ai/__tests__/workout-validator.test.ts` — property-based invariants for the validator
+  - Landed alongside Milestones D1/D2 in the same commit
 
-- **Deliverables**
-  - **D1** Layer 3: `src/lib/ai/quality-judge.ts` — Haiku call scoring 5 dimensions (safety, scientific accuracy, personalization, Kiro voice, completeness), threshold 4/5, integration with `generateProgramAction` as non-blocking telemetry (not acceptance gate initially)
-  - **D2** Layer 4: `src/lib/ai/__tests__/golden-profiles/` — 15 seed profiles (not 50 — full set is scope creep), snapshot assertion harness, deviation tolerance for volume ±10% and exercise count ±1
-- **Acceptance criteria**
-  - Judge returns scores within 2s p95 on Haiku
-  - Golden profile suite runs in CI via `npm run test:golden`
-  - Drift alert: quality-judge score < 4/5 triggers PostHog event `AI_QUALITY_BELOW_THRESHOLD`
+### Milestone D: Testing Layers 3 + 4 — LLM Judge + Snapshot Regression [COMPLETE]
+
+Completed in commit c674c3f.
+
+- **Delivered**
+  - `src/lib/ai/quality-judge.ts` + `src/lib/ai/__tests__/quality-judge.test.ts` (11 tests)
+  - `src/lib/ai/__tests__/golden-profiles/` fixtures + `src/lib/ai/__tests__/golden-profiles.test.ts` (8 tests)
+  - Both suites run under the standard `npm test` command, contributing to the 327-test baseline
 
 ### Milestone E: Health Data Encryption + Measurement Logging
 
