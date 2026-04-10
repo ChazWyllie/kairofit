@@ -247,30 +247,6 @@ async function getFallbackProgram(
 }
 
 // ============================================================
-// DEBRIEF GENERATION (separate function, lower stakes)
-// ============================================================
-
-/**
- * Generate Kiro's post-workout debrief.
- * TODO: Implement - see skills/ai-resilience/SKILL.md for the debrief degradation chain.
- */
-export async function generateDebrief(
-  _sessionId: string,
-  _userId: string
-): Promise<{ text: string; source: GenerationSource }> {
-  // TODO: Implement full streaming debrief using Sonnet
-  // Steps: load session data -> build debrief prompt -> stream from Sonnet
-  // -> on failure fall back to static template (never throw)
-  //
-  // Until implemented: return the static fallback so post-workout flow does not crash.
-  // The pattern used in generateProgram (return fallback, never throw) applies here too.
-  return {
-    text: "Your session is logged. Kiro's analysis will be available once this feature ships.",
-    source: 'static_fallback',
-  }
-}
-
-// ============================================================
 // HELPERS
 // ============================================================
 
