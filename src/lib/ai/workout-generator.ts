@@ -326,10 +326,7 @@ Critical constraints (must hold in adjusted program):
  * Unlike generateProgram, adjustProgram CAN throw. The caller (adjustProgramAction)
  * wraps it with circuit breaker and recordFailure on error.
  */
-export async function adjustProgram(
-  program: Program,
-  feedback: string
-): Promise<GenerationResult> {
+export async function adjustProgram(program: Program, feedback: string): Promise<GenerationResult> {
   // Try Sonnet first
   try {
     const adjusted = await adjustWithModel(program, feedback, 'claude-sonnet-4-20250514', 4096)

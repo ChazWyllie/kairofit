@@ -6,13 +6,13 @@ _Last updated: 2026-04-10. Baseline: `main` @ 2659e34. 327/327 tests passing._
 
 ## Milestone Status
 
-| Milestone | Description | Status | Reference |
-|-----------|-------------|--------|-----------|
-| A | Public landing page (Phase 10) | COMPLETE | PR #49 / commit 2659e34 |
-| B | Unblock stubbed Server Actions | PENDING | - |
-| C | Testing Layer 2 (property-based) | COMPLETE | commit c674c3f |
-| D | Testing Layers 3+4 (LLM judge + golden profiles) | COMPLETE | commit c674c3f |
-| E | Health data encryption + measurement logging | PENDING | - |
+| Milestone | Description                                      | Status   | Reference               |
+| --------- | ------------------------------------------------ | -------- | ----------------------- |
+| A         | Public landing page (Phase 10)                   | COMPLETE | PR #49 / commit 2659e34 |
+| B         | Unblock stubbed Server Actions                   | PENDING  | -                       |
+| C         | Testing Layer 2 (property-based)                 | COMPLETE | commit c674c3f          |
+| D         | Testing Layers 3+4 (LLM judge + golden profiles) | COMPLETE | commit c674c3f          |
+| E         | Health data encryption + measurement logging     | PENDING  | -                       |
 
 ---
 
@@ -214,6 +214,7 @@ app/layout.tsx
 ### Phases 0-9 (Foundation through PWA+Offline)
 
 **Foundation (Phases 0-0.5)**
+
 - `supabase/migrations/001_initial_schema.sql` - full DB schema + RLS + triggers
 - `src/lib/db/supabase.ts` - `createBrowserClient` + `createServerClient` split
 - `src/lib/db/queries/` - typed query functions: profiles, programs, exercises, sessions, recovery, progression
@@ -221,10 +222,12 @@ app/layout.tsx
 - `src/stores/onboarding.store.ts`, `src/stores/workout.store.ts`
 
 **Auth (Phase 1)**
+
 - `src/app/auth/callback/route.ts` - magic link exchange
 - `src/app/(auth)/login/page.tsx`, `signup/page.tsx`
 
 **Onboarding (Phase 2)**
+
 - `src/app/onboarding/` - all 22 screens; email gate at step 16; program generation at step 22
 - `src/actions/onboarding.actions.ts` - `createAccountAction` (OTP + origin allowlist), `persistOnboardingState`
 - `src/actions/program.actions.ts` - `generateProgramAction` (AI + rate limit + resilience chain)
@@ -233,6 +236,7 @@ app/layout.tsx
 - `src/lib/onboarding/archetypes.ts` - all 8 archetypes (source of truth)
 
 **Dashboard + Workout Logging (Phases 3-4)**
+
 - `src/app/(app)/dashboard/page.tsx` - parallel data fetching with `Promise.all`
 - `src/components/workout/ProgramCard.tsx`, `TodayWorkout.tsx`, `StatsStrip.tsx`
 - `src/app/(app)/workout/[sessionId]/page.tsx` + `WorkoutLogger.tsx`
@@ -240,6 +244,7 @@ app/layout.tsx
 - `src/actions/workout.actions.ts` - `startSessionAction`, `logSetAction`, `completeSessionAction`
 
 **Post-Workout + Progressive Overload (Phases 5-6)**
+
 - `src/app/(app)/workout/[sessionId]/complete/page.tsx` - streak, heatmap, Kiro debrief, share card
 - `src/components/workout/StreakMilestone.tsx`, `src/components/charts/RecoveryHeatmap.tsx`
 - `src/components/ai/KiroDebrief.tsx` - streaming inline via `useCompletion`
@@ -248,6 +253,7 @@ app/layout.tsx
 - `src/lib/utils/progressive-overload.ts` - linear / double_progression / rpe_based models
 
 **Analytics + PWA + Offline (Phases 7-9)**
+
 - `src/components/providers/PostHogProvider.tsx` - pageview tracking + event taxonomy
 - `@serwist/next` service worker (NOT next-pwa; incompatible with Turbopack)
 - `src/lib/offline/db.ts` - Dexie.js IndexedDB; `SetLogger` always writes via `logSetOffline()` first
@@ -261,12 +267,12 @@ One focused PR per sub-milestone, each branching independently from `main`.
 
 ### Interfaces (all 4 stubs)
 
-| Action | File | Input | Output |
-|--------|------|-------|--------|
-| `adjustProgramAction` | `src/actions/program.actions.ts:104` | `{ programId: string, feedback: string }` | `{ success: boolean, updatedProgram?: Program }` |
-| `swapExerciseAction` | `src/actions/program.actions.ts:123` | `{ programId: string, dayIndex: number, exerciseId: string, reason?: string }` | `{ success: boolean, newExerciseId?: string }` |
-| `deleteAccountAction` | `src/actions/profile.actions.ts:93` | `{ confirmation: 'DELETE' }` | `{ success: boolean }` |
-| `logMeasurementAction` | `src/actions/profile.actions.ts:69` | `{ weight_kg?: number, body_fat_pct?: number, measurement_date: string }` | `{ success: boolean, measurementId?: string }` |
+| Action                 | File                                 | Input                                                                          | Output                                           |
+| ---------------------- | ------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------ |
+| `adjustProgramAction`  | `src/actions/program.actions.ts:104` | `{ programId: string, feedback: string }`                                      | `{ success: boolean, updatedProgram?: Program }` |
+| `swapExerciseAction`   | `src/actions/program.actions.ts:123` | `{ programId: string, dayIndex: number, exerciseId: string, reason?: string }` | `{ success: boolean, newExerciseId?: string }`   |
+| `deleteAccountAction`  | `src/actions/profile.actions.ts:93`  | `{ confirmation: 'DELETE' }`                                                   | `{ success: boolean }`                           |
+| `logMeasurementAction` | `src/actions/profile.actions.ts:69`  | `{ weight_kg?: number, body_fat_pct?: number, measurement_date: string }`      | `{ success: boolean, measurementId?: string }`   |
 
 `logMeasurementAction` is gated on Milestone E completion. The other three are unblocked now.
 
@@ -278,12 +284,14 @@ One focused PR per sub-milestone, each branching independently from `main`.
 ### Milestone B1 - `feat/adjust-program-action`
 
 **Deliverables:**
+
 - Implement `adjustProgramAction` stub in `src/actions/program.actions.ts:104`
 - Resilience chain: Sonnet -> Haiku -> static; circuit breaker key `ADJUSTMENT`; rate limit key `RATE_LIMIT_KEYS.AI_ADJUSTMENT`
 - Zod validation + `workout-validator` post-check
 - Write to new program version; keep old version for completed sessions (see Risks)
 
 **Unit tests (TDD-first):**
+
 - [ ] happy path: returns `updatedProgram` with valid shape
 - [ ] rate-limit hit: returns `{ success: false, error: "rate_limit" }`
 - [ ] safety-filter rejection: returns `{ success: false, error: "unsafe_input" }`
@@ -291,6 +299,7 @@ One focused PR per sub-milestone, each branching independently from `main`.
 - [ ] Zod validation failure: returns `{ success: false, error: "invalid_input" }`
 
 **Acceptance criteria:**
+
 - [ ] TDD-first: tests written before implementation
 - [ ] `npm test` 327+ green
 - [ ] `npm run lint:kiro` passes
@@ -301,17 +310,20 @@ One focused PR per sub-milestone, each branching independently from `main`.
 ### Milestone B2 - `feat/swap-exercise-action`
 
 **Deliverables:**
+
 - Implement `swapExerciseAction` stub in `src/actions/program.actions.ts:123`
 - Deterministic candidate pool: filter exercise library by muscle group + equipment + contraindications
 - Kiro picks with rationale via Claude; output passes through `safety-filter.ts`
 - No network call if no valid substitute exists (return `{ success: false, newExerciseId: undefined }`)
 
 **Unit tests (TDD-first):**
+
 - [ ] happy path: returns `newExerciseId` from valid candidate pool
 - [ ] no valid substitute: returns `{ success: false }` without erroring
 - [ ] contraindicated request: safety filter blocks; returns `{ success: false, error: "contraindicated" }`
 
 **Acceptance criteria:**
+
 - [ ] TDD-first: tests written before implementation
 - [ ] `npm test` 327+ green
 - [ ] Stub at `program.actions.ts:123` replaced
@@ -321,6 +333,7 @@ One focused PR per sub-milestone, each branching independently from `main`.
 ### Milestone B3 - `feat/delete-account-action`
 
 **Deliverables:**
+
 - Implement `deleteAccountAction` stub in `src/actions/profile.actions.ts:93`
 - Server-only `supabase.auth.admin.deleteUser` (cascade deletes all user data via FK)
 - Action returns `{ success: true, revoke_sessions: true }` so middleware signs user out
@@ -330,6 +343,7 @@ One focused PR per sub-milestone, each branching independently from `main`.
 - Integration test against local Supabase branch: confirms cascade delete removes sessions + sets
 
 **Acceptance criteria:**
+
 - [ ] TDD-first: tests written before implementation
 - [ ] `npm test` 327+ green
 - [ ] Dialog requires typing "DELETE" before button enables
@@ -362,12 +376,12 @@ CREATE FUNCTION decrypt_health_metric(ciphertext bytea, user_id uuid) RETURNS nu
 
 ### New Code
 
-| File | Purpose |
-|------|---------|
-| `src/lib/db/encryption.ts` | TypeScript wrapper for encrypt/decrypt helpers |
-| `src/actions/profile.actions.ts:69` | Implement `logMeasurementAction` using encryption helper |
-| `src/components/profile/MeasurementLogger.tsx` | Form: weight + body fat input with date |
-| `src/components/profile/MeasurementHistory.tsx` | Chart: decrypted measurement history |
+| File                                            | Purpose                                                  |
+| ----------------------------------------------- | -------------------------------------------------------- |
+| `src/lib/db/encryption.ts`                      | TypeScript wrapper for encrypt/decrypt helpers           |
+| `src/actions/profile.actions.ts:69`             | Implement `logMeasurementAction` using encryption helper |
+| `src/components/profile/MeasurementLogger.tsx`  | Form: weight + body fat input with date                  |
+| `src/components/profile/MeasurementHistory.tsx` | Chart: decrypted measurement history                     |
 
 Mount `MeasurementLogger` and `MeasurementHistory` in `src/app/(app)/settings/page.tsx`.
 
@@ -384,11 +398,11 @@ Mount `MeasurementLogger` and `MeasurementHistory` in `src/app/(app)/settings/pa
 
 ## Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| `adjustProgramAction` mutates program mid-week, losing workout history | Medium | High | Write to new program version; keep old version for completed sessions |
-| `deleteAccountAction` race with in-flight Dexie sync leaves orphaned IndexedDB data | Medium | Medium | Flush Dexie client-side before calling action; action returns `revoke_sessions: true` |
-| `pgcrypto` key stored in env var is single point of failure | High | High | Use `pgsodium` (Supabase managed) or Vault pattern with `encryption_key_version`; document recovery before enabling in prod |
+| Risk                                                                                | Likelihood | Impact | Mitigation                                                                                                                  |
+| ----------------------------------------------------------------------------------- | ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `adjustProgramAction` mutates program mid-week, losing workout history              | Medium     | High   | Write to new program version; keep old version for completed sessions                                                       |
+| `deleteAccountAction` race with in-flight Dexie sync leaves orphaned IndexedDB data | Medium     | Medium | Flush Dexie client-side before calling action; action returns `revoke_sessions: true`                                       |
+| `pgcrypto` key stored in env var is single point of failure                         | High       | High   | Use `pgsodium` (Supabase managed) or Vault pattern with `encryption_key_version`; document recovery before enabling in prod |
 
 ---
 
@@ -407,24 +421,24 @@ Mount `MeasurementLogger` and `MeasurementHistory` in `src/app/(app)/settings/pa
 
 ## Key Files Reference
 
-| File | Purpose |
-|------|---------|
-| `src/actions/program.actions.ts` | `generateProgramAction` + stubs for `adjustProgramAction` / `swapExerciseAction` |
-| `src/actions/profile.actions.ts` | Profile read/write + stubs for `deleteAccountAction` / `logMeasurementAction` |
-| `src/lib/ai/workout-generator.ts` | AI generation resilience chain (Sonnet -> Haiku -> Supabase -> static) |
-| `src/lib/ai/workout-validator.ts` | Post-generation constraint enforcement (volume caps, injuries, rep ranges) |
-| `src/lib/ai/safety-filter.ts` | Input safety check before every Claude call |
-| `src/lib/ai/circuit-breaker.ts` | Redis-backed circuit breaker (Upstash) - NOT in-memory |
-| `src/lib/ai/quality-judge.ts` | Haiku secondary judge for generation quality |
-| `src/lib/utils/progressive-overload.ts` | Deterministic overload calculations |
-| `src/lib/utils/recovery-model.ts` | SRA curve per muscle group |
-| `src/lib/utils/rate-limit.ts` | Upstash Redis rate limiting |
-| `src/lib/onboarding/archetypes.ts` | All 8 archetypes (source of truth) |
-| `src/lib/offline/db.ts` | Dexie.js IndexedDB schema |
-| `src/middleware.ts` | Auth route protection + PUBLIC_ROUTES |
-| `src/app/page.tsx` | Public landing page (Milestone A) |
-| `supabase/migrations/001_initial_schema.sql` | Full DB schema + RLS + triggers |
-| `src/lib/utils/event-names.ts` | PostHog event name constants (add B/E events here) |
+| File                                         | Purpose                                                                          |
+| -------------------------------------------- | -------------------------------------------------------------------------------- |
+| `src/actions/program.actions.ts`             | `generateProgramAction` + stubs for `adjustProgramAction` / `swapExerciseAction` |
+| `src/actions/profile.actions.ts`             | Profile read/write + stubs for `deleteAccountAction` / `logMeasurementAction`    |
+| `src/lib/ai/workout-generator.ts`            | AI generation resilience chain (Sonnet -> Haiku -> Supabase -> static)           |
+| `src/lib/ai/workout-validator.ts`            | Post-generation constraint enforcement (volume caps, injuries, rep ranges)       |
+| `src/lib/ai/safety-filter.ts`                | Input safety check before every Claude call                                      |
+| `src/lib/ai/circuit-breaker.ts`              | Redis-backed circuit breaker (Upstash) - NOT in-memory                           |
+| `src/lib/ai/quality-judge.ts`                | Haiku secondary judge for generation quality                                     |
+| `src/lib/utils/progressive-overload.ts`      | Deterministic overload calculations                                              |
+| `src/lib/utils/recovery-model.ts`            | SRA curve per muscle group                                                       |
+| `src/lib/utils/rate-limit.ts`                | Upstash Redis rate limiting                                                      |
+| `src/lib/onboarding/archetypes.ts`           | All 8 archetypes (source of truth)                                               |
+| `src/lib/offline/db.ts`                      | Dexie.js IndexedDB schema                                                        |
+| `src/middleware.ts`                          | Auth route protection + PUBLIC_ROUTES                                            |
+| `src/app/page.tsx`                           | Public landing page (Milestone A)                                                |
+| `supabase/migrations/001_initial_schema.sql` | Full DB schema + RLS + triggers                                                  |
+| `src/lib/utils/event-names.ts`               | PostHog event name constants (add B/E events here)                               |
 
 ---
 
