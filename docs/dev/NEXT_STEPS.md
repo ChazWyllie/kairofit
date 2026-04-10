@@ -1,231 +1,191 @@
 # KairoFit - Next Steps
 
-_Last updated: 2026-04-09. Reflects state after Phase 10 (public landing page). 327/327 tests passing._
+_Last updated: 2026-04-10. Baseline: `main` @ f00b208. 327/327 tests passing._
+
+---
+
+## Milestone Status
+
+| Milestone | Status | Reference |
+|-----------|--------|-----------|
+| A - Phase 10 landing page | COMPLETE | PR #49 / commit 2659e34 |
+| B - Unblock stubbed Server Actions (B1/B2/B3) | PENDING | - |
+| C - Testing Layer 2 (property-based) | COMPLETE | commit c674c3f |
+| D - Testing Layers 3+4 (LLM judge + golden profiles) | COMPLETE | commit c674c3f |
+| E - Health data encryption + measurement logging | PENDING | - |
 
 ---
 
 ## What is built and working
 
-### Foundation (Phase 0+0.5)
+### Foundation (Phases 0-0.5)
 
-- Full DB schema + RLS + triggers (`supabase/migrations/001_initial_schema.sql`)
-- Supabase client split: server (`createServerClient`) + browser (`createBrowserClient`)
-- Query layer: `src/lib/db/queries/` - profiles, programs, exercises, sessions, recovery
-- Action stubs: `workout.actions.ts`, `program.actions.ts`, `profile.actions.ts`
-- App shell: layout with `BottomNav`, placeholder dashboard, middleware route protection
-- Zustand stores: `onboarding.store.ts` (with `persist` middleware), `workout.store.ts`
+- `supabase/migrations/001_initial_schema.sql` - full DB schema + RLS + triggers
+- `src/lib/db/supabase.ts` - browser (`createBrowserClient`) + server (`createServerClient`) split
+- `src/lib/db/queries/` - typed query functions: profiles, programs, exercises, sessions, recovery, progression
+- `src/middleware.ts` - auth route protection; `PUBLIC_ROUTES` includes `/`, `/auth/*`, `/onboarding`
+- `src/stores/onboarding.store.ts`, `src/stores/workout.store.ts` - Zustand stores
 
-### Auth infrastructure (Phase 1)
+### Auth (Phase 1)
 
-- `src/app/auth/callback/route.ts` - exchanges magic link code for session, redirects
-- `src/app/(auth)/login/page.tsx` - magic link login form with `createAccountAction`
-- `src/app/(auth)/signup/page.tsx` - signup form (reuses auth flow)
-- `src/middleware.ts` - protects all `(app)` routes, redirects unauthenticated to `/login`
+- `src/app/auth/callback/route.ts` - magic link exchange
+- `src/app/(auth)/login/page.tsx`, `signup/page.tsx`
 
-### Onboarding-to-dashboard flow (Phase 2)
+### Onboarding (Phase 2)
 
-- All 23 onboarding quiz screens complete (Steps 1-23)
-- Step 17 (`email-gate`) - triggers `createAccountAction`, sends OTP magic link
-- Step 23 (`program-building`) - awaits `auth_ready`, calls `persistOnboardingState` + `generateProgramAction`, redirects to `/dashboard`
-- `src/actions/onboarding.actions.ts` - `createAccountAction` (OTP with origin allowlist), `persistOnboardingState` (Zod-validated, writes to profiles)
-- `src/actions/program.actions.ts` - `generateProgramAction` (AI generation, rate-limited, resilience chain)
-- `src/lib/ai/workout-generator.ts` - full AI generation with Sonnet/Haiku fallback + static fallback
+- `src/app/onboarding/` - all 23 screens; email gate at step 16; program generation at step 23
+- `src/actions/onboarding.actions.ts` - `createAccountAction` (OTP + origin allowlist), `persistOnboardingState`
+- `src/actions/program.actions.ts` - `generateProgramAction` (AI + rate limit + resilience chain)
+- `src/lib/ai/workout-generator.ts` - Sonnet -> Haiku -> Supabase -> static fallback chain
 - `src/lib/ai/workout-validator.ts` - post-generation constraint enforcement (volume caps, injuries, rep ranges)
-- `src/app/(app)/dashboard/page.tsx` - minimal dashboard showing active program
+- `src/lib/onboarding/archetypes.ts` - all 8 archetypes (System Builder, Milestone Chaser, Explorer, Pragmatist, Comeback Kid, Optimizer, Challenger, Understander)
 
-### Security hardening
+### Dashboard + Workout Logging (Phases 3-4)
 
-- `createAccountAction` origin allowlist prevents OTP token-hijacking via crafted Origin header
-- `onboardingStateSchema.parse(state)` validates all client-supplied state at DB write boundary
-- RLS enforced on all tables; no service role key exposed to client
-
-### Test coverage (327/327 passing)
-
-Test suite expanded through Phases 7-10. All 327 unit tests green. Includes property-based tests (Layer 2), quality-judge tests (Layer 3), and golden-profile regression tests (Layer 4).
-
-### Analytics (Phase 8)
-
-PostHog instrumentation across all critical user flows. Events fire via `after()` so they never delay responses.
-
-- `ONBOARDING_STEP_COMPLETED`, `PROGRAM_GENERATED`, `WORKOUT_STARTED`, `SET_LOGGED`, `WORKOUT_COMPLETED`, `KIRO_DEBRIEF_VIEWED`
-- `src/components/providers/PostHogProvider.tsx` - client-side PostHog init with pageview tracking
-- All events use taxonomy defined in `skills/posthog-event-taxonomy/`
-
-### PWA + Offline (Phase 9)
-
-App installs to home screen and works offline during workouts.
-
-- `@serwist/next` service worker (NOT next-pwa - incompatible with Turbopack)
-- `src/lib/offline/db.ts` - Dexie.js IndexedDB schema for queued sets
-- `src/components/workout/OfflineBanner.tsx` - network status indicator
-- `src/components/workout/SyncStatusDot.tsx` - per-set sync state indicator
-- `SetLogger` always writes via `logSetOffline()` first; background sync handles server persistence
-- `public/sw.js` - compiled service worker asset
-
-### Public Landing Page (Phase 10)
-
-Marketing page at `/` converts new visitors to onboarding starters. Merged as PR #49 (commit 2659e34).
-
-- `src/app/page.tsx` - landing page shell (Server Component)
-- `src/components/marketing/LandingNav.tsx` - sticky nav with scroll state
-- `src/components/marketing/HeroSection.tsx` - full-viewport hero with Framer Motion
-- `src/components/marketing/ScienceHookSection.tsx` - 3-layer science transparency visual
-- `src/components/marketing/HowItWorksSection.tsx` - 3-step numbered flow
-- `src/components/marketing/FeaturesGrid.tsx` - 6 feature tiles
-- `src/components/marketing/LandingCTA.tsx` - bottom full-width CTA
-- `src/middleware.ts` - `'/'` added to `PUBLIC_ROUTES`
-- axios patched to 1.15.0 (GHSA-3p68-rc4w-qgx5 SSRF fix)
-
-### Testing Layers 2-4 (Phase 11 partial)
-
-Completed in commit c674c3f alongside Phase 9 work.
-
-- `src/lib/ai/__tests__/workout-validator.test.ts` - property-based tests via `fast-check` (Layer 2)
-- `src/lib/ai/quality-judge.ts` - Haiku secondary-judge for 5 quality dimensions (Layer 3)
-- `src/lib/ai/__tests__/quality-judge.test.ts` - 11 tests for quality judge (Layer 3)
-- `src/lib/ai/__tests__/golden-profiles/` - expert-validated profile fixtures (Layer 4)
-- `src/lib/ai/__tests__/golden-profiles.test.ts` - 8 snapshot regression tests (Layer 4)
-
-Layer 5 (A/B production via PostHog ratio tracking) remains deferred.
-
-### Dashboard UI (Phase 3)
-
-Real home screen replacing the placeholder. Built on `feature/phase-3-dashboard`, merged via PR.
-
-- `src/app/(app)/dashboard/page.tsx` - server component, parallel data fetching with `Promise.all`
-- `src/components/workout/ProgramCard.tsx` - program name, archetype badge, week X of Y
-- `src/components/workout/TodayWorkout.tsx` - next unlogged day with exercise list; handles week-complete and no-program states
-- `src/components/workout/StatsStrip.tsx` - streak (orange if >0) and weekly volume
-- `src/lib/db/queries/sessions.ts` - added `getNextProgramDay` (returns first unlogged day in current week)
-
-### Workout Logging (Phase 4)
-
-Full set-logging flow. Users start a session, log reps/weight per exercise, use the rest timer, and complete the session.
-
-- `src/app/(app)/workout/[sessionId]/page.tsx` + `WorkoutLogger.tsx` - active workout view
-- `src/components/workout/SetLogger.tsx`, `RestTimer.tsx`, `ExerciseCard.tsx`, `StartWorkoutButton.tsx`
+- `src/app/(app)/dashboard/page.tsx` - parallel data fetching with `Promise.all`
+- `src/components/workout/ProgramCard.tsx`, `TodayWorkout.tsx`, `StatsStrip.tsx`
+- `src/app/(app)/workout/[sessionId]/page.tsx` + `WorkoutLogger.tsx`
+- `src/components/workout/SetLogger.tsx`, `RestTimer.tsx`, `ExerciseCard.tsx`
 - `src/actions/workout.actions.ts` - `startSessionAction`, `logSetAction`, `completeSessionAction`
-- `completeSessionAction` uses `after()` to update muscle recovery non-blocking
 
-### Post-Workout Experience (Phase 5)
+### Post-Workout + Progressive Overload (Phases 5-6)
 
-Four-step post-workout sequence. Rendered at `/workout/[sessionId]/complete`.
+- `src/app/(app)/workout/[sessionId]/complete/page.tsx` - streak, heatmap, Kiro debrief, share card
+- `src/components/workout/StreakMilestone.tsx`, `src/components/charts/RecoveryHeatmap.tsx`
+- `src/components/ai/KiroDebrief.tsx` - streaming inline via `useCompletion`
+- `src/app/api/debrief/[sessionId]/route.ts` - SSE streaming, rate-limited
+- `src/lib/db/queries/progression.ts` - `getProgressionSuggestionsForDay` (no N+1)
+- `src/lib/utils/progressive-overload.ts` - linear / double_progression / rpe_based models
 
-- `src/app/(app)/workout/[sessionId]/complete/page.tsx` - server component, loads session data
-- `src/components/workout/StreakMilestone.tsx` - streak count + milestone animation (Framer Motion)
-- `src/components/charts/RecoveryHeatmap.tsx` - 13-muscle recovery visualization
-- `src/components/ai/KiroDebrief.tsx` - streaming inline Kiro debrief via `useCompletion`
-- `src/components/social/ShareCard.tsx` - on-demand shareable workout card
-- `src/app/api/debrief/[sessionId]/route.ts` - SSE streaming endpoint, rate-limited
-- `src/lib/db/queries/sessions.ts` - `getCompletedSessionSummary` + `getStreakCount`
+### Analytics + PWA + Offline (Phases 7-9)
 
-### Progressive Overload (Phase 6)
+- `src/components/providers/PostHogProvider.tsx` - pageview tracking + event taxonomy
+- `@serwist/next` service worker (NOT next-pwa; incompatible with Turbopack)
+- `src/lib/offline/db.ts` - Dexie.js IndexedDB; `SetLogger` always writes via `logSetOffline()` first
+- `src/components/workout/OfflineBanner.tsx`, `SyncStatusDot.tsx`
 
-Deterministic next-session targets displayed inline on each exercise card during a workout.
+### Public Landing Page (Phase 10 - PR #49)
 
-- `src/lib/db/queries/sessions.ts` - added `getRecentPerformance(userId, exerciseId, limit?)` - fetches last N work sets from completed sessions
-- `src/lib/db/queries/progression.ts` - NEW: `getProgressionSuggestionsForDay(userId, programDay)` - accepts ProgramDay directly (avoids N+1), orchestrates per-exercise suggestions
-- `src/lib/utils/progressive-overload.ts` - `ProgressionResult` now includes `units: 'metric' | 'imperial'` so the UI renders the correct weight suffix
-- `src/components/workout/ExerciseCard.tsx` - added `progression?: ProgressionResult` prop + `ProgressionHint` sub-component (uses `progression.units` for kg/lbs label)
-- `src/app/(app)/workout/[sessionId]/WorkoutLogger.tsx` - threads `suggestions` prop from page through to each ExerciseCard
-- `src/app/(app)/workout/[sessionId]/page.tsx` - fetches programDay then passes it to getProgressionSuggestionsForDay (no duplicate DB call)
+- `src/app/page.tsx` - 7-section landing page (Nav, Hero, ScienceHook, HowItWorks, Archetypes, Features, CTA)
+- `src/components/marketing/` - LandingNav, HeroSection, ScienceHookSection, HowItWorksSection, ArchetypeSection, FeaturesGrid, LandingCTA
+- axios patched 1.13.6 -> 1.15.0 (GHSA-3p68-rc4w-qgx5 SSRF)
 
-**Three progression models** (scheme set per-exercise by AI at generation time):
+### Testing Layers 2-4 (commit c674c3f)
 
-- `linear` - add weight every session when all reps hit (levels 1-2 typical)
-- `double_progression` - increase reps within range, then bump weight and reset (level 3 typical)
-- `rpe_based` - maintain/increase/decrease based on average RPE vs. target zone 7-9 (levels 4-5 typical)
-
-No DB migration required - suggestions are computed at render time and displayed as hints only.
+- `src/lib/ai/__tests__/workout-validator.test.ts` - property-based via `fast-check` (Layer 2)
+- `src/lib/ai/quality-judge.ts` + `quality-judge.test.ts` - Haiku secondary judge, 11 tests (Layer 3)
+- `src/lib/ai/__tests__/golden-profiles/` + `golden-profiles.test.ts` - 8 snapshot regression tests (Layer 4)
 
 ---
 
-## What to build next
+## Active Work
 
-### Milestone B: Unblock stubbed Server Actions
+### Milestone B: Unblock Stubbed Server Actions
 
-Three stubs remain in the action layer. Each ships as its own focused PR.
+One focused PR per action (B1, B2, B3 branch independently from `main`).
 
-**B1 - Program adjustment** (`src/actions/program.actions.ts:104`):
+**Interfaces (all 4 stubs):**
 
-- Implement `adjustProgramAction` via Claude (currently returns a stub)
-- Rate-limited, same resilience chain as `generateProgramAction`
-- Branch: `feat/adjust-program-action`
+| Action | File | Shape |
+|--------|------|-------|
+| `adjustProgramAction` | `src/actions/program.actions.ts:104` | `{ programId: string, feedback: string }` -> `{ success: boolean, updatedProgram?: Program }` |
+| `swapExerciseAction` | `src/actions/program.actions.ts:123` | `{ programId: string, dayIndex: number, exerciseId: string, reason?: string }` -> `{ success: boolean, newExerciseId?: string }` |
+| `deleteAccountAction` | `src/actions/profile.actions.ts:93` | `{ confirmation: 'DELETE' }` -> `{ success: boolean }` (cascade via `auth.admin.deleteUser`) |
+| `logMeasurementAction` | `src/actions/profile.actions.ts:69` | `{ weight_kg?, body_fat_pct?, measurement_date }` -> `{ success: boolean, measurementId?: string }` (blocked on Milestone E) |
 
-**B2 - Exercise swap** (`src/actions/program.actions.ts:123`):
+**PostHog events to add to `src/lib/utils/event-names.ts`:** `PROGRAM_ADJUSTED`, `EXERCISE_SWAPPED`, `ACCOUNT_DELETED`, `MEASUREMENT_LOGGED`
 
-- Implement `swapExerciseAction` - substitution reasoning via Kiro
-- Passes through `safety-filter.ts` and `workout-validator.ts`
-- Branch: `feat/swap-exercise-action`
+**B1 - `feat/adjust-program-action`:**
+- Resilience chain: Sonnet -> Haiku -> static; circuit breaker key `ADJUSTMENT`; rate limit key `RATE_LIMIT_KEYS.AI_ADJUSTMENT`
+- Zod validation + `workout-validator` post-check
+- Unit tests: happy, rate-limit, safety-fail, circuit-open, Zod-fail
 
-**B3 - Account deletion** (`src/actions/profile.actions.ts:93`):
+**B2 - `feat/swap-exercise-action`:**
+- Deterministic candidate pool from exercise library (filter by muscle group + equipment + contraindications)
+- Kiro picks with rationale via Claude; passes through `safety-filter.ts`
+- Unit tests: happy, no-valid-substitute, contraindicated-request
 
-- Implement full account deletion (profile + program + sessions cascade via DB triggers)
-- Branch: `feat/delete-account-action`
+**B3 - `feat/delete-account-action`:**
+- Server-only `supabase.auth.admin.deleteUser`; flush Dexie via `clearAllData()` client-side before calling
+- Action returns `{ revoke_sessions: true }` so middleware signs user out
+- New `src/components/profile/DeleteAccountDialog.tsx` - confirmation UX
+- Mount in `src/app/(app)/settings/page.tsx`
+- Integration test against local Supabase branch: confirms cascade delete
+
+**Acceptance criteria (per PR):**
+- [ ] TDD-first: tests written before implementation
+- [ ] `npm test` 327+ green after merge
+- [ ] No stubs remain in `program.actions.ts` / `profile.actions.ts` (except `logMeasurementAction` gated on Milestone E)
+- [ ] `npm run lint:kiro` passes
 
 ---
 
-### Milestone E: Health data encryption + measurement logging
+### Milestone E: Health Data Encryption + Measurement Logging
 
-- `supabase/migrations/003_health_data_encryption.sql` - column-level encryption for health fields
-- `logMeasurementAction` - implement stub at `src/actions/profile.actions.ts:69`
-- `src/components/profile/MeasurementLogger.tsx` - UI for logging weight/body fat
-- `src/components/profile/MeasurementHistory.tsx` - chart of measurements over time
-- See `skills/health-data-encryption/SKILL.md`
+**Database migration - `supabase/migrations/003_health_data_encryption.sql`:**
+- `CREATE EXTENSION IF NOT EXISTS pgcrypto`
+- Encrypted columns on `measurements`: `weight_kg_encrypted`, `body_fat_pct_encrypted`
+- `encryption_key_version smallint` for rotation
+- Helper functions: `encrypt_health_metric(value, user_id)`, `decrypt_health_metric(ciphertext, user_id)`
+- Updated RLS policies with both `USING` and `WITH CHECK` (see `skills/rls-migration-checklist/`)
+
+**New code:**
+- `src/lib/db/encryption.ts` - TypeScript wrapper for encrypt/decrypt helpers
+- Implement `logMeasurementAction` using encryption helper
+- `src/components/profile/MeasurementLogger.tsx` - form
+- `src/components/profile/MeasurementHistory.tsx` - chart reader
+- Mount both in `src/app/(app)/settings/page.tsx`
+
+**Acceptance criteria:**
+- [ ] Measurements round-trip via encryption (integration test against local Supabase)
+- [ ] RLS denies cross-user reads even in test environment
+- [ ] Zero plaintext health values in `measurements` table post-migration
+- [ ] `MEASUREMENT_LOGGED` event captured
+- [ ] `skills/health-data-encryption/SKILL.md` updated with real implementation example
 
 ---
 
-### Phase 11: Testing Layer 5 (remaining)
+## Risks
 
-Layers 2-4 are complete (see "What is built and working" above). Layer 5 remains:
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| `adjustProgramAction` mutates program mid-week, losing workout history | Medium | High | Write to new program version; keep old version for completed sessions |
+| `deleteAccountAction` race with in-flight Dexie sync leaves orphaned IndexedDB data | Medium | Medium | Flush Dexie client-side before calling action; action returns `revoke_sessions: true` |
+| `pgcrypto` key stored in env var is single point of failure | High | High | Use `pgsodium` (Supabase managed) or Vault pattern with `encryption_key_version`; document recovery before enabling in prod |
 
-**Layer 5 - A/B production:**
+---
 
-- PostHog `WORKOUT_COMPLETED` / `WORKOUT_STARTED` ratio per prompt version
-- See `skills/posthog-event-taxonomy/` for event naming
+## Out of scope
+
+- Phase 12 social features (leaderboards, friends) - blocked on `NEXT_PUBLIC_SOCIAL_ENABLED` + schema
+- Stripe paywall activation - separate launch decision gated on retention data
+- Testing Layer 5 (A/B production) - requires real traffic
+- RAG / pgvector - deferred per CLAUDE.md; trigger is >15% swap rate or system prompt >4000 tokens
+- Capacitor mobile wrapper - post-revenue
+- Nutrition / Wearables - flagged off, not scaffolded
+- Light theme - dark theme is permanent per CLAUDE.md
+- Localization / i18n - English only at launch
 
 ---
 
 ## Key files reference
 
-| File                                          | Status                           | Purpose                                         |
-| --------------------------------------------- | -------------------------------- | ----------------------------------------------- |
-| `src/lib/ai/workout-generator.ts`             | Complete                         | AI generation with resilience chain             |
-| `src/lib/ai/workout-validator.ts`             | Complete                         | Post-generation constraint enforcement          |
-| `src/lib/ai/safety-filter.ts`                 | Complete                         | Input safety check before every Claude call     |
-| `src/lib/utils/progressive-overload.ts`       | Complete                         | Deterministic overload calculations             |
-| `src/lib/utils/recovery-model.ts`             | Complete                         | SRA curve per muscle group                      |
-| `src/lib/db/supabase.ts`                      | Complete                         | Browser + server Supabase clients               |
-| `src/middleware.ts`                           | Complete                         | Auth route protection                           |
-| `src/stores/onboarding.store.ts`              | Complete                         | Onboarding quiz state with localStorage persist |
-| `src/stores/workout.store.ts`                 | Complete                         | Active workout state                            |
-| `src/actions/onboarding.actions.ts`           | Complete                         | OTP send, persist onboarding state              |
-| `src/actions/program.actions.ts`              | Complete (stubs for adjust/swap) | AI program generation                           |
-| `src/actions/workout.actions.ts`              | Complete (Phase 4)               | startSession, logSet, completeSession           |
-| `src/app/onboarding/`                         | Complete                         | All 23 screens                                  |
-| `src/app/(app)/dashboard/page.tsx`            | Complete (Phase 3)               | Dashboard with parallel data fetching           |
-| `src/components/workout/ProgramCard.tsx`      | Complete (Phase 3)               | Program name, archetype badge, week X/Y         |
-| `src/components/workout/TodayWorkout.tsx`     | Complete (Phase 3)               | Next unlogged day; handles week-complete/empty  |
-| `src/components/workout/StatsStrip.tsx`       | Complete (Phase 3)               | Streak and weekly volume display                |
-| `src/app/(app)/workout/[sessionId]/`          | Complete (Phase 4)               | Active workout logger (page + WorkoutLogger)    |
-| `src/components/workout/SetLogger.tsx`        | Complete (Phase 4)               | Reps/weight +/- controls with optimistic UI     |
-| `src/components/workout/RestTimer.tsx`        | Complete (Phase 4)               | Countdown timer after each set                  |
-| `src/components/workout/ExerciseCard.tsx`     | Complete (Phase 4+6)             | Target vs actual display + progression hint     |
-| `src/app/(app)/workout/[sessionId]/complete/` | Complete (Phase 5)               | Post-workout experience server page             |
-| `src/components/workout/StreakMilestone.tsx`  | Complete (Phase 5)               | Streak count + milestone animation              |
-| `src/components/charts/RecoveryHeatmap.tsx`   | Complete (Phase 5)               | 13-muscle recovery heatmap                      |
-| `src/components/ai/KiroDebrief.tsx`           | Complete (Phase 5)               | Streaming inline AI debrief                     |
-| `src/components/social/ShareCard.tsx`         | Complete (Phase 5)               | On-demand shareable workout card                |
-| `src/app/api/debrief/[sessionId]/route.ts`    | Complete (Phase 5)               | SSE streaming debrief endpoint                  |
-| `src/lib/db/queries/progression.ts`           | Complete (Phase 6)               | getProgressionSuggestionsForDay orchestrator    |
-| `src/app/(app)/workout/[sessionId]/page.tsx`  | Complete (Phase 4+6)             | Parallel fetch: session + progression hints     |
-| `supabase/migrations/001_initial_schema.sql`  | Complete                         | Full DB schema + RLS + triggers                 |
-| `src/app/page.tsx`                            | Complete (Phase 10)              | Public landing page shell                       |
-| `src/components/marketing/LandingNav.tsx`     | Complete (Phase 10)              | Sticky nav with scroll state                    |
-| `src/components/marketing/HeroSection.tsx`    | Complete (Phase 10)              | Full-viewport hero with Framer Motion           |
-| `src/components/marketing/FeaturesGrid.tsx`   | Complete (Phase 10)              | 6-tile feature showcase                         |
-| `src/lib/ai/quality-judge.ts`                 | Complete (Phase 11 Layer 3)      | Haiku secondary judge for generation quality    |
-| `src/lib/ai/__tests__/golden-profiles/`       | Complete (Phase 11 Layer 4)      | Expert-validated profile fixtures               |
+| File | Purpose |
+|------|---------|
+| `src/lib/ai/workout-generator.ts` | AI generation with resilience chain |
+| `src/lib/ai/workout-validator.ts` | Post-generation constraint enforcement |
+| `src/lib/ai/safety-filter.ts` | Input safety check before every Claude call |
+| `src/lib/ai/circuit-breaker.ts` | Redis-backed circuit breaker (Upstash) |
+| `src/lib/ai/quality-judge.ts` | Haiku secondary judge for generation quality |
+| `src/lib/utils/progressive-overload.ts` | Deterministic overload calculations |
+| `src/lib/utils/recovery-model.ts` | SRA curve per muscle group |
+| `src/lib/utils/rate-limit.ts` | Upstash Redis rate limiting |
+| `src/lib/onboarding/archetypes.ts` | All 8 archetypes (source of truth) |
+| `src/actions/program.actions.ts` | generateProgram + stubs for adjust/swap |
+| `src/actions/profile.actions.ts` | Profile read/write + stubs for delete/measurement |
+| `src/app/page.tsx` | Public landing page (Phase 10) |
+| `src/middleware.ts` | Auth route protection + PUBLIC_ROUTES |
+| `supabase/migrations/001_initial_schema.sql` | Full DB schema + RLS + triggers |
 
 ---
 
