@@ -8,6 +8,7 @@
 'use server'
 
 import { after } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createSafeActionClient } from 'next-safe-action'
 import { createServerClient, createAdminClient } from '@/lib/db/supabase'
 import { checkRateLimit } from '@/lib/utils/rate-limit'
@@ -70,13 +71,34 @@ export const logMeasurementAction = action
   .action(async ({ parsedInput, ctx: { user, supabase } }) => {
     await checkRateLimit(user.id, RATE_LIMIT_KEYS.GENERAL)
 
-    // TODO (Phase 10): Implement with health data encryption
-    // When the encryption utility is built (Phase 14), wrap weight_kg and
-    // body_fat_pct in encrypt() before inserting to body_measurements.
-    // For now, measurements are deferred until the encryption layer exists.
-    void parsedInput
-    void supabase
-    throw new Error('Measurement logging not yet implemented - pending encryption utility')
+    // Encryption happens inside the log_body_measurement Postgres function via Vault key.
+    // All numeric values are passed as strings so pgp_sym_encrypt receives text.
+    type RpcFn = (
+      fn: string,
+      args?: Record<string, string | null>
+    ) => Promise<{ data: unknown; error: { message: string } | null }>
+    const { data: measurementId, error } = await (supabase.rpc as unknown as RpcFn)(
+      'log_body_measurement',
+      {
+        p_user_id: user.id,
+        p_weight_kg: parsedInput.weight_kg?.toString() ?? null,
+        p_body_fat_pct: parsedInput.body_fat_pct?.toString() ?? null,
+        p_chest_cm: parsedInput.chest_cm?.toString() ?? null,
+        p_waist_cm: parsedInput.waist_cm?.toString() ?? null,
+        p_hips_cm: parsedInput.hips_cm?.toString() ?? null,
+        p_notes: parsedInput.notes ?? null,
+      }
+    )
+
+    if (error) throw new Error(`Failed to log measurement: ${error.message}`)
+
+    revalidatePath('/settings')
+
+    after(async () => {
+      await trackServer(user.id, EVENTS.MEASUREMENT_LOGGED)
+    })
+
+    return { success: true, measurement_id: measurementId as string }
   })
 
 // ============================================================
