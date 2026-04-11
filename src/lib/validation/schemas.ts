@@ -200,6 +200,10 @@ export const onboardingStateSchema = z.object({
 // PROFILE UPDATES
 // ============================================================
 
+export const deleteAccountSchema = z.object({
+  confirmation: z.literal('DELETE'),
+})
+
 export const updateProfileSchema = z.object({
   display_name: z.string().min(1).max(50).optional(),
   preferred_units: z.enum(['metric', 'imperial']).optional(),
