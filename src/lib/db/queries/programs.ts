@@ -207,3 +207,46 @@ export async function saveProgramToDb(
   if (!saved) throw new Error('Program saved but could not be retrieved')
   return saved
 }
+
+/**
+ * Load a specific program by ID, scoped to the user for RLS safety.
+ * Returns null when the program does not exist or belongs to another user.
+ */
+export async function getProgramById(programId: string, userId: string): Promise<Program | null> {
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase
+    .from('programs')
+    .select(
+      `
+      id, user_id, created_at, name, description, ai_rationale,
+      weeks_duration, days_per_week, goal, split_type, current_week,
+      progression_scheme, is_active, projected_weeks_to_goal,
+      projected_outcome_description,
+      program_days (
+        id, program_id, day_number, week_number, name, focus_muscles,
+        session_type, estimated_duration_minutes,
+        program_exercises (
+          id, program_day_id, exercise_id, user_id, order_index,
+          superset_group, sets, reps_min, reps_max, rest_seconds,
+          rpe_target, rir_target, rationale, progression_scheme,
+          modification_note, is_flagged_for_injury,
+          exercises (
+            id, name, slug, primary_muscles, secondary_muscles,
+            movement_pattern, is_compound, equipment_required,
+            research_rationale, form_cues, contraindicated_for
+          )
+        )
+      )
+    `
+    )
+    .eq('id', programId)
+    .eq('user_id', userId)
+    .single()
+
+  if (error && error.code !== 'PGRST116') {
+    console.error('getProgramById error:', error.message)
+  }
+
+  return data as unknown as Program | null
+}
