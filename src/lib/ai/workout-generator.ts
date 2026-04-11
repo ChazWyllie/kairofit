@@ -468,7 +468,16 @@ export async function swapExercise(
     throw new Error('Haiku did not call the swap tool')
   }
 
-  const result = toolUse.input as SwapToolResult
+  // Validate tool result shape at runtime before trusting it
+  const input = toolUse.input
+  if (
+    typeof input !== 'object' ||
+    input === null ||
+    typeof (input as Record<string, unknown>).exercise_id !== 'string'
+  ) {
+    throw new Error('Haiku returned malformed swap tool result')
+  }
+  const result = input as SwapToolResult
 
   // Safety check: ensure the returned ID is actually in the candidate pool
   // Prevents the model from hallucinating an exercise ID
