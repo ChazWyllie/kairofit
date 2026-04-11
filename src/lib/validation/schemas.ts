@@ -63,7 +63,6 @@ export const adjustProgramSchema = z.object({
 
 export const swapExerciseSchema = z.object({
   program_exercise_id: uuid,
-  replacement_exercise_id: uuid,
   reason: z.string().max(500).optional(),
 })
 
@@ -240,6 +239,7 @@ export const RATE_LIMIT_KEYS = {
   AI_DEBRIEF: 'ai:debrief',
   AI_ADJUST: 'ai:adjust',
   AI_INTAKE: 'ai:intake',
+  AI_SWAP: 'ai:swap',
   AUTH: 'auth',
   GENERAL: 'general',
 } as const

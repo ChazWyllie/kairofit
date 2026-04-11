@@ -21,10 +21,16 @@ import {
   swapExerciseSchema,
   RATE_LIMIT_KEYS,
 } from '@/lib/validation/schemas'
-import { generateProgram, adjustProgram } from '@/lib/ai/workout-generator'
+import { generateProgram, adjustProgram, swapExercise } from '@/lib/ai/workout-generator'
 import { canRequest, recordSuccess, recordFailure, CIRCUITS } from '@/lib/ai/circuit-breaker'
 import { checkInputSafety } from '@/lib/ai/safety-filter'
-import { saveProgramToDb, getProgramById } from '@/lib/db/queries/programs'
+import {
+  saveProgramToDb,
+  getProgramById,
+  getProgramExerciseWithContext,
+  getSwapCandidates,
+  updateProgramExercise,
+} from '@/lib/db/queries/programs'
 import { getProfileForGeneration } from '@/lib/db/queries/profiles'
 import { EVENTS } from '@/lib/utils/event-names'
 import { trackServer } from '@/lib/utils/analytics'
@@ -162,11 +168,67 @@ export const adjustProgramAction = action
 export const swapExerciseAction = action
   .schema(swapExerciseSchema)
   .action(async ({ parsedInput, ctx: { user } }) => {
-    await checkRateLimit(user.id, RATE_LIMIT_KEYS.GENERAL)
-    // TODO (Phase 7): Implement exercise swap
-    // 1. Validate substitute is safe given user's injuries
-    // 2. Update program_exercises row
-    void parsedInput
-    void user
-    throw new Error('Exercise swap not yet implemented')
+    const { program_exercise_id, reason } = parsedInput
+
+    await checkRateLimit(user.id, RATE_LIMIT_KEYS.AI_SWAP)
+
+    // Step 1: Load the program exercise + user context
+    const context = await getProgramExerciseWithContext(program_exercise_id, user.id)
+    if (!context) {
+      throw new Error('Program exercise not found or access denied')
+    }
+
+    // Step 2: Build deterministic candidate pool
+    // Filters by matching primary muscles, available equipment, and no injury contraindications
+    const candidates = await getSwapCandidates(
+      context.primary_muscles,
+      context.user_equipment,
+      context.user_injuries,
+      context.exercise_id
+    )
+
+    // Step 3: No candidates - return without calling Claude (expected business outcome)
+    if (candidates.length === 0) {
+      return { success: false as const }
+    }
+
+    // Step 4: Safety filter on user-provided reason (if given)
+    if (reason) {
+      const safety = await checkInputSafety(reason)
+      if (!safety.safe) {
+        throw new Error(`Input rejected: ${safety.reason ?? 'unsafe content'}`)
+      }
+    }
+
+    // Step 5: Circuit breaker check
+    const circuitOpen = !(await canRequest(CIRCUITS.EXERCISE_SWAP))
+    if (circuitOpen) {
+      throw new Error('AI service temporarily unavailable - please try again shortly')
+    }
+
+    // Step 6: Ask Kiro (Haiku) to pick the best replacement from the candidate pool
+    let newExerciseId: string
+    try {
+      newExerciseId = await swapExercise(context.exercise_name, candidates, reason)
+      await recordSuccess(CIRCUITS.EXERCISE_SWAP)
+    } catch (err) {
+      await recordFailure(CIRCUITS.EXERCISE_SWAP)
+      throw err
+    }
+
+    // Step 7: Persist the swap
+    const rationale = `Swapped from ${context.exercise_name}${reason ? ` - ${reason}` : ''}`
+    await updateProgramExercise(program_exercise_id, newExerciseId, user.id, rationale)
+
+    // Step 8: Fire analytics (non-blocking)
+    after(async () => {
+      await trackServer(user.id, EVENTS.EXERCISE_SWAPPED, {
+        program_exercise_id,
+        old_exercise_id: context.exercise_id,
+        new_exercise_id: newExerciseId,
+        swap_reason: reason ?? null,
+      })
+    })
+
+    return { success: true as const, newExerciseId }
   })

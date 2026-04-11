@@ -129,6 +129,7 @@ export const CIRCUITS = {
   DEBRIEF: 'ai:debrief',
   ADJUSTMENT: 'ai:adjustment',
   INTAKE: 'ai:intake',
+  EXERCISE_SWAP: 'ai:exercise_swap',
 } as const
 
 // classifyEquipmentBucket moved to src/lib/utils/equipment.ts per CLAUDE.md architecture rules

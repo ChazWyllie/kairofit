@@ -396,6 +396,93 @@ Current week: ${program.current_week}
   return rawProgram
 }
 
+// ============================================================
+// EXERCISE SWAP
+// Haiku selects the best replacement from a deterministic candidate pool.
+// The caller is responsible for: safety filter, circuit breaker, rate limit.
+// This function only does the Claude call and validates the returned ID.
+// ============================================================
+
+const SWAP_TOOL_NAME = 'select_replacement_exercise'
+
+const SWAP_TOOL = {
+  name: SWAP_TOOL_NAME,
+  description: 'Select the best replacement exercise from a list of candidates.',
+  input_schema: {
+    type: 'object' as const,
+    properties: {
+      exercise_id: {
+        type: 'string',
+        description: 'The ID of the chosen replacement exercise from the candidates list.',
+      },
+      rationale: {
+        type: 'string',
+        description:
+          'One sentence explaining why this exercise is the best replacement. ' +
+          'Scientific, direct, no fluff. No em dashes.',
+      },
+    },
+    required: ['exercise_id', 'rationale'],
+  },
+}
+
+interface SwapToolResult {
+  exercise_id: string
+  rationale: string
+}
+
+/**
+ * Ask Haiku to pick the best replacement exercise from a candidate pool.
+ *
+ * @param currentExerciseName - Name of the exercise being replaced (for context)
+ * @param candidates - Deterministic pool filtered by muscles, equipment, and injuries
+ * @param reason - Optional user-provided reason for the swap
+ * @returns The selected exercise ID (guaranteed to be in the candidate pool)
+ */
+export async function swapExercise(
+  currentExerciseName: string,
+  candidates: Array<{ id: string; name: string; primary_muscles: string[] }>,
+  reason?: string
+): Promise<string> {
+  const candidateList = candidates
+    .map((c) => `- ID: ${c.id} | Name: ${c.name} | Muscles: ${c.primary_muscles.join(', ')}`)
+    .join('\n')
+
+  const userMessage =
+    `Current exercise: ${currentExerciseName}\n` +
+    (reason ? `User reason for swap: ${reason}\n` : '') +
+    `\nAvailable replacement exercises:\n${candidateList}\n\n` +
+    `Select the best replacement. Prioritize similar movement pattern and muscle overlap.`
+
+  const response = await client.messages.create({
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 256,
+    system: KIRO_BASE_SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: userMessage }],
+    tools: [SWAP_TOOL],
+    tool_choice: { type: 'tool', name: SWAP_TOOL_NAME },
+  })
+
+  const toolUse = response.content.find((b) => b.type === 'tool_use')
+  if (!toolUse || toolUse.type !== 'tool_use') {
+    throw new Error('Haiku did not call the swap tool')
+  }
+
+  const result = toolUse.input as SwapToolResult
+
+  // Safety check: ensure the returned ID is actually in the candidate pool
+  // Prevents the model from hallucinating an exercise ID
+  const isValid = candidates.some((c) => c.id === result.exercise_id)
+  if (!isValid) {
+    // Fall back to the first candidate if model returns an invalid ID
+    const fallback = candidates[0]
+    if (!fallback) throw new Error('No candidates available for swap')
+    return fallback.id
+  }
+
+  return result.exercise_id
+}
+
 // NOTE: buildCachedSystemMessage was removed.
 // It had two bugs: (1) getKiroSystemPrompt concatenates base+task into one string,
 // losing the per-block caching benefit; (2) the returned object shape was wrong for
