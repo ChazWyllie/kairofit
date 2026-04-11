@@ -9,7 +9,9 @@ _Last updated: 2026-04-10. Baseline: `main` @ 2659e34. 327/327 tests passing._
 | Milestone | Description                                      | Status   | Reference               |
 | --------- | ------------------------------------------------ | -------- | ----------------------- |
 | A         | Public landing page (Phase 10)                   | COMPLETE | PR #49 / commit 2659e34 |
-| B         | Unblock stubbed Server Actions                   | PENDING  | -                       |
+| B1        | adjust-program-action                            | COMPLETE | PR #50                  |
+| B2        | swap-exercise-action                             | PENDING  | -                       |
+| B3        | delete-account-action                            | PENDING  | -                       |
 | C         | Testing Layer 2 (property-based)                 | COMPLETE | commit c674c3f          |
 | D         | Testing Layers 3+4 (LLM judge + golden profiles) | COMPLETE | commit c674c3f          |
 | E         | Health data encryption + measurement logging     | PENDING  | -                       |
@@ -281,29 +283,35 @@ One focused PR per sub-milestone, each branching independently from `main`.
 
 ---
 
-### Milestone B1 - `feat/adjust-program-action`
+### Milestone B1 - `feat/adjust-program-action` - COMPLETE
+
+**PR:** ChazWyllie/kairofit#50 - merged 2026-04-11
 
 **Deliverables:**
 
-- Implement `adjustProgramAction` stub in `src/actions/program.actions.ts:104`
-- Resilience chain: Sonnet -> Haiku -> static; circuit breaker key `ADJUSTMENT`; rate limit key `RATE_LIMIT_KEYS.AI_ADJUSTMENT`
-- Zod validation + `workout-validator` post-check
-- Write to new program version; keep old version for completed sessions (see Risks)
+- [x] Implement `adjustProgramAction` stub in `src/actions/program.actions.ts`
+- [x] Resilience chain: Sonnet -> Haiku; circuit breaker key `CIRCUITS.ADJUSTMENT`; rate limit key `RATE_LIMIT_KEYS.AI_ADJUST`
+- [x] `checkInputSafety` called before every Claude call
+- [x] `validateWorkoutProgram` post-check with conservative defaults `(rawProgram, 3, [], [])`
+- [x] Version-copy strategy: `saveProgramToDb` deactivates old, saves adjusted as new active
+- [x] `PROGRAM_ADJUSTED` PostHog event via `after()` (non-blocking)
+- [x] `getProgramById(programId, userId)` added to `src/lib/db/queries/programs.ts` (RLS-scoped)
 
-**Unit tests (TDD-first):**
+**Unit tests (TDD-first) - 5/5 passing:**
 
-- [ ] happy path: returns `updatedProgram` with valid shape
-- [ ] rate-limit hit: returns `{ success: false, error: "rate_limit" }`
-- [ ] safety-filter rejection: returns `{ success: false, error: "unsafe_input" }`
-- [ ] circuit-open: returns `{ success: false, error: "circuit_open" }`
-- [ ] Zod validation failure: returns `{ success: false, error: "invalid_input" }`
+- [x] happy path: returns `updatedProgram` with valid shape
+- [x] rate-limit hit: returns `serverError`
+- [x] safety-filter rejection: returns `serverError`
+- [x] circuit-open: returns `serverError`
+- [x] Zod validation failure: returns `validationErrors`
 
 **Acceptance criteria:**
 
-- [ ] TDD-first: tests written before implementation
-- [ ] `npm test` 327+ green
-- [ ] `npm run lint:kiro` passes
-- [ ] Stub at `program.actions.ts:104` replaced with real implementation
+- [x] TDD-first: tests written before implementation
+- [x] `npm test` 332/332 green
+- [x] `npm run lint:kiro` passes
+- [x] `npm run typecheck` passes
+- [x] Stub replaced with real implementation
 
 ---
 
