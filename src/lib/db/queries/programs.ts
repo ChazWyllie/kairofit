@@ -212,10 +212,7 @@ export async function saveProgramToDb(
  * Load a specific program by ID, scoped to the user for RLS safety.
  * Returns null when the program does not exist or belongs to another user.
  */
-export async function getProgramById(
-  programId: string,
-  userId: string
-): Promise<Program | null> {
+export async function getProgramById(programId: string, userId: string): Promise<Program | null> {
   const supabase = await createServerClient()
 
   const { data, error } = await supabase
