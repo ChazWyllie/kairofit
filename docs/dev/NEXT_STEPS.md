@@ -10,7 +10,7 @@ _Last updated: 2026-04-10. Baseline: `main` @ 2659e34. 327/327 tests passing._
 | --------- | ------------------------------------------------ | -------- | ----------------------- |
 | A         | Public landing page (Phase 10)                   | COMPLETE | PR #49 / commit 2659e34 |
 | B1        | adjust-program-action                            | COMPLETE | PR #50                  |
-| B2        | swap-exercise-action                             | PENDING  | -                       |
+| B2        | swap-exercise-action                             | COMPLETE | PR #52                  |
 | B3        | delete-account-action                            | PENDING  | -                       |
 | C         | Testing Layer 2 (property-based)                 | COMPLETE | commit c674c3f          |
 | D         | Testing Layers 3+4 (LLM judge + golden profiles) | COMPLETE | commit c674c3f          |

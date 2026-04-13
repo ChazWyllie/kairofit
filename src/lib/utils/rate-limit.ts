@@ -46,6 +46,12 @@ function getLimiters(): Record<string, Ratelimit> {
         limiter: Ratelimit.slidingWindow(5, '5 m'),
         prefix: 'rl:ai:adjust',
       }),
+      // AI swap: lighter than generation, limit per session
+      'ai:swap': new Ratelimit({
+        redis: r,
+        limiter: Ratelimit.slidingWindow(10, '5 m'),
+        prefix: 'rl:ai:swap',
+      }),
       // AI intake: allow multi-turn conversation
       'ai:intake': new Ratelimit({
         redis: r,
