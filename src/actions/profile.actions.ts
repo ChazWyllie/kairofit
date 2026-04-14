@@ -7,14 +7,18 @@
 
 'use server'
 
+import { after } from 'next/server'
 import { createSafeActionClient } from 'next-safe-action'
-import { createServerClient } from '@/lib/db/supabase'
+import { createServerClient, createAdminClient } from '@/lib/db/supabase'
 import { checkRateLimit } from '@/lib/utils/rate-limit'
 import {
   updateProfileSchema,
   logMeasurementSchema,
+  deleteAccountSchema,
   RATE_LIMIT_KEYS,
 } from '@/lib/validation/schemas'
+import { trackServer } from '@/lib/utils/analytics'
+import { EVENTS } from '@/lib/utils/event-names'
 
 // ============================================================
 // AUTHENTICATED ACTION CLIENT
@@ -77,22 +81,24 @@ export const logMeasurementAction = action
 
 // ============================================================
 // DELETE ACCOUNT
-// Cancels Stripe subscription and cascades deletes all user data.
-// Implemented in Phase 10.
+// Deletes auth.users record, which cascades to all user data via ON DELETE CASCADE.
+// The client is responsible for clearing IndexedDB and signing out after this returns.
 // ============================================================
 
 export const deleteAccountAction = action
-  .schema(
-    // No input needed - the authenticated user deletes their own account
-    // Using an empty schema as a placeholder until Phase 10
-    (await import('zod')).z.object({})
-  )
-  .action(async ({ ctx: { user, supabase } }) => {
+  .schema(deleteAccountSchema)
+  .action(async ({ ctx: { user } }) => {
     await checkRateLimit(user.id, RATE_LIMIT_KEYS.GENERAL)
 
-    // TODO (Phase 10): Implement full account deletion
-    // 1. Cancel Stripe subscription if active
-    // 2. Delete from auth.users (cascades to all tables via ON DELETE CASCADE)
-    void supabase
-    throw new Error('Account deletion not yet implemented')
+    const adminClient = createAdminClient()
+    const { error } = await adminClient.auth.admin.deleteUser(user.id)
+    if (error) throw new Error(`Failed to delete account: ${error.message}`)
+
+    // Fire-and-forget analytics - runs after response is sent
+    after(async () => {
+      await trackServer(user.id, EVENTS.ACCOUNT_DELETED)
+    })
+
+    // revoke_sessions signals the client to call supabase.auth.signOut() and redirect
+    return { success: true, revoke_sessions: true }
   })

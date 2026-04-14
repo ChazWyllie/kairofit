@@ -5,13 +5,32 @@
  * for Client Components. For browser/client usage, import from
  * '@/lib/db/supabase-browser' instead.
  *
- * The service role client (createServiceRoleClient) is for Edge Functions only.
+ * createAdminClient uses the service role key and bypasses RLS.
+ * Only use it for operations that require admin privileges (e.g. deleteUser).
  * Never expose the service role key to the browser.
  */
 
 import { createServerClient as _createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import type { Database } from '@/types/supabase.generated'
+
+// ============================================================
+// ADMIN CLIENT (Server Actions only - bypasses RLS)
+// ============================================================
+
+/**
+ * Use only for admin-level operations that must bypass RLS.
+ * Current uses: auth.admin.deleteUser in deleteAccountAction.
+ *
+ * Returns a synchronous client (no cookie handling needed for admin ops).
+ */
+export function createAdminClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // ============================================================
 // SERVER CLIENT (Server Components + Server Actions)
