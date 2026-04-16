@@ -15,7 +15,7 @@ import { createServerClient } from '@supabase/ssr'
 const PUBLIC_ROUTES = ['/', '/auth/login', '/auth/signup', '/auth/callback', '/onboarding']
 
 // Routes that should redirect authenticated users away (e.g. login page)
-const AUTH_ROUTES = ['/auth/login', '/auth/signup']
+const AUTH_ROUTES = ['/login', '/signup']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -71,7 +71,7 @@ export async function middleware(request: NextRequest) {
 
   // Redirect unauthenticated users to login for protected routes
   if (!user && !isPublicRoute) {
-    const loginUrl = new URL('/auth/login', request.url)
+    const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('redirectTo', pathname)
     return NextResponse.redirect(loginUrl)
   }
