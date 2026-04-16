@@ -1,0 +1,224 @@
+{
+  "description": "Intermediate, full gym, 4-day Upper/Lower, shoulders injury. Level 3. Excluded exercises absent. Caution exercises present with modification notes.",
+  "profile": {
+    "experience_level": 3,
+    "injuries": ["shoulders"],
+    "equipment": ["barbell", "dumbbells", "bench", "pull_up_bar", "cable_machine", "rack"]
+  },
+  "program": {
+    "name": "Shoulder-Safe Upper Lower - 4-Day",
+    "description": "4-day upper/lower split built around a shoulder injury. Avoids all high-impingement movements. Caution exercises are included with technique cues.",
+    "ai_rationale": "Shoulder injuries restrict overhead and impingement-risk movements. This program maintains pressing and pulling volume using safer angles and reduced range of motion on caution exercises.",
+    "weeks_duration": 8,
+    "progression_scheme": "double_progression",
+    "projected_weeks_to_goal": 10,
+    "projected_outcome_description": "8 weeks of pain-free training around the shoulder injury maintains upper body strength while the joint recovers.",
+    "days": [
+      {
+        "day_number": 1,
+        "name": "Upper A",
+        "focus_muscles": ["chest", "back", "shoulders", "biceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 55,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Bench Press",
+            "sets": 4,
+            "reps_min": 6,
+            "reps_max": 10,
+            "rest_seconds": 180,
+            "rpe_target": 8,
+            "rationale": "Horizontal push with shoulder in a stable, non-impingement position. Safe primary press.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Barbell Row",
+            "sets": 4,
+            "reps_min": 6,
+            "reps_max": 10,
+            "rest_seconds": 180,
+            "rpe_target": 8,
+            "rationale": "Horizontal pull. Retraction-based movement is generally safe for shoulder injuries.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Cable Lateral Raise",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 6,
+            "rationale": "Shoulder width accessory. Cable provides steady tension and better control than dumbbells.",
+            "progression_scheme": "double_progression",
+            "modification_note": "Use light weight only. Raise to shoulder height maximum - do not raise above. Stop if shoulder pain occurs."
+          },
+          {
+            "exercise_name": "Dumbbell Curl",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Bicep isolation with no shoulder involvement.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 2,
+        "name": "Lower A",
+        "focus_muscles": ["quads", "hamstrings", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 55,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Squat",
+            "sets": 4,
+            "reps_min": 6,
+            "reps_max": 10,
+            "rest_seconds": 180,
+            "rpe_target": 8,
+            "rationale": "Primary quad driver. High bar position reduces shoulder stress during the rack hold.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Romanian Deadlift",
+            "sets": 3,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Hip hinge with no shoulder loading. Trains hamstrings and glutes safely.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Leg Press",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Quad accessory with no upper body involvement. Pure quad and glute work.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Hip Thrust",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Glute isolation with no shoulder loading. Full hip extension range.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 3,
+        "name": "Upper B",
+        "focus_muscles": ["chest", "back", "triceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 55,
+        "exercises": [
+          {
+            "exercise_name": "Incline Dumbbell Press",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 6,
+            "rationale": "Upper chest stimulus from a safer angle than flat press for some shoulder injuries.",
+            "progression_scheme": "double_progression",
+            "modification_note": "Reduce range of motion at the top. Keep elbows at 45 degrees to the torso. Stop if shoulder impingement occurs."
+          },
+          {
+            "exercise_name": "Lat Pulldown",
+            "sets": 4,
+            "reps_min": 8,
+            "reps_max": 12,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Vertical pull in a supported position. Safer than overhead pressing for shoulder injuries.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Pull-up",
+            "sets": 3,
+            "reps_min": 5,
+            "reps_max": 8,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Vertical pull with bodyweight. Scapular control builds shoulder stability.",
+            "progression_scheme": "double_progression",
+            "modification_note": "Use assisted variation if pain occurs. Avoid full dead hang - start from a slight shoulder pack position."
+          },
+          {
+            "exercise_name": "Tricep Pushdown",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Tricep isolation with shoulder in a neutral, non-impingement position.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 4,
+        "name": "Lower B",
+        "focus_muscles": ["hamstrings", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 50,
+        "exercises": [
+          {
+            "exercise_name": "Conventional Deadlift",
+            "sets": 3,
+            "reps_min": 4,
+            "reps_max": 6,
+            "rest_seconds": 180,
+            "rpe_target": 8,
+            "rationale": "Hip hinge with no shoulder impingement. Arms hang straight - no shoulder stress.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Hip Thrust",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Second weekly glute session. No shoulder involvement.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Lying Leg Curl",
+            "sets": 3,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Hamstring isolation with no upper body loading.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      }
+    ]
+  },
+  "expectations": {
+    "valid": true,
+    "error_count": 0
+  }
+}

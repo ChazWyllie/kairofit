@@ -103,7 +103,7 @@ to your price IDs and the 7-day trial logic activates automatically.
 
 ## Growth Strategy (PWA-first)
 
-KairoFit is a PWA - it does NOT appear in iOS App Store or Google Play searches.
+KairoFit is a PWA; it does NOT appear in iOS App Store or Google Play searches.
 Acquisition channels that work for a web app:
 
 1. Web SEO - target "AI workout program", "research-based strength training", etc.
@@ -136,9 +136,3 @@ See src/lib/ai/kiro-voice.ts and skills/kiro-output-auditor/ for voice rules.
 See docs/security/SECURITY.md for the full architecture.
 
 ---
-
-## Repo Visibility Note
-
-Keep this repo private if it contains docs/competitive/ or docs/research/.
-Those directories contain competitor analysis, pricing strategy, and business intelligence.
-Before open-sourcing: move those directories to a separate private repository.

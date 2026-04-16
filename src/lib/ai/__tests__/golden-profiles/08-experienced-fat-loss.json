@@ -1,0 +1,224 @@
+{
+  "description": "Experienced, full gym, 4-day Upper/Lower fat loss focus. Level 4. No injuries. Higher reps, moderate rest, volume within 24-set cap.",
+  "profile": {
+    "experience_level": 4,
+    "injuries": [],
+    "equipment": ["barbell", "dumbbells", "bench", "pull_up_bar", "cable_machine", "rack"]
+  },
+  "program": {
+    "name": "Fat Loss Upper Lower - 4-Day",
+    "description": "4-day upper/lower split optimised for fat loss. Higher rep ranges and shorter rest periods increase metabolic demand while preserving muscle mass.",
+    "ai_rationale": "Fat loss programming keeps the same movement patterns as hypertrophy but shifts to 10-15 rep ranges and shorter rest. Muscle is preserved via mechanical tension - the volume stays high but the load per rep drops.",
+    "weeks_duration": 10,
+    "progression_scheme": "double_progression",
+    "projected_weeks_to_goal": 12,
+    "projected_outcome_description": "10 weeks of elevated training density creates a metabolic environment that accelerates fat loss while keeping muscle mass intact.",
+    "days": [
+      {
+        "day_number": 1,
+        "name": "Upper A",
+        "focus_muscles": ["chest", "back", "shoulders", "triceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 60,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Bench Press",
+            "sets": 4,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 120,
+            "rpe_target": 7,
+            "rationale": "Primary horizontal push. Lighter load at higher reps maintains volume with lower joint stress.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Barbell Row",
+            "sets": 4,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 120,
+            "rpe_target": 7,
+            "rationale": "Horizontal pull to balance pressing volume. Higher rep range boosts metabolic cost.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Cable Lateral Raise",
+            "sets": 3,
+            "reps_min": 15,
+            "reps_max": 20,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Shoulder width accessory. High-rep cable work adds metabolic density to the session.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Tricep Pushdown",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Tricep isolation. Superset candidate to increase session density.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 2,
+        "name": "Lower A",
+        "focus_muscles": ["quads", "hamstrings", "glutes"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 60,
+        "exercises": [
+          {
+            "exercise_name": "Barbell Squat",
+            "sets": 4,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 120,
+            "rpe_target": 7,
+            "rationale": "Primary quad driver. High-rep squats are metabolically demanding and preserve muscle mass.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Romanian Deadlift",
+            "sets": 4,
+            "reps_min": 10,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Hip hinge accessory. High-rep RDL extends hamstring and glute time-under-tension.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Lying Leg Curl",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Hamstring isolation to complete the posterior chain work.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Hip Thrust",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Glute isolation. High-rep hip thrusts accumulate significant glute fatigue.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 3,
+        "name": "Upper B",
+        "focus_muscles": ["back", "shoulders", "biceps"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 55,
+        "exercises": [
+          {
+            "exercise_name": "Lat Pulldown",
+            "sets": 4,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Vertical pull. Machine-based for controlled load at high reps.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Shoulder Press",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Vertical push. Moderate reps maintain shoulder volume.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Pull-up",
+            "sets": 3,
+            "reps_min": 5,
+            "reps_max": 10,
+            "rest_seconds": 90,
+            "rpe_target": 8,
+            "rationale": "Second weekly vertical pull. Bodyweight provides a different tension curve.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Dumbbell Curl",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Bicep isolation. High rep range extends time-under-tension.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      },
+      {
+        "day_number": 4,
+        "name": "Lower B",
+        "focus_muscles": ["quads", "glutes", "hamstrings"],
+        "session_type": "hypertrophy",
+        "estimated_duration_minutes": 55,
+        "exercises": [
+          {
+            "exercise_name": "Leg Press",
+            "sets": 4,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Quad-dominant accessory. Machine allows very high-rep sets without form breakdown.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Hip Thrust",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 90,
+            "rpe_target": 7,
+            "rationale": "Second weekly glute session. Hip thrusts provide direct peak-contraction overload.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          },
+          {
+            "exercise_name": "Lying Leg Curl",
+            "sets": 3,
+            "reps_min": 12,
+            "reps_max": 15,
+            "rest_seconds": 60,
+            "rpe_target": 7,
+            "rationale": "Second weekly hamstring isolation to ensure full posterior chain coverage.",
+            "progression_scheme": "double_progression",
+            "modification_note": null
+          }
+        ]
+      }
+    ]
+  },
+  "expectations": {
+    "valid": true,
+    "error_count": 0
+  }
+}

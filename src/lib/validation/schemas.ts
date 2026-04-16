@@ -31,6 +31,7 @@ export const logSetSchema = z.object({
   rpe: rpe.optional(),
   is_warmup: z.boolean().default(false),
   is_dropset: z.boolean().default(false),
+  exercise_name: z.string().max(100).optional(), // analytics only - not written to DB
 })
 
 export const startSessionSchema = z.object({
@@ -62,7 +63,6 @@ export const adjustProgramSchema = z.object({
 
 export const swapExerciseSchema = z.object({
   program_exercise_id: uuid,
-  replacement_exercise_id: uuid,
   reason: z.string().max(500).optional(),
 })
 
@@ -199,6 +199,10 @@ export const onboardingStateSchema = z.object({
 // PROFILE UPDATES
 // ============================================================
 
+export const deleteAccountSchema = z.object({
+  confirmation: z.literal('DELETE'),
+})
+
 export const updateProfileSchema = z.object({
   display_name: z.string().min(1).max(50).optional(),
   preferred_units: z.enum(['metric', 'imperial']).optional(),
@@ -239,6 +243,7 @@ export const RATE_LIMIT_KEYS = {
   AI_DEBRIEF: 'ai:debrief',
   AI_ADJUST: 'ai:adjust',
   AI_INTAKE: 'ai:intake',
+  AI_SWAP: 'ai:swap',
   AUTH: 'auth',
   GENERAL: 'general',
 } as const

@@ -14,7 +14,21 @@
  */
 
 import { createServerClient } from '@/lib/db/supabase'
-import type { Program, GeneratedProgram } from '@/types'
+import type { Program, GeneratedProgram, Exercise, InjuryZone } from '@/types'
+
+// ---------------------------------------------------------------------------
+// Swap exercise context types
+// ---------------------------------------------------------------------------
+
+export interface ProgramExerciseContext {
+  program_exercise_id: string
+  exercise_id: string
+  exercise_name: string
+  primary_muscles: string[]
+  equipment_required: string[]
+  user_equipment: string[]
+  user_injuries: InjuryZone[]
+}
 
 /**
  * Get the user's currently active program with all days and exercises.
@@ -206,4 +220,187 @@ export async function saveProgramToDb(
   const saved = await getActiveProgram(userId, 1)
   if (!saved) throw new Error('Program saved but could not be retrieved')
   return saved
+}
+
+/**
+ * Get a program exercise with its exercise details and user profile context.
+ * Used by swapExerciseAction to build the candidate pool.
+ * Returns null when the exercise does not belong to the user.
+ */
+export async function getProgramExerciseWithContext(
+  programExerciseId: string,
+  userId: string
+): Promise<ProgramExerciseContext | null> {
+  const supabase = await createServerClient()
+
+  const { data: peRow, error: peError } = await supabase
+    .from('program_exercises')
+    .select(
+      `
+      id, exercise_id, user_id,
+      exercises (
+        id, name, primary_muscles, equipment_required
+      )
+    `
+    )
+    .eq('id', programExerciseId)
+    .eq('user_id', userId)
+    .single()
+
+  if (peError || !peRow) {
+    if (peError && peError.code !== 'PGRST116') {
+      console.error('getProgramExerciseWithContext error:', peError.message)
+    }
+    return null
+  }
+
+  const exercise = peRow.exercises as unknown as Pick<
+    Exercise,
+    'id' | 'name' | 'primary_muscles' | 'equipment_required'
+  >
+
+  // Fetch user profile for equipment and injuries.
+  // profiles.id is the user UUID (not a separate user_id column).
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('equipment, injuries')
+    .eq('id', userId)
+    .single()
+
+  if (profileError) {
+    console.error('getProgramExerciseWithContext profile error:', profileError.message)
+  }
+
+  return {
+    program_exercise_id: programExerciseId,
+    exercise_id: exercise.id,
+    exercise_name: exercise.name,
+    primary_muscles: exercise.primary_muscles as string[],
+    equipment_required: exercise.equipment_required as string[],
+    user_equipment: (profile?.equipment as unknown as string[]) ?? [],
+    user_injuries: (profile?.injuries as unknown as InjuryZone[]) ?? [],
+  }
+}
+
+/**
+ * Get candidate exercises for a swap.
+ * Filters by:
+ *   - overlapping primary muscles with the current exercise
+ *   - equipment the user has available
+ *   - no contraindications for the user's injuries
+ *   - excludes the exercise being replaced
+ *
+ * Uses DB-side muscle overlap filter, then client-side equipment + injury filter.
+ */
+export async function getSwapCandidates(
+  primaryMuscles: string[],
+  userEquipment: string[],
+  userInjuries: InjuryZone[],
+  excludeExerciseId: string
+): Promise<Exercise[]> {
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase
+    .from('exercises')
+    .select(
+      'id, name, slug, primary_muscles, secondary_muscles, movement_pattern, is_compound, ' +
+        'equipment_required, difficulty, default_sets_min, default_sets_max, default_reps_min, ' +
+        'default_reps_max, default_rest_seconds, description, research_rationale, form_cues, ' +
+        'common_mistakes, contraindicated_for, video_url, thumbnail_url, is_verified, evidence_quality, ' +
+        'alternative_names'
+    )
+    .overlaps('primary_muscles', primaryMuscles)
+    .neq('id', excludeExerciseId)
+    .eq('is_verified', true)
+
+  if (error) {
+    console.error('getSwapCandidates error:', error.message)
+    return []
+  }
+
+  const exercises = (data ?? []) as unknown as Exercise[]
+
+  // Client-side filter: user must have all required equipment (or exercise needs none)
+  // and exercise must not be contraindicated for any of the user's injuries
+  return exercises.filter((ex) => {
+    const hasEquipment =
+      ex.equipment_required.length === 0 ||
+      ex.equipment_required.every((eq) => userEquipment.includes(eq))
+
+    const isSafe =
+      userInjuries.length === 0 ||
+      !ex.contraindicated_for.some((zone) => userInjuries.includes(zone))
+
+    return hasEquipment && isSafe
+  })
+}
+
+/**
+ * Update a program exercise to use a different exercise.
+ * RLS guards this to the owner user only.
+ */
+export async function updateProgramExercise(
+  programExerciseId: string,
+  newExerciseId: string,
+  userId: string,
+  rationale: string
+): Promise<void> {
+  const supabase = await createServerClient()
+
+  const { error } = await supabase
+    .from('program_exercises')
+    .update({
+      exercise_id: newExerciseId,
+      modification_note: rationale,
+    })
+    .eq('id', programExerciseId)
+    .eq('user_id', userId)
+
+  if (error) {
+    console.error('updateProgramExercise error:', error.message)
+    throw new Error(`Failed to update program exercise: ${error.message}`)
+  }
+}
+
+/**
+ * Load a specific program by ID, scoped to the user for RLS safety.
+ * Returns null when the program does not exist or belongs to another user.
+ */
+export async function getProgramById(programId: string, userId: string): Promise<Program | null> {
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase
+    .from('programs')
+    .select(
+      `
+      id, user_id, created_at, name, description, ai_rationale,
+      weeks_duration, days_per_week, goal, split_type, current_week,
+      progression_scheme, is_active, projected_weeks_to_goal,
+      projected_outcome_description,
+      program_days (
+        id, program_id, day_number, week_number, name, focus_muscles,
+        session_type, estimated_duration_minutes,
+        program_exercises (
+          id, program_day_id, exercise_id, user_id, order_index,
+          superset_group, sets, reps_min, reps_max, rest_seconds,
+          rpe_target, rir_target, rationale, progression_scheme,
+          modification_note, is_flagged_for_injury,
+          exercises (
+            id, name, slug, primary_muscles, secondary_muscles,
+            movement_pattern, is_compound, equipment_required,
+            research_rationale, form_cues, contraindicated_for
+          )
+        )
+      )
+    `
+    )
+    .eq('id', programId)
+    .eq('user_id', userId)
+    .single()
+
+  if (error && error.code !== 'PGRST116') {
+    console.error('getProgramById error:', error.message)
+  }
+
+  return data as unknown as Program | null
 }

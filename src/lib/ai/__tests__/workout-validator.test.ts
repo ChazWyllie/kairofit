@@ -7,8 +7,10 @@
  */
 
 import { describe, it, expect } from 'vitest'
+import * as fc from 'fast-check'
 import { validateWorkoutProgram } from '../workout-validator'
-import type { GeneratedProgram } from '@/types'
+import type { GeneratedProgram, ExperienceLevel, InjuryZone } from '@/types'
+import { CONTRAINDICATIONS } from '@/lib/utils/contraindications'
 import validProgram from './fixtures/valid-program.json'
 
 // ============================================================
@@ -272,5 +274,130 @@ describe('volume hard cap enforcement', () => {
     const result = validateWorkoutProgram(program, 1, [], ['barbells', 'bench'])
     const capErrors = result.errors.filter((e) => e.rule === 'volume_hard_cap')
     expect(capErrors).toHaveLength(0)
+  })
+})
+
+// ============================================================
+// PROPERTY-BASED TESTS (Layer 2)
+// Requires: npm install --save-dev fast-check
+// These tests fuzz random inputs to verify universal invariants.
+// ============================================================
+
+// Level-specific hard caps from CLAUDE.md and VOLUME_LIMITS in workout-validator.ts
+const HARD_CAPS: Record<number, number> = { 1: 16, 2: 16, 3: 20, 4: 24, 5: 25 }
+
+// All injury zones that have at least one exclusion
+const ALL_ZONES_WITH_EXCLUSIONS: InjuryZone[] = [
+  'lower_back',
+  'knees',
+  'shoulders',
+  'wrists',
+  'hips',
+  'neck',
+]
+
+// Flat list of [injuryZone, excludedExerciseName] pairs used by fc.constantFrom
+const INJURY_EXCLUSION_PAIRS: [InjuryZone, string][] = ALL_ZONES_WITH_EXCLUSIONS.flatMap((zone) =>
+  CONTRAINDICATIONS[zone].exclude.map((ex): [InjuryZone, string] => [zone, ex])
+).filter(([, ex]) => ex.trim().length > 0)
+
+describe('property-based invariants (Layer 2)', () => {
+  it('volume cap: always rejects programs exceeding level-specific hard cap', () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 5 }), // experience level
+        fc.integer({ min: 1, max: 5 }), // sets per exercise (1-5)
+        fc.integer({ min: 1, max: 8 }), // exercises per day (max 8)
+        (level, setsEach, exPerDay) => {
+          const cap = HARD_CAPS[level]!
+          // Build enough days so total chest sets strictly exceed the cap
+          const setsPerDay = exPerDay * setsEach
+          const numDaysNeeded = Math.ceil(cap / setsPerDay) + 1
+
+          const days = Array.from({ length: numDaysNeeded }, (_, dayIdx) => ({
+            day_number: dayIdx + 1,
+            name: `Day ${dayIdx + 1}`,
+            focus_muscles: ['chest'],
+            session_type: 'hypertrophy' as const,
+            estimated_duration_minutes: 50,
+            exercises: Array.from({ length: exPerDay }, (_, exIdx) =>
+              makeExercise({
+                exercise_name: `Barbell Bench Press ${dayIdx}x${exIdx}`,
+                sets: setsEach,
+                rest_seconds: 120,
+              })
+            ),
+          }))
+
+          const program = makeProgram({ days })
+          const result = validateWorkoutProgram(
+            program,
+            level as ExperienceLevel,
+            [],
+            ['barbells', 'bench']
+          )
+
+          return result.errors.some((e) => e.rule === 'volume_hard_cap')
+        }
+      ),
+      { numRuns: 100 }
+    )
+  })
+
+  it('contraindication: always rejects excluded exercises for every injury zone', () => {
+    fc.assert(
+      fc.property(fc.constantFrom(...INJURY_EXCLUSION_PAIRS), ([zone, excludedExercise]) => {
+        const program = makeProgram({
+          days: [makeDay([makeExercise({ exercise_name: excludedExercise, rest_seconds: 120 })])],
+        })
+        const result = validateWorkoutProgram(program, 3, [zone], [])
+
+        return result.errors.some((e) => e.rule === 'injury_contraindication')
+      }),
+      { numRuns: 50 }
+    )
+  })
+
+  it('rest bounds: always rejects rest_seconds below 30', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 1, max: 29 }), (restSeconds) => {
+        const program = makeProgram({
+          days: [makeDay([makeExercise({ rest_seconds: restSeconds })])],
+        })
+        const result = validateWorkoutProgram(program, 3, [], [])
+
+        return result.errors.some((e) => e.rule === 'rest_range')
+      }),
+      { numRuns: 100 }
+    )
+  })
+
+  it('rest bounds: always rejects rest_seconds above 300', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 301, max: 600 }), (restSeconds) => {
+        const program = makeProgram({
+          days: [makeDay([makeExercise({ rest_seconds: restSeconds })])],
+        })
+        const result = validateWorkoutProgram(program, 3, [], [])
+
+        return result.errors.some((e) => e.rule === 'rest_range')
+      }),
+      { numRuns: 100 }
+    )
+  })
+
+  it('rest bounds: accepts any rest_seconds in [30, 300] for non-heavy-compound exercises', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 30, max: 300 }), (restSeconds) => {
+        const program = makeProgram({
+          days: [makeDay([makeExercise({ rest_seconds: restSeconds })])],
+        })
+        const result = validateWorkoutProgram(program, 3, [], [])
+        const restRangeErrors = result.errors.filter((e) => e.rule === 'rest_range')
+
+        return restRangeErrors.length === 0
+      }),
+      { numRuns: 100 }
+    )
   })
 })

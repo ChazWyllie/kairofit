@@ -2,12 +2,15 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { usePostHog } from 'posthog-js/react'
 import { useOnboardingStore } from '@/stores/onboarding.store'
 import { OnboardingLayout } from '@/components/onboarding/OnboardingLayout'
 import { TOTAL_STEPS } from '@/lib/onboarding/flow-config'
 import { assignArchetype, ARCHETYPES } from '@/lib/onboarding/archetypes'
+import { EVENTS } from '@/lib/utils/event-names'
 
 export default function ArchetypeRevealPage() {
+  const posthog = usePostHog()
   const { psych_scores, archetype, setArchetype, nextStep } = useOnboardingStore()
   const router = useRouter()
 
@@ -18,6 +21,12 @@ export default function ArchetypeRevealPage() {
   }, [archetype, psych_scores, setArchetype])
 
   const computed = archetype ?? assignArchetype(psych_scores)
+
+  // Fire once on reveal - computed is deterministic from psych_scores
+  useEffect(() => {
+    posthog?.capture(EVENTS.ARCHETYPE_REVEALED, { archetype: computed })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const def = ARCHETYPES[computed]
 
   function handleContinue() {

@@ -94,6 +94,15 @@ export async function markSetsAsSynced(setIds: string[]): Promise<void> {
 }
 
 /**
+ * Clear all offline data. Called before account deletion to prevent
+ * orphaned IndexedDB data remaining on the device after the account is gone.
+ */
+export async function clearAllData(): Promise<void> {
+  await db.workout_sets.clear()
+  await db.workout_sessions.clear()
+}
+
+/**
  * Mark sets as failed after a sync error.
  */
 export async function markSetsAsFailed(setIds: string[]): Promise<void> {

@@ -7,14 +7,19 @@
 
 'use server'
 
+import { after } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createSafeActionClient } from 'next-safe-action'
-import { createServerClient } from '@/lib/db/supabase'
+import { createServerClient, createAdminClient } from '@/lib/db/supabase'
 import { checkRateLimit } from '@/lib/utils/rate-limit'
 import {
   updateProfileSchema,
   logMeasurementSchema,
+  deleteAccountSchema,
   RATE_LIMIT_KEYS,
 } from '@/lib/validation/schemas'
+import { trackServer } from '@/lib/utils/analytics'
+import { EVENTS } from '@/lib/utils/event-names'
 
 // ============================================================
 // AUTHENTICATED ACTION CLIENT
@@ -66,33 +71,56 @@ export const logMeasurementAction = action
   .action(async ({ parsedInput, ctx: { user, supabase } }) => {
     await checkRateLimit(user.id, RATE_LIMIT_KEYS.GENERAL)
 
-    // TODO (Phase 10): Implement with health data encryption
-    // When the encryption utility is built (Phase 14), wrap weight_kg and
-    // body_fat_pct in encrypt() before inserting to body_measurements.
-    // For now, measurements are deferred until the encryption layer exists.
-    void parsedInput
-    void supabase
-    throw new Error('Measurement logging not yet implemented - pending encryption utility')
+    // Encryption happens inside the log_body_measurement Postgres function via Vault key.
+    // All numeric values are passed as strings so pgp_sym_encrypt receives text.
+    type RpcFn = (
+      fn: string,
+      args?: Record<string, string | null>
+    ) => Promise<{ data: unknown; error: { message: string } | null }>
+    const { data: measurementId, error } = await (supabase.rpc as unknown as RpcFn)(
+      'log_body_measurement',
+      {
+        p_user_id: user.id,
+        p_weight_kg: parsedInput.weight_kg?.toString() ?? null,
+        p_body_fat_pct: parsedInput.body_fat_pct?.toString() ?? null,
+        p_chest_cm: parsedInput.chest_cm?.toString() ?? null,
+        p_waist_cm: parsedInput.waist_cm?.toString() ?? null,
+        p_hips_cm: parsedInput.hips_cm?.toString() ?? null,
+        p_notes: parsedInput.notes ?? null,
+      }
+    )
+
+    if (error) throw new Error(`Failed to log measurement: ${error.message}`)
+
+    revalidatePath('/settings')
+
+    after(async () => {
+      await trackServer(user.id, EVENTS.MEASUREMENT_LOGGED)
+    })
+
+    return { success: true, measurement_id: measurementId as string }
   })
 
 // ============================================================
 // DELETE ACCOUNT
-// Cancels Stripe subscription and cascades deletes all user data.
-// Implemented in Phase 10.
+// Deletes auth.users record, which cascades to all user data via ON DELETE CASCADE.
+// The client is responsible for clearing IndexedDB and signing out after this returns.
 // ============================================================
 
 export const deleteAccountAction = action
-  .schema(
-    // No input needed - the authenticated user deletes their own account
-    // Using an empty schema as a placeholder until Phase 10
-    (await import('zod')).z.object({})
-  )
-  .action(async ({ ctx: { user, supabase } }) => {
+  .schema(deleteAccountSchema)
+  .action(async ({ ctx: { user } }) => {
     await checkRateLimit(user.id, RATE_LIMIT_KEYS.GENERAL)
 
-    // TODO (Phase 10): Implement full account deletion
-    // 1. Cancel Stripe subscription if active
-    // 2. Delete from auth.users (cascades to all tables via ON DELETE CASCADE)
-    void supabase
-    throw new Error('Account deletion not yet implemented')
+    const adminClient = createAdminClient()
+    const { error } = await adminClient.auth.admin.deleteUser(user.id)
+    if (error) throw new Error(`Failed to delete account: ${error.message}`)
+
+    // Fire-and-forget analytics - runs after response is sent
+    after(async () => {
+      await trackServer(user.id, EVENTS.ACCOUNT_DELETED)
+    })
+
+    // revoke_sessions signals the client to call supabase.auth.signOut() and redirect
+    return { success: true, revoke_sessions: true }
   })
