@@ -17,11 +17,12 @@ We are shipping a production-ready marketing surface for KairoFit at `/`, `/scie
 `/founder`, `/tour`, `/waitlist/thank-you`, `/legal/terms`, `/legal/privacy`, plus a
 bespoke `not-found`. The redesign is a ground-up token-first rebuild, not a polish pass.
 Credibility is the primary buyer: the site must feel like a research-backed tool, not a
-typical fitness app landing page. Priority order from `redesign.md` §12: **credibility > aesthetic
-> SEO > conversion**. The single systemic blocker is that `tailwind.config.ts` ships an
-empty `theme.extend`, so every page leans on hardcoded arbitrary values (`text-[#F5F5F4]`,
-`text-[48px]`, `bg-[#111113]`). Fixing that unlocks consistent type scale, responsive audit,
-accessibility tuning, and future maintainability in one move.
+typical fitness app landing page. Priority order from `redesign.md` §12: \*\*credibility > aesthetic
+
+> SEO > conversion\*\*. The single systemic blocker is that `tailwind.config.ts` ships an
+> empty `theme.extend`, so every page leans on hardcoded arbitrary values (`text-[#F5F5F4]`,
+> `text-[48px]`, `bg-[#111113]`). Fixing that unlocks consistent type scale, responsive audit,
+> accessibility tuning, and future maintainability in one move.
 
 Assumption: the current 7-page IA, 20-component inventory, and copy in
 `src/app/(marketing)/_content.ts` are directionally correct and stay. Structural rework is
@@ -35,31 +36,31 @@ values site-wide, (c) enforcing accent-usage rules, (d) responsive audit at 375/
 
 ### Palette (reaffirmed from redesign.md §3)
 
-| Token | Hex | Usage |
-| --- | --- | --- |
-| `bg` | `#0A0A0B` | Page background |
-| `bgElevated` | `#111113` | Cards, form surfaces |
-| `bgSubtle` | `#17171A` | Inline surfaces inside cards (Kiro chat bubbles, code panels) |
-| `border` | `#1F1F23` | Default dividers, card borders |
-| `borderStrong` | `#2A2A2F` | Elevated surface borders, CTA outlines |
-| `textPrimary` | `#F5F5F4` | Headlines, body |
-| `textSecondary` | `#A1A19E` | Supporting copy |
-| `textMuted` | `#6B6B68` | Eyebrow labels, metadata |
-| `accent` | `#CAFF4C` | One punch per section (see accent rules) |
-| `accentMuted` | `rgba(202,255,76,0.15)` | Glow fills, badge backgrounds |
-| `accentOn` | `#0A0A0B` | Foreground color on accent fills |
-| `success` | `#10B981` | Rare, reserved for waitlist success confirmation |
-| `danger` | `#EF4444` | Form errors, rate-limit messages |
+| Token           | Hex                     | Usage                                                         |
+| --------------- | ----------------------- | ------------------------------------------------------------- |
+| `bg`            | `#0A0A0B`               | Page background                                               |
+| `bgElevated`    | `#111113`               | Cards, form surfaces                                          |
+| `bgSubtle`      | `#17171A`               | Inline surfaces inside cards (Kiro chat bubbles, code panels) |
+| `border`        | `#1F1F23`               | Default dividers, card borders                                |
+| `borderStrong`  | `#2A2A2F`               | Elevated surface borders, CTA outlines                        |
+| `textPrimary`   | `#F5F5F4`               | Headlines, body                                               |
+| `textSecondary` | `#A1A19E`               | Supporting copy                                               |
+| `textMuted`     | `#6B6B68`               | Eyebrow labels, metadata                                      |
+| `accent`        | `#CAFF4C`               | One punch per section (see accent rules)                      |
+| `accentMuted`   | `rgba(202,255,76,0.15)` | Glow fills, badge backgrounds                                 |
+| `accentOn`      | `#0A0A0B`               | Foreground color on accent fills                              |
+| `success`       | `#10B981`               | Rare, reserved for waitlist success confirmation              |
+| `danger`        | `#EF4444`               | Form errors, rate-limit messages                              |
 
 ### Benchmarks — what we borrow
 
-| Site | What we borrow | Where it shows up |
-| --- | --- | --- |
-| Linear | Typographic restraint — giant display weights, zero decorative effects, generous whitespace | Hero H1, section headers, `display-xl` treatment |
-| Vercel | Metric cards and pristine grid system | Hero Stat trio, Science Foundation cards |
-| Whoop | Data-dense mono numeric labels + minimal color on near-black | Eyebrow labels, `mono-stat` components, floating cards |
-| Apple Fitness | Lifestyle-grade photography treatment, warm composition | Founder section portrait treatment, OG imagery |
-| Nike SNKRS | Drop cadence energy in a single accent punch | Accent usage rules: headline hits + primary CTA + streak pill, never washed backgrounds |
+| Site          | What we borrow                                                                              | Where it shows up                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Linear        | Typographic restraint — giant display weights, zero decorative effects, generous whitespace | Hero H1, section headers, `display-xl` treatment                                        |
+| Vercel        | Metric cards and pristine grid system                                                       | Hero Stat trio, Science Foundation cards                                                |
+| Whoop         | Data-dense mono numeric labels + minimal color on near-black                                | Eyebrow labels, `mono-stat` components, floating cards                                  |
+| Apple Fitness | Lifestyle-grade photography treatment, warm composition                                     | Founder section portrait treatment, OG imagery                                          |
+| Nike SNKRS    | Drop cadence energy in a single accent punch                                                | Accent usage rules: headline hits + primary CTA + streak pill, never washed backgrounds |
 
 ### Motion language
 
@@ -195,30 +196,30 @@ helpers in favor of direct class tokens.
 Status legend: `keep` = already aligned, `migrate` = token-migration only (structure ok),
 `rework` = structural change required, `new` = build new, `remove` = delete.
 
-| Component | File | Status | Notes |
-| --- | --- | --- | --- |
-| `SiteHeader` | `_components/SiteHeader.tsx` | migrate | Token migration only. Keep mobile toggle + tracked links. |
-| `SiteFooter` | `_components/SiteFooter.tsx` | rework | Current `border-t-2 border-[#CAFF4C]` violates §3 "accent never as full-section edge". Replace with `border-t border-marketing-border` + optional `accent-glow-sm` decoration over the logo block only. |
-| `Button` | `_components/Button.tsx` | migrate | 3 variants stay. Focus ring uses `ring-marketing-accent`. Min target 44x44 confirmed. |
-| `Card` | `_components/Card.tsx` | migrate | Unify radius to `rounded-lg`. Remove per-instance `border-[#1F1F23]` in favor of `border-marketing-border`. |
-| `Eyebrow` | `_components/Eyebrow.tsx` | migrate | Use `text-mono-label text-marketing-textMuted`. |
-| `SectionHeader` + `AccentText` | `_components/SectionHeader.tsx` | migrate | Consolidate: enforce one `AccentText` per header max. Default uses `display-lg`; prop for `display-md` in tighter sections. |
-| `AccentText` | (in SectionHeader) | migrate | Style: `text-marketing-accent`, no background. |
-| `Stat` | `_components/Stat.tsx` | migrate | Use `text-mono-stat` for value, `text-small text-marketing-textSecondary` for label. |
-| `Marquee` | `_components/Marquee.tsx` | migrate | Pause on focus/hover. Respect reduced motion (already done — verify). Delimit items with accent dots. |
-| `ProblemChart` | `_components/ProblemChart.tsx` | migrate | SVG colors from tokens. Ensure AA contrast on axis labels. |
-| `ComparisonTable` | `_components/ComparisonTable.tsx` | migrate | Mobile stacks into alternating cards. Use `bgSubtle` for the KairoFit column, subtle border for FitBod. |
-| `ProductScreens` + `PhoneFrame` | `_components/ProductScreens.tsx`, `PhoneFrame.tsx` | migrate | Keep the 4 screen variants. Token migration only. |
-| `HeroProductComposition` | `_components/HeroProductComposition.tsx` | migrate | Already correct structurally. Token migration. Add `aria-live="polite"` on the screen change so SR users hear the active screen name. |
-| `AdaptationPillars` | `_components/AdaptationPillars.tsx` | migrate | Correction from prior-plan: this already uses GSAP ScrollTrigger with `pin` and per-pillar `onEnter`/`onEnterBack`. No structural rework. Token migration only. |
-| `WaitlistForm` | `_components/WaitlistForm.tsx` | keep + harden | Keep `useAction` from `next-safe-action/hooks` (exposes `isExecuting`, `result.serverError`, `onSuccess`). Additions: `aria-live="polite"` error region, `autoComplete="email"`, client-side Zod pre-check to avoid a round-trip on malformed input, honeypot field for bot defense, explicit rate-limit messaging. |
-| `TrackedLink` | `_components/TrackedLink.tsx` | migrate | Already correct. Token migration if any literals. |
-| `MarketingAnalytics` | `_components/MarketingAnalytics.tsx` | keep | Event dispatch helper. No visual output. |
-| `MarketingOgImage` | `_components/MarketingOgImage.tsx` | migrate | Reads from `marketingTokens`. Verify it still renders after token centralization. |
-| `AccentText` (separate file if extracted) | — | n/a | Already inside SectionHeader. |
-| **NEW** `MarketingShell` | `_components/MarketingShell.tsx` | new | Wraps `<SiteHeader>`, `<main>`, `<SiteFooter>`. Replaces per-page repetition and guarantees semantic landmarks + skip link. |
-| **NEW** `SkipToContent` | `_components/SkipToContent.tsx` | new | Visually hidden focus-revealed skip link. WCAG 2.4.1. |
-| **NEW** `Reveal` | `_components/Reveal.tsx` | new | Framer Motion primitive for in-view fade+translate reveals. Respects reduced motion. Replaces scattered `whileInView` props. |
+| Component                                 | File                                               | Status        | Notes                                                                                                                                                                                                                                                                                                               |
+| ----------------------------------------- | -------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SiteHeader`                              | `_components/SiteHeader.tsx`                       | migrate       | Token migration only. Keep mobile toggle + tracked links.                                                                                                                                                                                                                                                           |
+| `SiteFooter`                              | `_components/SiteFooter.tsx`                       | rework        | Current `border-t-2 border-[#CAFF4C]` violates §3 "accent never as full-section edge". Replace with `border-t border-marketing-border` + optional `accent-glow-sm` decoration over the logo block only.                                                                                                             |
+| `Button`                                  | `_components/Button.tsx`                           | migrate       | 3 variants stay. Focus ring uses `ring-marketing-accent`. Min target 44x44 confirmed.                                                                                                                                                                                                                               |
+| `Card`                                    | `_components/Card.tsx`                             | migrate       | Unify radius to `rounded-lg`. Remove per-instance `border-[#1F1F23]` in favor of `border-marketing-border`.                                                                                                                                                                                                         |
+| `Eyebrow`                                 | `_components/Eyebrow.tsx`                          | migrate       | Use `text-mono-label text-marketing-textMuted`.                                                                                                                                                                                                                                                                     |
+| `SectionHeader` + `AccentText`            | `_components/SectionHeader.tsx`                    | migrate       | Consolidate: enforce one `AccentText` per header max. Default uses `display-lg`; prop for `display-md` in tighter sections.                                                                                                                                                                                         |
+| `AccentText`                              | (in SectionHeader)                                 | migrate       | Style: `text-marketing-accent`, no background.                                                                                                                                                                                                                                                                      |
+| `Stat`                                    | `_components/Stat.tsx`                             | migrate       | Use `text-mono-stat` for value, `text-small text-marketing-textSecondary` for label.                                                                                                                                                                                                                                |
+| `Marquee`                                 | `_components/Marquee.tsx`                          | migrate       | Pause on focus/hover. Respect reduced motion (already done — verify). Delimit items with accent dots.                                                                                                                                                                                                               |
+| `ProblemChart`                            | `_components/ProblemChart.tsx`                     | migrate       | SVG colors from tokens. Ensure AA contrast on axis labels.                                                                                                                                                                                                                                                          |
+| `ComparisonTable`                         | `_components/ComparisonTable.tsx`                  | migrate       | Mobile stacks into alternating cards. Use `bgSubtle` for the KairoFit column, subtle border for FitBod.                                                                                                                                                                                                             |
+| `ProductScreens` + `PhoneFrame`           | `_components/ProductScreens.tsx`, `PhoneFrame.tsx` | migrate       | Keep the 4 screen variants. Token migration only.                                                                                                                                                                                                                                                                   |
+| `HeroProductComposition`                  | `_components/HeroProductComposition.tsx`           | migrate       | Already correct structurally. Token migration. Add `aria-live="polite"` on the screen change so SR users hear the active screen name.                                                                                                                                                                               |
+| `AdaptationPillars`                       | `_components/AdaptationPillars.tsx`                | migrate       | Correction from prior-plan: this already uses GSAP ScrollTrigger with `pin` and per-pillar `onEnter`/`onEnterBack`. No structural rework. Token migration only.                                                                                                                                                     |
+| `WaitlistForm`                            | `_components/WaitlistForm.tsx`                     | keep + harden | Keep `useAction` from `next-safe-action/hooks` (exposes `isExecuting`, `result.serverError`, `onSuccess`). Additions: `aria-live="polite"` error region, `autoComplete="email"`, client-side Zod pre-check to avoid a round-trip on malformed input, honeypot field for bot defense, explicit rate-limit messaging. |
+| `TrackedLink`                             | `_components/TrackedLink.tsx`                      | migrate       | Already correct. Token migration if any literals.                                                                                                                                                                                                                                                                   |
+| `MarketingAnalytics`                      | `_components/MarketingAnalytics.tsx`               | keep          | Event dispatch helper. No visual output.                                                                                                                                                                                                                                                                            |
+| `MarketingOgImage`                        | `_components/MarketingOgImage.tsx`                 | migrate       | Reads from `marketingTokens`. Verify it still renders after token centralization.                                                                                                                                                                                                                                   |
+| `AccentText` (separate file if extracted) | —                                                  | n/a           | Already inside SectionHeader.                                                                                                                                                                                                                                                                                       |
+| **NEW** `MarketingShell`                  | `_components/MarketingShell.tsx`                   | new           | Wraps `<SiteHeader>`, `<main>`, `<SiteFooter>`. Replaces per-page repetition and guarantees semantic landmarks + skip link.                                                                                                                                                                                         |
+| **NEW** `SkipToContent`                   | `_components/SkipToContent.tsx`                    | new           | Visually hidden focus-revealed skip link. WCAG 2.4.1.                                                                                                                                                                                                                                                               |
+| **NEW** `Reveal`                          | `_components/Reveal.tsx`                           | new           | Framer Motion primitive for in-view fade+translate reveals. Respects reduced motion. Replaces scattered `whileInView` props.                                                                                                                                                                                        |
 
 ### Hook pattern decision
 
@@ -262,6 +263,7 @@ Ten sections, in order:
 10. **Footer** — `SiteFooter`, three-column grid, accent-muted logo block decoration only.
 
 Mobile reorder (sub-`lg`):
+
 - Hero: headline → sub → CTAs → Stats → `HeroProductComposition` below.
 - Problem: copy → `ProblemChart` below.
 - Adaptation Pillars: pillars only, GSAP pin disabled, `ProductScreen` inline per pillar.
@@ -342,23 +344,23 @@ Four target viewports audited per page: **375 (iPhone SE/13 mini), 768 (iPad por
 
 **Home**
 
-| Viewport | Behavior |
-| --- | --- |
-| 375 | Hero stack: H1 at 52px, sub, CTAs full-width stacked, Stats 1-col, product comp below. Marquee single-row. Pillars one-col stacked, GSAP pin disabled. Comparison as alternating cards. Founder: image above copy. |
-| 768 | Hero still stacked, Stats 3-col. Science cards 1-col → 2-col at 768. Comparison is 2-col table. Founder image + copy stack. |
-| 1024 | Hero adopts `lg:` two-column; pillars adopt pinned right-side scrollytelling. Science cards 3-col. Comparison 2-col table with wider gutter. |
-| 1440 | Full layout, container centered, section padding at desktop max. |
+| Viewport | Behavior                                                                                                                                                                                                           |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 375      | Hero stack: H1 at 52px, sub, CTAs full-width stacked, Stats 1-col, product comp below. Marquee single-row. Pillars one-col stacked, GSAP pin disabled. Comparison as alternating cards. Founder: image above copy. |
+| 768      | Hero still stacked, Stats 3-col. Science cards 1-col → 2-col at 768. Comparison is 2-col table. Founder image + copy stack.                                                                                        |
+| 1024     | Hero adopts `lg:` two-column; pillars adopt pinned right-side scrollytelling. Science cards 3-col. Comparison 2-col table with wider gutter.                                                                       |
+| 1440     | Full layout, container centered, section padding at desktop max.                                                                                                                                                   |
 
 **/science**
 
-| Viewport | Behavior |
-| --- | --- |
-| 375 | Single column article, TOC collapses into a `<details>` at the top. |
-| 768 | Article stays centered, body 640px max. |
-| 1024 | TOC sticky left rail, article body centered. |
-| 1440 | Same as 1024 with wider gutters. |
+| Viewport | Behavior                                                            |
+| -------- | ------------------------------------------------------------------- |
+| 375      | Single column article, TOC collapses into a `<details>` at the top. |
+| 768      | Article stays centered, body 640px max.                             |
+| 1024     | TOC sticky left rail, article body centered.                        |
+| 1440     | Same as 1024 with wider gutters.                                    |
 
-**/founder, /tour, /waitlist/thank-you, /legal/***: single responsive linear flow, no
+**/founder, /tour, /waitlist/thank-you, /legal/\***: single responsive linear flow, no
 complex grid reshuffle. Tour's scrollytelling pins right-column product screen at `lg:+`
 only.
 
@@ -385,15 +387,15 @@ only.
 
 Manual audit required for each pair. Spec-stage assumptions:
 
-| Foreground | Background | Ratio (expected) | WCAG |
-| --- | --- | --- | --- |
-| `#F5F5F4` | `#0A0A0B` | ~19:1 | AAA all sizes |
-| `#F5F5F4` | `#111113` | ~17:1 | AAA all sizes |
-| `#A1A19E` | `#0A0A0B` | ~7.5:1 | AAA body |
-| `#A1A19E` | `#111113` | ~6.8:1 | AA body |
-| `#6B6B68` | `#0A0A0B` | ~4.8:1 | AA large text only |
-| `#CAFF4C` | `#0A0A0B` | ~14:1 | AAA all sizes |
-| `#0A0A0B` | `#CAFF4C` | ~14:1 | AAA (used on primary button) |
+| Foreground | Background | Ratio (expected) | WCAG                         |
+| ---------- | ---------- | ---------------- | ---------------------------- |
+| `#F5F5F4`  | `#0A0A0B`  | ~19:1            | AAA all sizes                |
+| `#F5F5F4`  | `#111113`  | ~17:1            | AAA all sizes                |
+| `#A1A19E`  | `#0A0A0B`  | ~7.5:1           | AAA body                     |
+| `#A1A19E`  | `#111113`  | ~6.8:1           | AA body                      |
+| `#6B6B68`  | `#0A0A0B`  | ~4.8:1           | AA large text only           |
+| `#CAFF4C`  | `#0A0A0B`  | ~14:1            | AAA all sizes                |
+| `#0A0A0B`  | `#CAFF4C`  | ~14:1            | AAA (used on primary button) |
 
 Stage 2 runs axe on every route and fixes anything short of AA body. `#6B6B68` is only
 allowed for `mono-label` eyebrows (12px uppercase tracking) and metadata chips, never for
@@ -455,14 +457,14 @@ injuries".
 
 ### Structured data (JSON-LD)
 
-| Route | Schema type |
-| --- | --- |
-| `/` | `SoftwareApplication` (already in place) |
-| `/science` | `Article` with `author: { @type: Organization, name: "KairoFit" }`, `datePublished`, `dateModified` |
-| `/founder` | `Person` with name, jobTitle "Founder of KairoFit", sameAs Instagram + email link |
-| `/tour` | `HowTo` with 7 step entries from `tourSteps` |
-| `/waitlist/thank-you` | `WebPage` |
-| `/legal/*` | `WebPage` with `isPartOf` linking to WebSite |
+| Route                 | Schema type                                                                                         |
+| --------------------- | --------------------------------------------------------------------------------------------------- |
+| `/`                   | `SoftwareApplication` (already in place)                                                            |
+| `/science`            | `Article` with `author: { @type: Organization, name: "KairoFit" }`, `datePublished`, `dateModified` |
+| `/founder`            | `Person` with name, jobTitle "Founder of KairoFit", sameAs Instagram + email link                   |
+| `/tour`               | `HowTo` with 7 step entries from `tourSteps`                                                        |
+| `/waitlist/thank-you` | `WebPage`                                                                                           |
+| `/legal/*`            | `WebPage` with `isPartOf` linking to WebSite                                                        |
 
 A shared `StructuredData.tsx` helper renders the `<script type="application/ld+json">` tag
 from a typed input. Stage 2 builds this helper.
@@ -560,6 +562,7 @@ Five atomic milestones. Each is independently reviewable and CI-verifiable.
 ### Milestone A — Token foundation (no visual regressions)
 
 Deliverables:
+
 - `tailwind.config.ts` populated per Section 2.
 - `src/app/globals.css` exports CSS custom properties mirroring Tailwind tokens.
 - `_tokens.ts` trimmed to TS-facing exports only (remove `marketingClassNames`).
@@ -567,6 +570,7 @@ Deliverables:
 - No component or page markup changes yet.
 
 Acceptance criteria:
+
 - `npm run typecheck && npm run lint && npm run format:check && npm test && npm run build`
   green.
 - `npm run test:e2e marketing-site.spec.ts` still passes (existing spec).
@@ -575,6 +579,7 @@ Acceptance criteria:
 ### Milestone B — Shell, primitives, and homepage migration
 
 Deliverables:
+
 - New components: `MarketingShell`, `SkipToContent`, `Reveal`, `StructuredData`.
 - `SiteHeader`, `SiteFooter`, `Button`, `Card`, `Eyebrow`, `SectionHeader`, `Stat`,
   `HeroProductComposition`, `AdaptationPillars`, `Marquee`, `ProblemChart`, `ComparisonTable`,
@@ -584,6 +589,7 @@ Deliverables:
 - `SiteFooter` accent top border replaced per spec.
 
 Acceptance criteria:
+
 - `rg 'text-\[[0-9]' src/app/\(marketing\)` returns zero matches.
 - `rg 'bg-\[#' src/app/\(marketing\)` returns zero matches.
 - `rg 'text-\[#' src/app/\(marketing\)` returns zero matches.
@@ -594,6 +600,7 @@ Acceptance criteria:
 ### Milestone C — Subpages and waitlist hardening
 
 Deliverables:
+
 - `/science`, `/founder`, `/tour`, `/waitlist/thank-you`, `/legal/terms`, `/legal/privacy`,
   `/not-found` — all migrated and wrapped in `MarketingShell`.
 - `/tour` pinned scrollytelling at `lg:+` via GSAP ScrollTrigger.
@@ -603,6 +610,7 @@ Deliverables:
 - `StructuredData` usage per route (Article, Person, HowTo, WebPage).
 
 Acceptance criteria:
+
 - Zero arbitrary color/size values in any `(marketing)/**` page.
 - All 7 pages pass axe with zero violations.
 - Lighthouse mobile ≥ 90, desktop ≥ 95 on every marketing route.
@@ -613,6 +621,7 @@ Acceptance criteria:
 ### Milestone D — Responsive audit and accessibility hardening
 
 Deliverables:
+
 - Manual breakpoint audit at 375/768/1024/1440 per page with fixes committed.
 - Keyboard navigation audit per page with fixes.
 - Reduced motion verified per page.
@@ -620,6 +629,7 @@ Deliverables:
 - Screenshot artifacts captured under `docs/dev/plans/screenshots/redesign/` for the record.
 
 Acceptance criteria:
+
 - Zero horizontal overflow at any viewport.
 - All interactive elements visibly focused.
 - All body copy ≥ AA contrast.
@@ -629,6 +639,7 @@ Acceptance criteria:
 ### Milestone E — Tests, SEO, performance, PR
 
 Deliverables:
+
 - `e2e/marketing-site.spec.ts` expanded per Section 7 + Milestone C.
 - Unit tests for `Reveal`, `StructuredData`, `MarketingShell`, token drift guard.
 - `robots.ts` + `sitemap.ts` cover every marketing route with appropriate changefreq.
@@ -636,6 +647,7 @@ Deliverables:
 - PR opened against `main` with full summary + screenshots + Lighthouse numbers.
 
 Acceptance criteria:
+
 - `npm run test:e2e` green at 375/768/1024/1440.
 - Unit test coverage for new components ≥ 80%.
 - Lighthouse mobile ≥ 90, desktop ≥ 95, LCP < 2.5s, CLS < 0.05, INP < 200ms on every route.
@@ -646,13 +658,13 @@ Acceptance criteria:
 
 ## Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-| --- | --- | --- | --- |
-| Tailwind token migration introduces visual regressions invisible in diff review | Medium | High (visible on production) | Milestone A ships token-only with zero markup changes; capture before/after screenshots of every route at 1440 and diff. Only then do components migrate in Milestone B. |
-| GSAP ScrollTrigger pinning interferes with mobile layout or reduced-motion users | Medium | High (breaks the pillar section on phones) | Gate ScrollTrigger behind `matchMedia('(min-width: 1024px)')` and `useReducedMotion()` short-circuit. Verified pattern already exists in `AdaptationPillars`. Add explicit e2e test at 375 viewport that no pinning occurs. |
-| Waitlist hardening changes (honeypot, aria-live) regress the existing happy-path submission | Low | High (blocks the primary business objective) | Add e2e happy-path test before starting changes; keep server action signature unchanged; honeypot field is additive only. |
-| Axe or Lighthouse reveals issues not visible in local testing (e.g. font rendering, focus ring on Windows Chrome) | Medium | Medium (delays merge) | Run Lighthouse CI in mobile + desktop profiles during Milestone E, not at the end. Budget a short fix-loop window. |
-| Bundle size regresses from new primitives (Reveal, StructuredData) or from GSAP | Low | Medium (violates <200kb gz budget) | GSAP is already dynamically imported in `AdaptationPillars`. Keep new primitives small and server-renderable. Run `next build` with bundle analyzer at end of Milestone B and C. |
+| Risk                                                                                                              | Likelihood | Impact                                       | Mitigation                                                                                                                                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tailwind token migration introduces visual regressions invisible in diff review                                   | Medium     | High (visible on production)                 | Milestone A ships token-only with zero markup changes; capture before/after screenshots of every route at 1440 and diff. Only then do components migrate in Milestone B.                                                    |
+| GSAP ScrollTrigger pinning interferes with mobile layout or reduced-motion users                                  | Medium     | High (breaks the pillar section on phones)   | Gate ScrollTrigger behind `matchMedia('(min-width: 1024px)')` and `useReducedMotion()` short-circuit. Verified pattern already exists in `AdaptationPillars`. Add explicit e2e test at 375 viewport that no pinning occurs. |
+| Waitlist hardening changes (honeypot, aria-live) regress the existing happy-path submission                       | Low        | High (blocks the primary business objective) | Add e2e happy-path test before starting changes; keep server action signature unchanged; honeypot field is additive only.                                                                                                   |
+| Axe or Lighthouse reveals issues not visible in local testing (e.g. font rendering, focus ring on Windows Chrome) | Medium     | Medium (delays merge)                        | Run Lighthouse CI in mobile + desktop profiles during Milestone E, not at the end. Budget a short fix-loop window.                                                                                                          |
+| Bundle size regresses from new primitives (Reveal, StructuredData) or from GSAP                                   | Low        | Medium (violates <200kb gz budget)           | GSAP is already dynamically imported in `AdaptationPillars`. Keep new primitives small and server-renderable. Run `next build` with bundle analyzer at end of Milestone B and C.                                            |
 
 ---
 
@@ -686,7 +698,7 @@ Complete when all of the following pass:
 - [ ] Lighthouse mobile ≥ 90 and desktop ≥ 95 on every marketing route; LCP < 2.5s,
       CLS < 0.05, INP < 200ms.
 - [ ] `npm run typecheck && npm run lint && npm run lint:kiro && npm run format:check &&
-      npm test && npm run test:e2e && npm run build` — all green.
+    npm test && npm run test:e2e && npm run build` — all green.
 - [ ] PR merged against `main` with before/after screenshots attached.
 
 ---
