@@ -3,9 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0b;
-  --foreground: #f5f5f4;
-  --accent: #caff4c;
+  --marketing-bg: #0a0a0b;
+  --marketing-bg-elevated: #111113;
+  --marketing-bg-subtle: #17171a;
+  --marketing-border: #1f1f23;
+  --marketing-border-strong: #2a2a2f;
+  --marketing-text-primary: #f5f5f4;
+  --marketing-text-secondary: #a1a19e;
+  --marketing-text-muted: #6b6b68;
+  --marketing-accent: #caff4c;
+  --marketing-accent-muted: rgba(202, 255, 76, 0.15);
+  --marketing-accent-on: #0a0a0b;
+  --marketing-success: #10b981;
+  --marketing-danger: #ef4444;
+
+  --background: var(--marketing-bg);
+  --foreground: var(--marketing-text-primary);
+  --accent: var(--marketing-accent);
   color-scheme: dark;
 }
 
@@ -32,7 +46,7 @@ body {
 
 ::selection {
   background: rgba(202, 255, 76, 0.85);
-  color: #0a0a0b;
+  color: var(--marketing-bg);
 }
 
 a {
