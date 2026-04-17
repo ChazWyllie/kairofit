@@ -389,6 +389,7 @@ export interface ActiveWorkoutState {
     seconds_remaining: number
     total_seconds: number
     exercise_name: string | null
+    science_rationale?: string
   }
 }
 
