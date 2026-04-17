@@ -1,13 +1,3 @@
-/**
- * Root Layout
- *
- * Required by Next.js App Router - every app needs exactly one root layout.
- * Provides the HTML shell: <html>, <body>, global fonts, and dark background.
- *
- * Route group layouts (auth), (app), and onboarding/ layer on top of this.
- * This file does NOT include the app shell nav - that lives in (app)/layout.tsx.
- */
-
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { PostHogProvider } from '@/components/providers/PostHogProvider'
@@ -25,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'KairoFit',
-  description: 'Research-backed AI workout programming. Now you know why.',
+  description: 'KairoFit marketing site and product platform.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

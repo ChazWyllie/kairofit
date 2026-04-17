@@ -166,9 +166,12 @@ export const onboardingStateSchema = z.object({
   activity_level: onboardingLifestyleSchema.shape.activity_level.optional(),
   obstacle: onboardingLifestyleSchema.shape.obstacle.optional(),
   injuries: onboardingInjuriesSchema.shape.injuries.optional(),
-  height_cm: onboardingBodyCompositionSchema.shape.height_cm.optional(),
-  weight_kg: onboardingBodyCompositionSchema.shape.weight_kg.optional(),
-  body_fat_pct: onboardingBodyCompositionSchema.shape.body_fat_pct.nullable().optional(),
+  // Biometric fields: lenient ranges in this state-snapshot schema.
+  // Strict per-screen validation lives in onboardingBodyCompositionSchema.
+  // These fields are stored in body_measurements (Phase 10), not profiles.
+  height_cm: z.number().positive().max(300).nullable().optional(),
+  weight_kg: z.number().positive().max(500).nullable().optional(),
+  body_fat_pct: z.number().min(1).max(70).nullable().optional(),
   why_now: onboardingWhyNowSchema.shape.why_now.optional(),
   psych_scores: onboardingPsychSchema.shape.psych_scores.optional(),
   archetype: z
@@ -201,6 +204,15 @@ export const onboardingStateSchema = z.object({
 
 export const deleteAccountSchema = z.object({
   confirmation: z.literal('DELETE'),
+})
+
+export const waitlistJoinSchema = z.object({
+  email: z.string().email(),
+  source: z.string().max(100).optional(),
+  referrer: z.string().max(2048).optional(),
+  utm_source: z.string().max(255).optional(),
+  utm_medium: z.string().max(255).optional(),
+  utm_campaign: z.string().max(255).optional(),
 })
 
 export const updateProfileSchema = z.object({
@@ -245,5 +257,6 @@ export const RATE_LIMIT_KEYS = {
   AI_INTAKE: 'ai:intake',
   AI_SWAP: 'ai:swap',
   AUTH: 'auth',
+  WAITLIST: 'waitlist',
   GENERAL: 'general',
 } as const

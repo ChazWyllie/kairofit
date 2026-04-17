@@ -1,12 +1,3 @@
-/**
- * Global Error Boundary
- *
- * Catches errors in the root layout itself - the last line of defense.
- * Must define its own <html> and <body> since the root layout may have crashed.
- *
- * This is a Client Component by requirement (Next.js error boundaries must be).
- */
-
 'use client'
 
 import { useEffect } from 'react'
@@ -19,21 +10,23 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    // TODO: pipe to Sentry once @sentry/nextjs is installed (Phase A2)
     console.error('Global error boundary caught:', error)
   }, [error])
 
   return (
     <html lang="en" className="dark">
-      <body className="flex min-h-screen items-center justify-center bg-[#0A0A0B] text-[#F5F5F4] antialiased">
-        <div className="mx-auto max-w-md px-6 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Something went wrong</h1>
-          <p className="mt-3 text-[#A1A19E]">
-            An unexpected error occurred. Your workout data is safe.
+      <body className="flex min-h-screen items-center justify-center bg-[#050505] px-6 text-[#F5F5F4] antialiased">
+        <div className="max-w-md border border-[#1A1A1A] bg-[#0A0A0A] p-10 text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#DC2626]">Error</p>
+          <h1 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-white">
+            Something went wrong
+          </h1>
+          <p className="mt-4 text-sm leading-7 text-[#999999]">
+            An unexpected error occurred while rendering this page.
           </p>
           <button
             onClick={reset}
-            className="mt-6 rounded-lg bg-[#6366F1] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#5558E6]"
+            className="mt-8 inline-flex min-h-11 items-center justify-center bg-[#DC2626] px-6 text-[12px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#EF4444]"
           >
             Try again
           </button>

@@ -69,6 +69,18 @@ export const EVENTS = {
   ACCOUNT_DELETED: 'ACCOUNT_DELETED',
 
   // ============================================================
+  // MARKETING
+  // ============================================================
+  WAITLIST_PAGE_VIEWED: 'WAITLIST_PAGE_VIEWED',
+  WAITLIST_CTA_CLICKED: 'WAITLIST_CTA_CLICKED',
+  WAITLIST_SUBMITTED: 'WAITLIST_SUBMITTED',
+  WAITLIST_FAILED: 'WAITLIST_FAILED',
+  SCIENCE_LINK_CLICKED: 'SCIENCE_LINK_CLICKED',
+  FOUNDER_LINK_CLICKED: 'FOUNDER_LINK_CLICKED',
+  TOUR_LINK_CLICKED: 'TOUR_LINK_CLICKED',
+  INSTAGRAM_CLICKED: 'INSTAGRAM_CLICKED',
+
+  // ============================================================
   // SOCIAL
   // ============================================================
   WORKOUT_SHARED: 'WORKOUT_SHARED',
