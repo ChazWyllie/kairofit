@@ -17,6 +17,13 @@ dist/
 coverage/
 playwright-report/
 test-results/
+.playwright-mcp/
+
+# Local screenshots and browser-captured artifacts
+*.png
+!public/**/*.png
+!src/**/*.png
+!docs/**/*.png
 
 # Misc
 .DS_Store

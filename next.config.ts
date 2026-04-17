@@ -1,35 +1,17 @@
-/**
- * Next.js Configuration
- *
- * Serwist PWA plugin is required for the service worker to work.
- * Without withSerwist(), sw.ts cannot access self.__SW_MANIFEST and throws.
- * Offline workout logging (a core differentiator) is entirely non-functional
- * without this file.
- *
- * Why Serwist instead of next-pwa:
- * next-pwa conflicts with Turbopack (the default in Next.js 15).
- * Only @serwist/next is Turbopack-compatible.
- */
-
 import type { NextConfig } from 'next'
-import withSerwist from '@serwist/next'
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      // ExerciseDB GIFs - the exercise library foundation
       { protocol: 'https', hostname: 'v2.exercisedb.io' },
       { protocol: 'https', hostname: 'exercisedb.io' },
-      // Supabase storage - user avatars and progress photos
       { protocol: 'https', hostname: '*.supabase.co' },
+      { protocol: 'https', hostname: 'chazwyllie.com' },
     ],
   },
-  // Security headers (see docs/security/SECURITY.md for full rationale)
   async headers() {
     const isDev = process.env.NODE_ENV === 'development'
 
-    // unsafe-eval is required by Next.js hot reload in development.
-    // In production it is excluded - shipping unsafe-eval defeats XSS protection.
     const scriptSrc = isDev
       ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
       : "script-src 'self' 'unsafe-inline'"
@@ -73,8 +55,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withSerwist({
-  swSrc: 'src/app/sw.ts', // Service worker source
-  swDest: 'public/sw.js', // Output location Serwist expects
-  disable: process.env.NODE_ENV === 'development', // Disable in dev for faster HMR
-})(nextConfig)
+export default nextConfig

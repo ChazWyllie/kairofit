@@ -1,14 +1,3 @@
-/**
- * Sitemap
- *
- * Lists all public, crawlable pages for search engines.
- * Authenticated routes (dashboard, workout) are excluded - those are
- * behind auth and provide no SEO value.
- *
- * KairoFit is a PWA - web SEO is the #1 acquisition channel.
- * This file is critical for Google indexing.
- */
-
 import type { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -20,25 +9,43 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: baseUrl,
       lastModified: now,
       changeFrequency: 'weekly',
-      priority: 1.0,
+      priority: 1,
     },
     {
-      url: `${baseUrl}/onboarding`,
+      url: `${baseUrl}/science`,
       lastModified: now,
       changeFrequency: 'monthly',
-      priority: 0.9,
+      priority: 0.8,
     },
     {
-      url: `${baseUrl}/auth/login`,
+      url: `${baseUrl}/founder`,
       lastModified: now,
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.7,
     },
     {
-      url: `${baseUrl}/auth/signup`,
+      url: `${baseUrl}/tour`,
       lastModified: now,
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/waitlist/thank-you`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/legal/privacy`,
+      lastModified: now,
+      changeFrequency: 'yearly',
+      priority: 0.2,
+    },
+    {
+      url: `${baseUrl}/legal/terms`,
+      lastModified: now,
+      changeFrequency: 'yearly',
+      priority: 0.2,
     },
   ]
 }

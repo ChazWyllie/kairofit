@@ -1,13 +1,3 @@
-/**
- * robots.txt
- *
- * Allows all crawlers to index all public pages.
- * Points to the sitemap for discovery.
- *
- * Uses NEXT_PUBLIC_APP_URL so the sitemap URL resolves
- * to the correct domain in both dev and production.
- */
-
 import type { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
@@ -18,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/dashboard/', '/workout/', '/auth/'],
+        disallow: ['/api/'],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
