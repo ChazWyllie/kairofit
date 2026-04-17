@@ -143,6 +143,8 @@ are scored against weighted profiles and the highest wins. See `assignArchetype(
 
 ## Landing Page
 
+> Note: the live root route now serves the internal showcase directory at `/`. The landing-page structure below remains the canonical design reference for the Signal baseline and future public landing work.
+
 File: `src/app/page.tsx`
 Route: `/` (public, no auth required)
 
@@ -440,3 +442,13 @@ Before shipping any UI change:
 - [ ] New Supabase queries specify columns, not `select('*')`
 - [ ] Kiro voice copy reviewed against `skills/kiro-output-auditor/SKILL.md`
 - [ ] Color contrast passes WCAG AA on all text
+
+## Showcase Variants
+
+The internal showcase directory lives at `/` and links to three full-page previews under `/showcase/1`, `/showcase/2`, and `/showcase/3`.
+
+- `Signal` is the closest expression of the canonical KairoFit design system.
+- `Edge` is an internal orange-led exploration for stronger conversion framing.
+- `Atlas` is an internal violet-led exploration for editorial authority.
+- Options 2 and 3 do not replace the brand system. They test layout and emphasis patterns while keeping KairoFit product truth and copy rules intact.
+- Future showcase generations should inherit approved patterns from `docs/dev/plans/UI_PREFERENCES.md`.
