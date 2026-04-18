@@ -44,25 +44,25 @@ const softwareApplicationStructuredData = {
 
 export default function MarketingHomePage() {
   return (
-    <main className="bg-[#0A0A0B] text-[#F5F5F4]">
+    <main className="bg-marketing-bg text-marketing-text-primary">
       <MarketingAnalytics event="WAITLIST_PAGE_VIEWED" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationStructuredData) }}
       />
 
-      <section className="relative overflow-hidden border-b border-[#1F1F23]">
+      <section className="relative overflow-hidden border-b border-marketing-border">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:92px_92px] opacity-35" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[radial-gradient(circle_at_bottom,rgba(202,255,76,0.12),transparent_72%)]" />
         <div className="relative mx-auto grid min-h-[calc(100vh-80px)] max-w-[1280px] items-center gap-14 px-6 py-20 md:px-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(340px,0.8fr)] lg:px-10 lg:py-24">
           <div>
-            <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-[#CAFF4C]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-marketing-accent">
               KAIROFIT // CLOSED BETA
             </p>
-            <h1 className="mt-6 max-w-4xl text-[52px] font-semibold leading-[0.98] tracking-[-0.05em] text-[#F5F5F4] sm:text-[72px]">
+            <h1 className="mt-6 max-w-4xl text-[52px] font-semibold leading-[0.98] tracking-[-0.05em] text-marketing-text-primary sm:text-[72px]">
               Fitness that adapts <AccentText>when life happens.</AccentText>
             </h1>
-            <p className="mt-8 max-w-2xl text-xl leading-9 text-[#A1A19E]">
+            <p className="mt-8 max-w-2xl text-xl leading-9 text-marketing-text-secondary">
               Tell Kairo your constraints. Get a plan that fits today, not the perfect version of
               your week that never shows up.
             </p>
@@ -86,7 +86,7 @@ export default function MarketingHomePage() {
         </div>
       </section>
 
-      <section className="border-b border-[#1F1F23]">
+      <section className="border-b border-marketing-border">
         <Marquee items={marqueeItems} />
       </section>
 
@@ -102,7 +102,7 @@ export default function MarketingHomePage() {
             }
             sub="Most fitness apps assume an idealized week that never happens. They hand you a rigid 12-week program, then treat missed days like a personal failure instead of a design failure."
           />
-          <div className="mt-8 max-w-2xl space-y-6 text-lg leading-8 text-[#A1A19E]">
+          <div className="mt-8 max-w-2xl space-y-6 text-lg leading-8 text-marketing-text-secondary">
             <p>
               Real weeks have travel. Bad sleep. Work deadlines. Old injuries flaring up. Gyms
               closed for a holiday. A plan that cannot handle any of this was never actually a plan.
@@ -117,7 +117,7 @@ export default function MarketingHomePage() {
         <ProblemChart />
       </section>
 
-      <section id="how-it-adapts" className="border-y border-[#1F1F23] bg-[#0D0D10]">
+      <section id="how-it-adapts" className="border-y border-marketing-border bg-[#0D0D10]">
         <div className="mx-auto max-w-[1280px] px-6 py-24 md:px-8 lg:px-10 lg:py-40">
           <SectionHeader
             eyebrow="THE PRODUCT"
@@ -149,17 +149,17 @@ export default function MarketingHomePage() {
           <div className="space-y-6">
             {kiroExamples.map((example) => (
               <div key={example.user} className="space-y-3">
-                <div className="ml-auto max-w-[88%] rounded-[24px] bg-[#CAFF4C] px-5 py-4 text-base leading-7 text-[#0A0A0B]">
+                <div className="ml-auto max-w-[88%] rounded-[24px] bg-marketing-accent px-5 py-4 text-base leading-7 text-marketing-accent-on">
                   {example.user}
                 </div>
-                <div className="max-w-[92%] rounded-[28px] border border-[#1F1F23] bg-[#17171A] px-5 py-4 text-base leading-7 text-[#F5F5F4]">
+                <div className="max-w-[92%] rounded-[28px] border border-marketing-border bg-marketing-bg-subtle px-5 py-4 text-base leading-7 text-marketing-text-primary">
                   {example.kiro}
                 </div>
               </div>
             ))}
           </div>
         </Card>
-        <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-[#A1A19E]">
+        <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-marketing-text-secondary">
           Every answer is backed by peer-reviewed research. Every swap has a reason. Every number on
           your screen came from somewhere.
         </p>
@@ -172,7 +172,7 @@ export default function MarketingHomePage() {
         </div>
       </section>
 
-      <section className="border-y border-[#1F1F23] bg-[#0D0D10]">
+      <section className="border-y border-marketing-border bg-[#0D0D10]">
         <div className="mx-auto max-w-[1280px] px-6 py-24 md:px-8 lg:px-10 lg:py-40">
           <SectionHeader
             eyebrow="THE FOUNDATION"
@@ -187,14 +187,16 @@ export default function MarketingHomePage() {
             {scienceCards.map((card) => (
               <Card key={card.id} className="flex h-full flex-col p-6">
                 <div className="h-10 w-10 rounded-full bg-[#CAFF4C14]" />
-                <p className="mt-5 font-mono text-[12px] uppercase tracking-[0.16em] text-[#6B6B68]">
+                <p className="mt-5 font-mono text-[12px] uppercase tracking-[0.16em] text-marketing-text-muted">
                   {card.citation}
                 </p>
-                <h3 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-[#F5F5F4]">
+                <h3 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-marketing-text-primary">
                   {card.title}
                 </h3>
-                <p className="mt-4 flex-1 text-base leading-8 text-[#A1A19E]">{card.body}</p>
-                <p className="mt-6 border-t border-[#1F1F23] pt-4 text-sm leading-7 text-[#F5F5F4]">
+                <p className="mt-4 flex-1 text-base leading-8 text-marketing-text-secondary">
+                  {card.body}
+                </p>
+                <p className="mt-6 border-t border-marketing-border pt-4 text-sm leading-7 text-marketing-text-primary">
                   {card.footer}
                 </p>
               </Card>
@@ -225,9 +227,9 @@ export default function MarketingHomePage() {
         </div>
       </section>
 
-      <section className="border-y border-[#1F1F23] bg-[#0D0D10]">
+      <section className="border-y border-marketing-border bg-[#0D0D10]">
         <div className="mx-auto grid max-w-[1280px] gap-14 px-6 py-24 md:px-8 lg:grid-cols-[400px_minmax(0,1fr)] lg:px-10 lg:py-40">
-          <div className="relative overflow-hidden rounded-[32px] border border-[#2A2A2F] bg-[#111113]">
+          <div className="relative overflow-hidden rounded-xl border border-marketing-border-strong bg-marketing-bg-elevated">
             <Image
               src="https://chazwyllie.com/assets/images/profile-photo.jpg"
               alt="Chaz Wyllie, founder of KairoFit"
@@ -235,7 +237,7 @@ export default function MarketingHomePage() {
               height={960}
               className="h-full w-full object-cover grayscale"
             />
-            <div className="absolute inset-0 border-2 border-[#CAFF4C]/30" />
+            <div className="absolute inset-0 border-2 border-marketing-accent/30" />
           </div>
           <div>
             <SectionHeader
@@ -247,7 +249,7 @@ export default function MarketingHomePage() {
               }
               sub="Balancing a CS degree at ASU with consistent training made one thing obvious: the plans that survive are the ones that bend without breaking."
             />
-            <div className="mt-8 space-y-6 text-lg leading-8 text-[#A1A19E]">
+            <div className="mt-8 space-y-6 text-lg leading-8 text-marketing-text-secondary">
               <p>
                 I am Chaz. I built KairoFit because I watched too many people start strong, then
                 fall off for reasons that had nothing to do with effort. Their plan could not
@@ -267,7 +269,7 @@ export default function MarketingHomePage() {
               {founderCredentials.map((credential) => (
                 <span
                   key={credential}
-                  className="rounded-full border border-[#1F1F23] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-[#6B6B68]"
+                  className="rounded-full border border-marketing-border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted"
                 >
                   {credential}
                 </span>
@@ -298,10 +300,10 @@ export default function MarketingHomePage() {
           sub="KairoFit is in closed beta. We are onboarding users in small waves to keep programming quality high. Join the waitlist and we will reach out when a slot opens."
           className="mx-auto text-center"
         />
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#A1A19E]">
+        <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-marketing-text-secondary">
           No spam. No drip funnel. One email when you are in.
         </p>
-        <div className="mt-12 rounded-[36px] border border-[#1F1F23] bg-[#111113] p-6 md:p-8">
+        <div className="mt-12 rounded-[36px] border border-marketing-border bg-marketing-bg-elevated p-6 md:p-8">
           <Suspense fallback={<div className="min-h-[116px]" />}>
             <WaitlistForm />
           </Suspense>

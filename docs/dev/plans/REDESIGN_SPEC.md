@@ -698,7 +698,7 @@ Complete when all of the following pass:
 - [ ] Lighthouse mobile ≥ 90 and desktop ≥ 95 on every marketing route; LCP < 2.5s,
       CLS < 0.05, INP < 200ms.
 - [ ] `npm run typecheck && npm run lint && npm run lint:kiro && npm run format:check &&
-    npm test && npm run test:e2e && npm run build` — all green.
+  npm test && npm run test:e2e && npm run build` — all green.
 - [ ] PR merged against `main` with before/after screenshots attached.
 
 ---

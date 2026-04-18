@@ -28,7 +28,7 @@ export function ProductScreen({ screen }: { screen: ScreenName }) {
 
   return (
     <PhoneFrame>
-      <div className="relative overflow-hidden bg-[#0C0D10] p-4 text-[#F5F5F4]">
+      <div className="relative overflow-hidden bg-[#0C0D10] p-4 text-marketing-text-primary">
         <div className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top,rgba(202,255,76,0.18),transparent_72%)]" />
         <div className="relative z-10 min-h-[620px]">
           <AnimatePresence mode="wait">
@@ -60,13 +60,15 @@ function ScreenTop({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="mb-6 flex items-start justify-between gap-4">
       <div>
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#6B6B68]">
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
           KairoFit // Today
         </p>
         <h3 className="mt-3 text-2xl font-semibold tracking-[-0.03em]">{title}</h3>
-        <p className="mt-2 max-w-[240px] text-sm leading-6 text-[#A1A19E]">{subtitle}</p>
+        <p className="mt-2 max-w-[240px] text-sm leading-6 text-marketing-text-secondary">
+          {subtitle}
+        </p>
       </div>
-      <div className="rounded-full border border-[#2A2A2F] bg-[#141518] px-3 py-1 font-mono text-[11px] text-[#CAFF4C]">
+      <div className="rounded-full border border-marketing-border-strong bg-[#141518] px-3 py-1 font-mono text-[11px] text-marketing-accent">
         Active
       </div>
     </div>
@@ -74,7 +76,9 @@ function ScreenTop({ title, subtitle }: { title: string; subtitle: string }) {
 }
 
 function Surface({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-[24px] border border-[#1F1F23] bg-[#121316] p-4">{children}</div>
+  return (
+    <div className="rounded-[24px] border border-marketing-border bg-[#121316] p-4">{children}</div>
+  )
 }
 
 function TodayScreen() {
@@ -88,8 +92,8 @@ function TodayScreen() {
               key={state}
               className={`rounded-[18px] border px-4 py-5 text-left text-sm ${
                 index === 2
-                  ? 'border-[#CAFF4C] bg-[#CAFF4C14] text-[#F5F5F4]'
-                  : 'border-[#1F1F23] bg-[#0E0F12] text-[#A1A19E]'
+                  ? 'border-marketing-accent bg-[#CAFF4C14] text-marketing-text-primary'
+                  : 'border-marketing-border bg-[#0E0F12] text-marketing-text-secondary'
               }`}
             >
               {state}
@@ -99,7 +103,7 @@ function TodayScreen() {
       </Surface>
       <div className="mt-4 grid gap-4">
         <Surface>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#6B6B68]">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
             Nutrition today
           </p>
           <div className="mt-4 grid grid-cols-3 gap-3">
@@ -109,7 +113,7 @@ function TodayScreen() {
           </div>
         </Surface>
         <Surface>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#6B6B68]">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
             Workout options
           </p>
           <div className="mt-4 space-y-3">
@@ -136,15 +140,15 @@ function QuickLogScreen() {
           ].map(([label, value]) => (
             <div
               key={label}
-              className="flex items-center justify-between rounded-[18px] border border-[#1F1F23] bg-[#0D0E11] px-4 py-3"
+              className="flex items-center justify-between rounded-[18px] border border-marketing-border bg-[#0D0E11] px-4 py-3"
             >
-              <span className="text-sm text-[#F5F5F4]">{label}</span>
-              <span className="font-mono text-sm text-[#CAFF4C]">{value}</span>
+              <span className="text-sm text-marketing-text-primary">{label}</span>
+              <span className="font-mono text-sm text-marketing-accent">{value}</span>
             </div>
           ))}
         </div>
       </Surface>
-      <div className="mt-4 rounded-[24px] border border-[#CAFF4C33] bg-[#CAFF4C14] p-4 text-sm leading-6 text-[#F5F5F4]">
+      <div className="mt-4 rounded-[24px] border border-[#CAFF4C33] bg-[#CAFF4C14] p-4 text-sm leading-6 text-marketing-text-primary">
         Tap <span className="font-semibold">I missed</span> if the session did not happen. Tomorrow
         adapts automatically.
       </div>
@@ -178,12 +182,12 @@ function InsightsScreen() {
       <ScreenTop title="Insights" subtitle="What changed this week, and what still counts." />
       <div className="grid gap-4">
         <Surface>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#6B6B68]">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
             Week score
           </p>
           <div className="mt-4 flex items-end justify-between">
-            <div className="font-mono text-5xl tracking-[-0.04em] text-[#CAFF4C]">84</div>
-            <p className="max-w-[160px] text-right text-sm leading-6 text-[#A1A19E]">
+            <div className="font-mono text-5xl tracking-[-0.04em] text-marketing-accent">84</div>
+            <p className="max-w-[160px] text-right text-sm leading-6 text-marketing-text-secondary">
               Four workouts completed. Protein averaged 152g.
             </p>
           </div>
@@ -192,10 +196,10 @@ function InsightsScreen() {
           <div className="grid grid-cols-4 gap-3">
             {[72, 81, 66, 84].map((score, index) => (
               <div key={score} className="rounded-[18px] bg-[#0E0F12] p-3 text-center">
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#6B6B68]">
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
                   W{index + 1}
                 </p>
-                <p className="mt-3 font-mono text-xl text-[#F5F5F4]">{score}</p>
+                <p className="mt-3 font-mono text-xl text-marketing-text-primary">{score}</p>
               </div>
             ))}
           </div>
@@ -211,9 +215,11 @@ function MissedScreen() {
       <ScreenTop title="Missed day logged" subtitle="The week stays intact." />
       <Surface>
         <div className="rounded-[20px] border border-[#CAFF4C33] bg-[#CAFF4C14] p-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#CAFF4C]">Action</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-accent">
+            Action
+          </p>
           <p className="mt-3 text-base font-medium">Tuesday session marked as missed</p>
-          <p className="mt-2 text-sm leading-6 text-[#A1A19E]">
+          <p className="mt-2 text-sm leading-6 text-marketing-text-secondary">
             Pulling volume moved to Thursday and Saturday. Weekly back volume still lands at 14
             sets.
           </p>
@@ -231,18 +237,20 @@ function RecoveryScreen() {
         <Surface>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-[#A1A19E]">Sleep</p>
-              <p className="mt-2 font-mono text-3xl text-[#F5F5F4]">5h 04m</p>
+              <p className="text-sm text-marketing-text-secondary">Sleep</p>
+              <p className="mt-2 font-mono text-3xl text-marketing-text-primary">5h 04m</p>
             </div>
             <div>
-              <p className="text-sm text-[#A1A19E]">Stress</p>
-              <p className="mt-2 font-mono text-3xl text-[#CAFF4C]">High</p>
+              <p className="text-sm text-marketing-text-secondary">Stress</p>
+              <p className="mt-2 font-mono text-3xl text-marketing-accent">High</p>
             </div>
           </div>
         </Surface>
         <Surface>
-          <p className="text-sm text-[#F5F5F4]">Workout shortened from 45 minutes to 30 minutes.</p>
-          <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-[#A1A19E]">
+          <p className="text-sm text-marketing-text-primary">
+            Workout shortened from 45 minutes to 30 minutes.
+          </p>
+          <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-marketing-text-secondary">
             <div className="rounded-[18px] bg-[#0D0E11] p-3">Primary compounds kept</div>
             <div className="rounded-[18px] bg-[#0D0E11] p-3">Accessory volume reduced</div>
           </div>
@@ -263,8 +271,8 @@ function TravelScreen() {
               key={item}
               className={`rounded-[18px] border px-4 py-4 text-sm ${
                 index === 0
-                  ? 'border-[#CAFF4C] bg-[#CAFF4C14] text-[#F5F5F4]'
-                  : 'border-[#1F1F23] bg-[#0D0E11] text-[#A1A19E]'
+                  ? 'border-marketing-accent bg-[#CAFF4C14] text-marketing-text-primary'
+                  : 'border-marketing-border bg-[#0D0E11] text-marketing-text-secondary'
               }`}
             >
               {item}
@@ -309,7 +317,7 @@ function DebriefScreen() {
     <div>
       <ScreenTop title="Weekly debrief" subtitle="The loop closes with targets, not fluff." />
       <Surface>
-        <p className="text-sm leading-7 text-[#F5F5F4]">
+        <p className="text-sm leading-7 text-marketing-text-primary">
           Bench moved well at 72.5 kg for 8, 8, and 7. Keep the load next week and chase 8 on the
           third set before adding weight. Hamstring volume held at 12 sets because sleep averaged 6
           hours this week.
@@ -331,16 +339,16 @@ function WorkoutOption({
   return (
     <div
       className={`rounded-[20px] border px-4 py-4 ${
-        selected ? 'border-[#CAFF4C33] bg-[#CAFF4C14]' : 'border-[#1F1F23] bg-[#121316]'
+        selected ? 'border-[#CAFF4C33] bg-[#CAFF4C14]' : 'border-marketing-border bg-[#121316]'
       }`}
     >
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-base font-medium text-[#F5F5F4]">{title}</p>
-          <p className="mt-1 text-sm text-[#A1A19E]">{meta}</p>
+          <p className="text-base font-medium text-marketing-text-primary">{title}</p>
+          <p className="mt-1 text-sm text-marketing-text-secondary">{meta}</p>
         </div>
         {selected && (
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#CAFF4C]">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-accent">
             Selected
           </span>
         )}
@@ -355,8 +363,8 @@ function Bubble({ align, children }: { align: 'left' | 'right'; children: React.
       <div
         className={`max-w-[85%] rounded-[24px] px-4 py-3 text-sm leading-6 ${
           align === 'right'
-            ? 'bg-[#CAFF4C] text-[#0A0A0B]'
-            : 'border border-[#1F1F23] bg-[#121316] text-[#F5F5F4]'
+            ? 'bg-marketing-accent text-marketing-accent-on'
+            : 'border border-marketing-border bg-[#121316] text-marketing-text-primary'
         }`}
       >
         {children}
@@ -368,8 +376,10 @@ function Bubble({ align, children }: { align: 'left' | 'right'; children: React.
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[18px] bg-[#0D0E11] p-3">
-      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#6B6B68]">{label}</p>
-      <p className="mt-3 font-mono text-xl text-[#F5F5F4]">{value}</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+        {label}
+      </p>
+      <p className="mt-3 font-mono text-xl text-marketing-text-primary">{value}</p>
     </div>
   )
 }
@@ -379,8 +389,8 @@ function Zone({ label, active = false }: { label: string; active?: boolean }) {
     <div
       className={`rounded-[18px] border px-3 py-4 ${
         active
-          ? 'border-[#CAFF4C33] bg-[#CAFF4C14] text-[#F5F5F4]'
-          : 'border-[#1F1F23] bg-[#0D0E11] text-[#A1A19E]'
+          ? 'border-[#CAFF4C33] bg-[#CAFF4C14] text-marketing-text-primary'
+          : 'border-marketing-border bg-[#0D0E11] text-marketing-text-secondary'
       }`}
     >
       {label}

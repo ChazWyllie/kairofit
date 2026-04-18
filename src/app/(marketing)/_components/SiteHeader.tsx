@@ -15,9 +15,12 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#1F1F23] bg-[#0A0A0B]/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between px-6 py-4 md:px-8 lg:px-10">
-        <Link href="/" className="text-lg font-semibold tracking-[0.28em] text-[#F5F5F4]">
+    <header className="sticky top-0 z-50 border-b border-marketing-border bg-marketing-bg/80 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-container-max items-center justify-between px-6 py-4 md:px-8 lg:px-10">
+        <Link
+          href="/"
+          className="text-lg font-semibold tracking-[0.28em] text-marketing-text-primary"
+        >
           KAIROFIT
         </Link>
         <nav className="hidden items-center gap-8 lg:flex">
@@ -26,7 +29,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               onClick={() => captureMarketingEvent(item.event)}
-              className="text-sm text-[#A1A19E] transition-colors hover:text-[#F5F5F4]"
+              className="text-sm text-marketing-text-secondary transition-colors hover:text-marketing-text-primary"
             >
               {item.label}
             </Link>
@@ -42,7 +45,7 @@ export function SiteHeader() {
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#2A2A2F] text-[#F5F5F4] lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-pill border border-marketing-border-strong text-marketing-text-primary lg:hidden"
           aria-expanded={open}
           aria-label="Toggle navigation"
         >
@@ -50,7 +53,7 @@ export function SiteHeader() {
         </button>
       </div>
       {open && (
-        <div className="border-t border-[#1F1F23] bg-[#111113] px-6 py-5 lg:hidden">
+        <div className="border-t border-marketing-border bg-marketing-bg-elevated px-6 py-5 lg:hidden">
           <div className="flex flex-col gap-4">
             {navItems.map((item) => (
               <Link
@@ -60,7 +63,7 @@ export function SiteHeader() {
                   captureMarketingEvent(item.event)
                   setOpen(false)
                 }}
-                className="text-base text-[#F5F5F4]"
+                className="text-base text-marketing-text-primary"
               >
                 {item.label}
               </Link>
@@ -71,7 +74,7 @@ export function SiteHeader() {
                 captureMarketingEvent('WAITLIST_CTA_CLICKED')
                 setOpen(false)
               }}
-              className="text-base text-[#CAFF4C]"
+              className="text-base text-marketing-accent"
             >
               Join the waitlist
             </Link>

@@ -19,7 +19,7 @@ const webPageStructuredData = {
 
 export default function TourPage() {
   return (
-    <main className="bg-[#0A0A0B] text-[#F5F5F4]">
+    <main className="bg-marketing-bg text-marketing-text-primary">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageStructuredData) }}
@@ -38,16 +38,18 @@ export default function TourPage() {
           {tourSteps.map((step, index) => (
             <section
               key={step.eyebrow}
-              className="grid gap-12 rounded-[36px] border border-[#1F1F23] bg-[#111113] p-6 md:p-8 lg:grid-cols-[minmax(0,0.8fr)_340px] lg:items-center"
+              className="grid gap-12 rounded-[36px] border border-marketing-border bg-marketing-bg-elevated p-6 md:p-8 lg:grid-cols-[minmax(0,0.8fr)_340px] lg:items-center"
             >
               <div>
-                <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-[#CAFF4C]">
+                <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-marketing-accent">
                   {index + 1}. {step.eyebrow}
                 </p>
-                <h2 className="mt-4 text-[36px] font-semibold leading-[1.08] tracking-[-0.03em] text-[#F5F5F4]">
+                <h2 className="mt-4 text-[36px] font-semibold leading-[1.08] tracking-[-0.03em] text-marketing-text-primary">
                   {step.title}
                 </h2>
-                <p className="mt-5 max-w-2xl text-lg leading-8 text-[#A1A19E]">{step.body}</p>
+                <p className="mt-5 max-w-2xl text-lg leading-8 text-marketing-text-secondary">
+                  {step.body}
+                </p>
               </div>
               <ProductScreen screen={step.screen} />
             </section>

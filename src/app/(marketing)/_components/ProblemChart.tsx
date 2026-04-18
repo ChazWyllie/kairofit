@@ -6,10 +6,10 @@ export function ProblemChart() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <div className="rounded-[32px] border border-[#1F1F23] bg-[#111113] p-6">
+    <div className="rounded-xl border border-marketing-border bg-marketing-bg-elevated p-6">
       <div className="mb-6 flex items-center justify-between text-[12px] font-medium uppercase tracking-[0.14em]">
-        <span className="text-[#6B6B68]">Rigid programs</span>
-        <span className="text-[#CAFF4C]">KairoFit</span>
+        <span className="text-marketing-text-muted">Rigid programs</span>
+        <span className="text-marketing-accent">KairoFit</span>
       </div>
       <svg viewBox="0 0 520 280" className="w-full">
         <defs>

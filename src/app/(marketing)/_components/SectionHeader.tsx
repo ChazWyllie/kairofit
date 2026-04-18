@@ -13,10 +13,10 @@ export function SectionHeader({ eyebrow, headline, sub, className = '' }: Sectio
   return (
     <div className={className}>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h2 className="mt-4 max-w-4xl text-[40px] font-semibold leading-[1.08] tracking-[-0.03em] text-[#F5F5F4] sm:text-[56px]">
+      <h2 className="mt-4 max-w-4xl text-display-md text-marketing-text-primary sm:text-display-lg">
         {headline}
       </h2>
-      <p className="mt-5 max-w-2xl text-lg leading-8 text-[#A1A19E]">{sub}</p>
+      <p className="mt-5 max-w-2xl text-body-lg text-marketing-text-secondary">{sub}</p>
     </div>
   )
 }
