@@ -11,12 +11,12 @@ export function PhoneFrame({
   return (
     <div
       className={clsx(
-        'relative mx-auto w-full max-w-[340px] rounded-[40px] border border-[#2A2A2F] bg-[#050506] p-3 shadow-[0_50px_140px_-70px_rgba(0,0,0,0.95)]',
+        'relative mx-auto w-full max-w-[340px] rounded-[40px] border border-marketing-border-strong bg-[#050506] p-3 shadow-[0_50px_140px_-70px_rgba(0,0,0,0.95)]',
         className
       )}
     >
-      <div className="absolute left-1/2 top-3 h-6 w-28 -translate-x-1/2 rounded-full bg-[#111113]" />
-      <div className="overflow-hidden rounded-[32px] border border-[#1F1F23] bg-[#0F1012]">
+      <div className="absolute left-1/2 top-3 h-6 w-28 -translate-x-1/2 rounded-full bg-marketing-bg-elevated" />
+      <div className="overflow-hidden rounded-xl border border-marketing-border bg-[#0F1012]">
         {children}
       </div>
     </div>

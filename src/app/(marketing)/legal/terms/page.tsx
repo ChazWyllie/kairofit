@@ -14,16 +14,16 @@ const webPageStructuredData = {
 
 export default function TermsPage() {
   return (
-    <main className="bg-[#0A0A0B] text-[#F5F5F4]">
+    <main className="bg-marketing-bg text-marketing-text-primary">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageStructuredData) }}
       />
       <section className="mx-auto max-w-[720px] px-6 py-24 md:px-8 lg:py-32">
-        <h1 className="text-[48px] font-semibold leading-[1.02] tracking-[-0.04em] text-[#F5F5F4]">
+        <h1 className="text-[48px] font-semibold leading-[1.02] tracking-[-0.04em] text-marketing-text-primary">
           Terms of use
         </h1>
-        <div className="mt-8 space-y-8 text-base leading-8 text-[#A1A19E]">
+        <div className="mt-8 space-y-8 text-base leading-8 text-marketing-text-secondary">
           <p>
             KairoFit is a closed beta fitness product. The marketing site and waitlist are offered
             for informational purposes and beta access coordination only. Submitting your email does

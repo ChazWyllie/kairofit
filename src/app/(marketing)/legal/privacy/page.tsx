@@ -14,16 +14,16 @@ const webPageStructuredData = {
 
 export default function PrivacyPage() {
   return (
-    <main className="bg-[#0A0A0B] text-[#F5F5F4]">
+    <main className="bg-marketing-bg text-marketing-text-primary">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageStructuredData) }}
       />
       <section className="mx-auto max-w-[720px] px-6 py-24 md:px-8 lg:py-32">
-        <h1 className="text-[48px] font-semibold leading-[1.02] tracking-[-0.04em] text-[#F5F5F4]">
+        <h1 className="text-[48px] font-semibold leading-[1.02] tracking-[-0.04em] text-marketing-text-primary">
           Privacy policy
         </h1>
-        <div className="mt-8 space-y-8 text-base leading-8 text-[#A1A19E]">
+        <div className="mt-8 space-y-8 text-base leading-8 text-marketing-text-secondary">
           <p>
             KairoFit collects the information you submit through the waitlist form, including your
             email address and optional attribution fields such as referrer and campaign tags. We use

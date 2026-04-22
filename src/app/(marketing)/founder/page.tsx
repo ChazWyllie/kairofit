@@ -22,14 +22,14 @@ const personStructuredData = {
 
 export default function FounderPage() {
   return (
-    <main className="bg-[#0A0A0B] text-[#F5F5F4]">
+    <main className="bg-marketing-bg text-marketing-text-primary">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personStructuredData) }}
       />
       <section className="mx-auto max-w-[980px] px-6 py-24 md:px-8 lg:px-10 lg:py-32">
         <div className="grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)]">
-          <div className="relative overflow-hidden rounded-[32px] border border-[#2A2A2F] bg-[#111113]">
+          <div className="relative overflow-hidden rounded-xl border border-marketing-border-strong bg-marketing-bg-elevated">
             <Image
               src="https://chazwyllie.com/assets/images/profile-photo.jpg"
               alt="Founder portrait of Chaz Wyllie"
@@ -48,7 +48,7 @@ export default function FounderPage() {
               }
               sub="Balancing engineering work, school, lifting, and life made one thing obvious: the plans that survive are the ones that adapt."
             />
-            <div className="mt-8 space-y-6 text-lg leading-8 text-[#A1A19E]">
+            <div className="mt-8 space-y-6 text-lg leading-8 text-marketing-text-secondary">
               <p>
                 I am Chaz Wyllie. I built KairoFit because I never found a fitness system that
                 treated a real week like the default case. Most products are built for the imaginary
@@ -75,7 +75,7 @@ export default function FounderPage() {
               {founderCredentials.map((credential) => (
                 <span
                   key={credential}
-                  className="rounded-full border border-[#1F1F23] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-[#6B6B68]"
+                  className="rounded-full border border-marketing-border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted"
                 >
                   {credential}
                 </span>

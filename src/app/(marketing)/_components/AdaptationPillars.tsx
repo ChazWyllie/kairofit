@@ -91,26 +91,30 @@ export function AdaptationPillars() {
             whileInView={reduceMotion ? {} : { opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className={`rounded-[32px] border p-8 transition-colors duration-300 lg:min-h-[62vh] ${
+            className={`rounded-xl border p-8 transition-colors duration-300 lg:min-h-[62vh] ${
               activeIndex === index
-                ? 'border-[#2A2A2F] bg-[#111113]'
-                : 'border-[#1F1F23] bg-[#0F1012]'
+                ? 'border-marketing-border-strong bg-marketing-bg-elevated'
+                : 'border-marketing-border bg-[#0F1012]'
             }`}
           >
             <p className="font-mono text-[48px] tracking-[-0.04em] text-[#2F3035]">
               {pillar.number}
             </p>
-            <h3 className="mt-8 text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#F5F5F4]">
+            <h3 className="mt-8 text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-marketing-text-primary">
               {pillar.title}
             </h3>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-[#A1A19E]">{pillar.body}</p>
+            <p className="mt-5 max-w-xl text-lg leading-8 text-marketing-text-secondary">
+              {pillar.body}
+            </p>
             <Link
               href={pillar.citationHref}
               title={pillar.citation}
-              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-[#CAFF4C]"
+              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-marketing-accent"
             >
               Related research
-              <span className="font-mono text-[12px] text-[#6B6B68]">{pillar.citation}</span>
+              <span className="font-mono text-[12px] text-marketing-text-muted">
+                {pillar.citation}
+              </span>
             </Link>
           </motion.article>
         ))}

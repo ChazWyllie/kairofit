@@ -7,7 +7,7 @@ export function Marquee({ items }: { items: readonly string[] }) {
   const repeated = [...items, ...items]
 
   return (
-    <div className="overflow-hidden border-y border-[#1F1F23] bg-[#0D0D10] py-4">
+    <div className="overflow-hidden border-y border-marketing-border bg-[#0D0D10] py-4">
       <div
         className="flex min-w-max items-center gap-6 px-6"
         style={{
@@ -16,8 +16,8 @@ export function Marquee({ items }: { items: readonly string[] }) {
       >
         {repeated.map((item, index) => (
           <div key={`${item}-${index}`} className="flex items-center gap-6">
-            <span className="text-sm text-[#F5F5F4]">{item}</span>
-            <span className="text-xs text-[#CAFF4C]">●</span>
+            <span className="text-sm text-marketing-text-primary">{item}</span>
+            <span className="text-xs text-marketing-accent">●</span>
           </div>
         ))}
       </div>

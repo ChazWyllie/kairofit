@@ -57,18 +57,18 @@ export function WaitlistForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@company.com"
-          className="min-h-12 flex-1 rounded-full border border-[#2A2A2F] bg-[#111113] px-5 text-base text-[#F5F5F4] placeholder:font-mono placeholder:text-[13px] placeholder:uppercase placeholder:tracking-[0.16em] placeholder:text-[#6B6B68] focus:border-[#CAFF4C] focus:outline-none focus:ring-2 focus:ring-[#CAFF4C]/40"
+          className="min-h-12 flex-1 rounded-pill border border-marketing-border-strong bg-marketing-bg-elevated px-5 text-base text-marketing-text-primary placeholder:font-mono placeholder:text-[13px] placeholder:uppercase placeholder:tracking-[0.16em] placeholder:text-marketing-text-muted focus:border-marketing-accent focus:outline-none focus:ring-2 focus:ring-marketing-accent/40"
           required
         />
         <Button type="submit" className="sm:min-w-[220px]" disabled={isExecuting}>
           {isExecuting ? 'Joining...' : 'Join the waitlist'}
         </Button>
       </div>
-      {result.serverError && <p className="text-sm text-[#EF4444]">{result.serverError}</p>}
+      {result.serverError && <p className="text-sm text-marketing-danger">{result.serverError}</p>}
       {result.validationErrors?.email?._errors?.[0] && (
-        <p className="text-sm text-[#EF4444]">{result.validationErrors.email._errors[0]}</p>
+        <p className="text-sm text-marketing-danger">{result.validationErrors.email._errors[0]}</p>
       )}
-      <p className="text-sm leading-7 text-[#6B6B68]">
+      <p className="text-sm leading-7 text-marketing-text-muted">
         Closed beta. Free during beta. $9.99/month when we open to the public.
       </p>
     </form>

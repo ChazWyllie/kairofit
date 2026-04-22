@@ -67,4 +67,59 @@ describe('joinWaitlistAction', () => {
 
     expect(result?.serverError).toContain('already on the waitlist')
   })
+
+  it('surfaces a generic server error for non-duplicate Supabase failures', async () => {
+    insertMock.mockResolvedValue({
+      error: { message: 'connection reset' },
+    })
+    const { joinWaitlistAction } = await import('../waitlist.actions')
+
+    const result = await joinWaitlistAction({
+      email: 'test@example.com',
+      source: 'marketing_homepage',
+    })
+
+    expect(result?.serverError).toContain('Unable to join the waitlist')
+    expect(result?.serverError).not.toContain('already on the waitlist')
+  })
+
+  it('returns the rate-limit error message when the limiter throws', async () => {
+    checkRateLimitMock.mockRejectedValueOnce(
+      new Error('Rate limit exceeded. Try again in 120 seconds.')
+    )
+    const { joinWaitlistAction } = await import('../waitlist.actions')
+
+    const result = await joinWaitlistAction({
+      email: 'test@example.com',
+      source: 'marketing_homepage',
+    })
+
+    expect(result?.serverError).toContain('Rate limit exceeded')
+    expect(insertMock).not.toHaveBeenCalled()
+  })
+
+  it('rejects invalid email input via Zod without hitting downstream services', async () => {
+    const { joinWaitlistAction } = await import('../waitlist.actions')
+
+    const result = await joinWaitlistAction({
+      email: 'not-an-email',
+      source: 'marketing_homepage',
+    })
+
+    expect(result?.validationErrors?.email).toBeDefined()
+    expect(checkRateLimitMock).not.toHaveBeenCalled()
+    expect(insertMock).not.toHaveBeenCalled()
+  })
+
+  it('uses the waitlist rate-limit key keyed by email', async () => {
+    insertMock.mockResolvedValue({ error: null })
+    const { joinWaitlistAction } = await import('../waitlist.actions')
+
+    await joinWaitlistAction({
+      email: 'Keyed@Example.com',
+      source: 'marketing_homepage',
+    })
+
+    expect(checkRateLimitMock).toHaveBeenCalledWith('Keyed@Example.com', 'waitlist')
+  })
 })

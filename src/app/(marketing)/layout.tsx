@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import { SiteHeader } from './_components/SiteHeader'
-import { SiteFooter } from './_components/SiteFooter'
+import { MarketingShell } from './_components/MarketingShell'
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://kairofitdev.vercel.app'
 
@@ -24,17 +23,5 @@ export const metadata: Metadata = {
 }
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[#CAFF4C] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[#0A0A0B]"
-      >
-        Skip to content
-      </a>
-      <SiteHeader />
-      <div id="main-content">{children}</div>
-      <SiteFooter />
-    </>
-  )
+  return <MarketingShell>{children}</MarketingShell>
 }
