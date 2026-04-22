@@ -132,7 +132,5 @@ See src/lib/ai/kiro-voice.ts and skills/kiro-output-auditor/ for voice rules.
 - Row Level Security on every Supabase table with WITH CHECK on all writes
 - FTC Health Breach Notification Rule compliant
 - GDPR-ready (data export, deletion, DPA enrollment required before EU launch)
-
-See docs/security/SECURITY.md for the full architecture.
-
+  
 ---
