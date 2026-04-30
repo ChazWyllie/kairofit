@@ -8,15 +8,15 @@ export function ComparisonTable() {
 
   return (
     <div className="overflow-hidden rounded-xl border border-marketing-border bg-marketing-bg-elevated">
-      <div className="grid border-b border-marketing-border bg-[#0D0D10] md:grid-cols-2">
+      <div className="grid border-b border-marketing-border bg-marketing-bg-tint md:grid-cols-2">
         <div className="px-6 py-5">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+          <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
             FitBod
           </p>
           <p className="mt-2 text-lg font-medium text-marketing-text-primary">Rigid generator</p>
         </div>
-        <div className="border-t border-marketing-border bg-[#CAFF4C14] px-6 py-5 md:border-l md:border-t-0">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-accent">
+        <div className="border-t border-marketing-border bg-marketing-accent-tint px-6 py-5 md:border-l md:border-t-0">
+          <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-accent">
             KairoFit
           </p>
           <p className="mt-2 text-lg font-medium text-marketing-text-primary">
@@ -36,7 +36,7 @@ export function ComparisonTable() {
           <div className="px-6 py-6 text-sm leading-7 text-marketing-text-secondary">
             {row.fitbod}
           </div>
-          <div className="border-t border-marketing-border bg-[#CAFF4C12] px-6 py-6 text-sm leading-7 text-marketing-text-primary md:border-l md:border-t-0">
+          <div className="border-t border-marketing-border bg-marketing-accent-tint px-6 py-6 text-sm leading-7 text-marketing-text-primary md:border-l md:border-t-0">
             {row.kairofit}
           </div>
         </motion.div>

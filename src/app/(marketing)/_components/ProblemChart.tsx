@@ -7,7 +7,7 @@ export function ProblemChart() {
 
   return (
     <div className="rounded-xl border border-marketing-border bg-marketing-bg-elevated p-6">
-      <div className="mb-6 flex items-center justify-between text-[12px] font-medium uppercase tracking-[0.14em]">
+      <div className="mb-6 flex items-center justify-between font-mono text-mono-label uppercase tracking-[0.14em]">
         <span className="text-marketing-text-muted">Rigid programs</span>
         <span className="text-marketing-accent">KairoFit</span>
       </div>

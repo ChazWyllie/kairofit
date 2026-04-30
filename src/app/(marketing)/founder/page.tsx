@@ -75,7 +75,7 @@ export default function FounderPage() {
               {founderCredentials.map((credential) => (
                 <span
                   key={credential}
-                  className="rounded-full border border-marketing-border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted"
+                  className="rounded-full border border-marketing-border px-3 py-1 font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted"
                 >
                   {credential}
                 </span>

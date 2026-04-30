@@ -49,18 +49,9 @@ const config: Config = {
           '32px',
           { lineHeight: '1.10', letterSpacing: '-0.02em', fontWeight: '600' },
         ],
-        'heading-xl': [
-          '48px',
-          { lineHeight: '1.02', letterSpacing: '-0.04em', fontWeight: '600' },
-        ],
-        'heading-lg': [
-          '36px',
-          { lineHeight: '1.08', letterSpacing: '-0.03em', fontWeight: '600' },
-        ],
-        'heading-md': [
-          '32px',
-          { lineHeight: '1.10', letterSpacing: '-0.03em', fontWeight: '600' },
-        ],
+        'heading-xl': ['48px', { lineHeight: '1.02', letterSpacing: '-0.04em', fontWeight: '600' }],
+        'heading-lg': ['36px', { lineHeight: '1.08', letterSpacing: '-0.03em', fontWeight: '600' }],
+        'heading-md': ['32px', { lineHeight: '1.10', letterSpacing: '-0.03em', fontWeight: '600' }],
         heading: ['24px', { lineHeight: '1.30', letterSpacing: '-0.01em', fontWeight: '600' }],
         'body-lg': ['18px', { lineHeight: '1.50', fontWeight: '400' }],
         body: ['16px', { lineHeight: '1.60', fontWeight: '400' }],

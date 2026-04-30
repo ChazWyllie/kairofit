@@ -7,7 +7,7 @@ export function Marquee({ items }: { items: readonly string[] }) {
   const repeated = [...items, ...items]
 
   return (
-    <div className="overflow-hidden border-y border-marketing-border bg-[#0D0D10] py-4">
+    <div className="overflow-hidden border-y border-marketing-border bg-marketing-bg-tint py-4">
       <div
         className="flex min-w-max items-center gap-6 px-6"
         style={{

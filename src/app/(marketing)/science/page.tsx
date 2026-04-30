@@ -37,7 +37,7 @@ export default function SciencePage() {
         <div className="mt-16 grid gap-14 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-20">
           <aside className="hidden self-start lg:block">
             <div className="sticky top-28 rounded-[28px] border border-marketing-border bg-marketing-bg-elevated p-5">
-              <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-marketing-text-muted">
+              <p className="font-mono text-mono-label uppercase tracking-[0.18em] text-marketing-text-muted">
                 Contents
               </p>
               <nav className="mt-5 space-y-3 text-sm text-marketing-text-secondary">
@@ -45,7 +45,7 @@ export default function SciencePage() {
                   <Link
                     key={section.id}
                     href={`#${section.id}`}
-                    className="block transition-colors hover:text-marketing-text-primary"
+                    className="block rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
                   >
                     {section.title}
                   </Link>
@@ -56,10 +56,10 @@ export default function SciencePage() {
           <div className="space-y-16">
             {sciencePageSections.map((section) => (
               <article key={section.id} id={section.id} className="scroll-mt-28">
-                <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-marketing-accent">
+                <p className="font-mono text-mono-label uppercase tracking-[0.18em] text-marketing-accent">
                   {section.citation}
                 </p>
-                <h2 className="mt-4 text-[40px] font-semibold leading-[1.08] tracking-[-0.03em] text-marketing-text-primary">
+                <h2 className="mt-4 text-display-md text-marketing-text-primary">
                   {section.title}
                 </h2>
                 <div className="mt-6 space-y-6 text-lg leading-8 text-marketing-text-secondary">

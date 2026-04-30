@@ -6,7 +6,7 @@ import { captureMarketingEvent } from './MarketingAnalytics'
 
 export function SiteFooter() {
   return (
-    <footer className="border-t-2 border-marketing-accent bg-marketing-bg">
+    <footer className="border-t border-marketing-border bg-marketing-bg">
       <div className="mx-auto grid max-w-container-max gap-12 px-6 py-16 md:grid-cols-3 md:px-8 lg:px-10">
         <div>
           <p className="text-lg font-semibold tracking-[0.28em] text-marketing-text-primary">
@@ -28,7 +28,7 @@ export function SiteFooter() {
               <Link
                 href="/tour"
                 onClick={() => captureMarketingEvent('TOUR_LINK_CLICKED')}
-                className="transition-colors hover:text-marketing-text-primary"
+                className="rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 How it works
               </Link>
@@ -37,7 +37,7 @@ export function SiteFooter() {
               <Link
                 href="/science"
                 onClick={() => captureMarketingEvent('SCIENCE_LINK_CLICKED')}
-                className="transition-colors hover:text-marketing-text-primary"
+                className="rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 Science
               </Link>
@@ -46,7 +46,7 @@ export function SiteFooter() {
               <Link
                 href="/tour"
                 onClick={() => captureMarketingEvent('TOUR_LINK_CLICKED')}
-                className="transition-colors hover:text-marketing-text-primary"
+                className="rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 Tour
               </Link>
@@ -55,7 +55,7 @@ export function SiteFooter() {
               <Link
                 href="/founder"
                 onClick={() => captureMarketingEvent('FOUNDER_LINK_CLICKED')}
-                className="transition-colors hover:text-marketing-text-primary"
+                className="rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 Founder
               </Link>
@@ -76,7 +76,7 @@ export function SiteFooter() {
               <a
                 href="https://instagram.com/chazwyllie"
                 onClick={() => captureMarketingEvent('INSTAGRAM_CLICKED')}
-                className="transition-colors hover:text-marketing-text-primary"
+                className="rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 Instagram @chazwyllie
               </a>
@@ -84,7 +84,7 @@ export function SiteFooter() {
             <li>
               <a
                 href="mailto:hello@kairofit.com"
-                className="transition-colors hover:text-marketing-text-primary"
+                className="rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 hello@kairofit.com
               </a>
@@ -92,7 +92,7 @@ export function SiteFooter() {
             <li>
               <Link
                 href="/legal/privacy"
-                className="transition-colors hover:text-marketing-text-primary"
+                className="rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 Privacy
               </Link>
@@ -100,7 +100,7 @@ export function SiteFooter() {
             <li>
               <Link
                 href="/legal/terms"
-                className="transition-colors hover:text-marketing-text-primary"
+                className="rounded-sm outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 Terms
               </Link>
@@ -110,7 +110,7 @@ export function SiteFooter() {
             {founderCredentials.map((credential) => (
               <span
                 key={credential}
-                className="rounded-pill border border-marketing-border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted"
+                className="rounded-pill border border-marketing-border px-3 py-1 font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted"
               >
                 {credential}
               </span>

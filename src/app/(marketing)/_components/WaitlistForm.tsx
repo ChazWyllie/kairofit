@@ -57,7 +57,7 @@ export function WaitlistForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@company.com"
-          className="min-h-12 flex-1 rounded-pill border border-marketing-border-strong bg-marketing-bg-elevated px-5 text-base text-marketing-text-primary placeholder:font-mono placeholder:text-[13px] placeholder:uppercase placeholder:tracking-[0.16em] placeholder:text-marketing-text-muted focus:border-marketing-accent focus:outline-none focus:ring-2 focus:ring-marketing-accent/40"
+          className="min-h-12 flex-1 rounded-pill border border-marketing-border-strong bg-marketing-bg-elevated px-5 text-base text-marketing-text-primary placeholder:font-mono placeholder:text-mono-label-md placeholder:uppercase placeholder:tracking-[0.16em] placeholder:text-marketing-text-muted focus:border-marketing-accent focus:outline-none focus:ring-2 focus:ring-marketing-accent/40"
           required
         />
         <Button type="submit" className="sm:min-w-[220px]" disabled={isExecuting}>
