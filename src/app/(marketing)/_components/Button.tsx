@@ -10,10 +10,10 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants = {
   primary:
-    'bg-[#CAFF4C] text-[#0A0A0B] shadow-[0_0_36px_rgba(202,255,76,0.2)] hover:-translate-y-0.5 hover:shadow-[0_0_44px_rgba(202,255,76,0.28)]',
+    'bg-marketing-accent text-marketing-accent-on shadow-accent-glow-sm hover:-translate-y-0.5 hover:shadow-accent-glow',
   secondary:
-    'border border-[#2A2A2F] bg-[#111113] text-[#F5F5F4] hover:border-[#CAFF4C] hover:text-[#CAFF4C]',
-  ghost: 'text-[#F5F5F4] hover:text-[#CAFF4C]',
+    'border border-marketing-border-strong bg-marketing-bg-elevated text-marketing-text-primary hover:border-marketing-accent hover:text-marketing-accent',
+  ghost: 'text-marketing-text-primary hover:text-marketing-accent',
 } as const
 
 export function Button({ asChild = false, className, variant = 'primary', ...props }: ButtonProps) {
@@ -22,7 +22,7 @@ export function Button({ asChild = false, className, variant = 'primary', ...pro
   return (
     <Comp
       className={clsx(
-        'inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CAFF4C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0B]',
+        'inline-flex min-h-11 items-center justify-center gap-2 rounded-pill px-5 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg',
         variants[variant],
         className
       )}

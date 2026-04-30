@@ -64,6 +64,13 @@ function getLimiters(): Record<string, Ratelimit> {
         limiter: Ratelimit.slidingWindow(10, '5 m'),
         prefix: 'rl:auth',
       }),
+      // Waitlist signup: per-email, permissive enough for typo corrections
+      // but tight enough to prevent enumeration abuse
+      waitlist: new Ratelimit({
+        redis: r,
+        limiter: Ratelimit.slidingWindow(5, '5 m'),
+        prefix: 'rl:waitlist',
+      }),
       // General mutations: per-user
       general: new Ratelimit({
         redis: r,
