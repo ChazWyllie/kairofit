@@ -94,25 +94,21 @@ export function AdaptationPillars() {
             className={`rounded-xl border p-8 transition-colors duration-300 lg:min-h-[62vh] ${
               activeIndex === index
                 ? 'border-marketing-border-strong bg-marketing-bg-elevated'
-                : 'border-marketing-border bg-[#0F1012]'
+                : 'border-marketing-border bg-marketing-bg-layer'
             }`}
           >
-            <p className="font-mono text-[48px] tracking-[-0.04em] text-[#2F3035]">
-              {pillar.number}
-            </p>
-            <h3 className="mt-8 text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-marketing-text-primary">
-              {pillar.title}
-            </h3>
+            <p className="font-mono text-mono-stat text-marketing-text-faint">{pillar.number}</p>
+            <h3 className="mt-8 text-heading-md text-marketing-text-primary">{pillar.title}</h3>
             <p className="mt-5 max-w-xl text-lg leading-8 text-marketing-text-secondary">
               {pillar.body}
             </p>
             <Link
               href={pillar.citationHref}
               title={pillar.citation}
-              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-marketing-accent"
+              className="mt-8 inline-flex items-center gap-2 rounded-sm text-sm font-medium text-marketing-accent outline-none focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
             >
               Related research
-              <span className="font-mono text-[12px] text-marketing-text-muted">
+              <span className="font-mono text-mono-label text-marketing-text-muted">
                 {pillar.citation}
               </span>
             </Link>

@@ -56,10 +56,10 @@ export default function MarketingHomePage() {
         <div className="absolute inset-x-0 bottom-0 h-40 bg-[radial-gradient(circle_at_bottom,rgba(202,255,76,0.12),transparent_72%)]" />
         <div className="relative mx-auto grid min-h-[calc(100vh-80px)] max-w-[1280px] items-center gap-14 px-6 py-20 md:px-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(340px,0.8fr)] lg:px-10 lg:py-24">
           <div>
-            <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-marketing-accent">
+            <p className="font-mono text-mono-label uppercase tracking-[0.18em] text-marketing-accent">
               KAIROFIT // CLOSED BETA
             </p>
-            <h1 className="mt-6 max-w-4xl text-[52px] font-semibold leading-[0.98] tracking-[-0.05em] text-marketing-text-primary sm:text-[72px]">
+            <h1 className="mt-6 max-w-4xl text-display-lg text-marketing-text-primary sm:text-display-xl">
               Fitness that adapts <AccentText>when life happens.</AccentText>
             </h1>
             <p className="mt-8 max-w-2xl text-xl leading-9 text-marketing-text-secondary">
@@ -117,7 +117,7 @@ export default function MarketingHomePage() {
         <ProblemChart />
       </section>
 
-      <section id="how-it-adapts" className="border-y border-marketing-border bg-[#0D0D10]">
+      <section id="how-it-adapts" className="border-y border-marketing-border bg-marketing-bg-tint">
         <div className="mx-auto max-w-[1280px] px-6 py-24 md:px-8 lg:px-10 lg:py-40">
           <SectionHeader
             eyebrow="THE PRODUCT"
@@ -172,7 +172,7 @@ export default function MarketingHomePage() {
         </div>
       </section>
 
-      <section className="border-y border-marketing-border bg-[#0D0D10]">
+      <section className="border-y border-marketing-border bg-marketing-bg-tint">
         <div className="mx-auto max-w-[1280px] px-6 py-24 md:px-8 lg:px-10 lg:py-40">
           <SectionHeader
             eyebrow="THE FOUNDATION"
@@ -186,8 +186,8 @@ export default function MarketingHomePage() {
           <div className="mt-14 grid gap-5 lg:grid-cols-3">
             {scienceCards.map((card) => (
               <Card key={card.id} className="flex h-full flex-col p-6">
-                <div className="h-10 w-10 rounded-full bg-[#CAFF4C14]" />
-                <p className="mt-5 font-mono text-[12px] uppercase tracking-[0.16em] text-marketing-text-muted">
+                <div className="h-10 w-10 rounded-full bg-marketing-accent-tint" />
+                <p className="mt-5 font-mono text-mono-label uppercase tracking-[0.16em] text-marketing-text-muted">
                   {card.citation}
                 </p>
                 <h3 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-marketing-text-primary">
@@ -227,7 +227,7 @@ export default function MarketingHomePage() {
         </div>
       </section>
 
-      <section className="border-y border-marketing-border bg-[#0D0D10]">
+      <section className="border-y border-marketing-border bg-marketing-bg-tint">
         <div className="mx-auto grid max-w-[1280px] gap-14 px-6 py-24 md:px-8 lg:grid-cols-[400px_minmax(0,1fr)] lg:px-10 lg:py-40">
           <div className="relative overflow-hidden rounded-xl border border-marketing-border-strong bg-marketing-bg-elevated">
             <Image
@@ -269,7 +269,7 @@ export default function MarketingHomePage() {
               {founderCredentials.map((credential) => (
                 <span
                   key={credential}
-                  className="rounded-full border border-marketing-border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted"
+                  className="rounded-full border border-marketing-border px-3 py-1 font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted"
                 >
                   {credential}
                 </span>

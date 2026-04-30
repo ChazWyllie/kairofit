@@ -20,9 +20,7 @@ export default function PrivacyPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageStructuredData) }}
       />
       <section className="mx-auto max-w-[720px] px-6 py-24 md:px-8 lg:py-32">
-        <h1 className="text-[48px] font-semibold leading-[1.02] tracking-[-0.04em] text-marketing-text-primary">
-          Privacy policy
-        </h1>
+        <h1 className="text-heading-xl text-marketing-text-primary">Privacy policy</h1>
         <div className="mt-8 space-y-8 text-base leading-8 text-marketing-text-secondary">
           <p>
             KairoFit collects the information you submit through the waitlist form, including your

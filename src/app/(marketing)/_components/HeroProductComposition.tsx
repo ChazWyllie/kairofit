@@ -28,7 +28,7 @@ export function HeroProductComposition() {
         {...(!reduceMotion ? { animate: { y: [0, -8, 0] } } : {})}
         transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
       >
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+        <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
           Kiro note
         </p>
         <p className="mt-2 max-w-[220px] text-sm leading-6 text-marketing-text-primary">
@@ -40,7 +40,7 @@ export function HeroProductComposition() {
         {...(!reduceMotion ? { animate: { y: [0, 10, 0] } } : {})}
         transition={{ duration: 7, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
       >
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+        <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
           Streak
         </p>
         <p className="mt-2 font-mono text-2xl text-marketing-accent">11 day streak</p>
@@ -50,7 +50,7 @@ export function HeroProductComposition() {
         {...(!reduceMotion ? { animate: { y: [0, -12, 0] } } : {})}
         transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
       >
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+        <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
           Progress
         </p>
         <p className="mt-2 text-sm text-marketing-text-primary">Workouts 4/5 this week</p>

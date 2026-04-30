@@ -19,7 +19,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-container-max items-center justify-between px-6 py-4 md:px-8 lg:px-10">
         <Link
           href="/"
-          className="text-lg font-semibold tracking-[0.28em] text-marketing-text-primary"
+          className="rounded-sm text-lg font-semibold tracking-[0.28em] text-marketing-text-primary outline-none focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
         >
           KAIROFIT
         </Link>
@@ -29,7 +29,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               onClick={() => captureMarketingEvent(item.event)}
-              className="text-sm text-marketing-text-secondary transition-colors hover:text-marketing-text-primary"
+              className="rounded-sm text-sm text-marketing-text-secondary outline-none transition-colors hover:text-marketing-text-primary focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
             >
               {item.label}
             </Link>
@@ -45,7 +45,7 @@ export function SiteHeader() {
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-pill border border-marketing-border-strong text-marketing-text-primary lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-pill border border-marketing-border-strong text-marketing-text-primary outline-none focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg lg:hidden"
           aria-expanded={open}
           aria-label="Toggle navigation"
         >
@@ -63,7 +63,7 @@ export function SiteHeader() {
                   captureMarketingEvent(item.event)
                   setOpen(false)
                 }}
-                className="text-base text-marketing-text-primary"
+                className="rounded-sm text-base text-marketing-text-primary outline-none focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
               >
                 {item.label}
               </Link>
@@ -74,7 +74,7 @@ export function SiteHeader() {
                 captureMarketingEvent('WAITLIST_CTA_CLICKED')
                 setOpen(false)
               }}
-              className="text-base text-marketing-accent"
+              className="rounded-sm text-base text-marketing-accent outline-none focus-visible:ring-2 focus-visible:ring-marketing-accent focus-visible:ring-offset-2 focus-visible:ring-offset-marketing-bg"
             >
               Join the waitlist
             </Link>

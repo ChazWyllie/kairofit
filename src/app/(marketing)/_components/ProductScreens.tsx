@@ -28,7 +28,7 @@ export function ProductScreen({ screen }: { screen: ScreenName }) {
 
   return (
     <PhoneFrame>
-      <div className="relative overflow-hidden bg-[#0C0D10] p-4 text-marketing-text-primary">
+      <div className="relative overflow-hidden bg-marketing-bg-tint p-4 text-marketing-text-primary">
         <div className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top,rgba(202,255,76,0.18),transparent_72%)]" />
         <div className="relative z-10 min-h-[620px]">
           <AnimatePresence mode="wait">
@@ -60,7 +60,7 @@ function ScreenTop({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="mb-6 flex items-start justify-between gap-4">
       <div>
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+        <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
           KairoFit // Today
         </p>
         <h3 className="mt-3 text-2xl font-semibold tracking-[-0.03em]">{title}</h3>
@@ -68,7 +68,7 @@ function ScreenTop({ title, subtitle }: { title: string; subtitle: string }) {
           {subtitle}
         </p>
       </div>
-      <div className="rounded-full border border-marketing-border-strong bg-[#141518] px-3 py-1 font-mono text-[11px] text-marketing-accent">
+      <div className="rounded-full border border-marketing-border-strong bg-marketing-surface-raised px-3 py-1 font-mono text-mono-label-xs text-marketing-accent">
         Active
       </div>
     </div>
@@ -77,7 +77,9 @@ function ScreenTop({ title, subtitle }: { title: string; subtitle: string }) {
 
 function Surface({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-[24px] border border-marketing-border bg-[#121316] p-4">{children}</div>
+    <div className="rounded-[24px] border border-marketing-border bg-marketing-surface p-4">
+      {children}
+    </div>
   )
 }
 
@@ -92,8 +94,8 @@ function TodayScreen() {
               key={state}
               className={`rounded-[18px] border px-4 py-5 text-left text-sm ${
                 index === 2
-                  ? 'border-marketing-accent bg-[#CAFF4C14] text-marketing-text-primary'
-                  : 'border-marketing-border bg-[#0E0F12] text-marketing-text-secondary'
+                  ? 'border-marketing-accent bg-marketing-accent-tint text-marketing-text-primary'
+                  : 'border-marketing-border bg-marketing-bg-layer text-marketing-text-secondary'
               }`}
             >
               {state}
@@ -103,7 +105,7 @@ function TodayScreen() {
       </Surface>
       <div className="mt-4 grid gap-4">
         <Surface>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+          <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
             Nutrition today
           </p>
           <div className="mt-4 grid grid-cols-3 gap-3">
@@ -113,7 +115,7 @@ function TodayScreen() {
           </div>
         </Surface>
         <Surface>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+          <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
             Workout options
           </p>
           <div className="mt-4 space-y-3">
@@ -140,7 +142,7 @@ function QuickLogScreen() {
           ].map(([label, value]) => (
             <div
               key={label}
-              className="flex items-center justify-between rounded-[18px] border border-marketing-border bg-[#0D0E11] px-4 py-3"
+              className="flex items-center justify-between rounded-[18px] border border-marketing-border bg-marketing-bg-tint px-4 py-3"
             >
               <span className="text-sm text-marketing-text-primary">{label}</span>
               <span className="font-mono text-sm text-marketing-accent">{value}</span>
@@ -148,7 +150,7 @@ function QuickLogScreen() {
           ))}
         </div>
       </Surface>
-      <div className="mt-4 rounded-[24px] border border-[#CAFF4C33] bg-[#CAFF4C14] p-4 text-sm leading-6 text-marketing-text-primary">
+      <div className="mt-4 rounded-[24px] border border-marketing-accent-outline bg-marketing-accent-tint p-4 text-sm leading-6 text-marketing-text-primary">
         Tap <span className="font-semibold">I missed</span> if the session did not happen. Tomorrow
         adapts automatically.
       </div>
@@ -182,7 +184,7 @@ function InsightsScreen() {
       <ScreenTop title="Insights" subtitle="What changed this week, and what still counts." />
       <div className="grid gap-4">
         <Surface>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+          <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
             Week score
           </p>
           <div className="mt-4 flex items-end justify-between">
@@ -195,8 +197,8 @@ function InsightsScreen() {
         <Surface>
           <div className="grid grid-cols-4 gap-3">
             {[72, 81, 66, 84].map((score, index) => (
-              <div key={score} className="rounded-[18px] bg-[#0E0F12] p-3 text-center">
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+              <div key={score} className="rounded-[18px] bg-marketing-bg-layer p-3 text-center">
+                <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
                   W{index + 1}
                 </p>
                 <p className="mt-3 font-mono text-xl text-marketing-text-primary">{score}</p>
@@ -214,8 +216,8 @@ function MissedScreen() {
     <div>
       <ScreenTop title="Missed day logged" subtitle="The week stays intact." />
       <Surface>
-        <div className="rounded-[20px] border border-[#CAFF4C33] bg-[#CAFF4C14] p-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-accent">
+        <div className="rounded-[20px] border border-marketing-accent-outline bg-marketing-accent-tint p-4">
+          <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-accent">
             Action
           </p>
           <p className="mt-3 text-base font-medium">Tuesday session marked as missed</p>
@@ -251,8 +253,8 @@ function RecoveryScreen() {
             Workout shortened from 45 minutes to 30 minutes.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-marketing-text-secondary">
-            <div className="rounded-[18px] bg-[#0D0E11] p-3">Primary compounds kept</div>
-            <div className="rounded-[18px] bg-[#0D0E11] p-3">Accessory volume reduced</div>
+            <div className="rounded-[18px] bg-marketing-bg-tint p-3">Primary compounds kept</div>
+            <div className="rounded-[18px] bg-marketing-bg-tint p-3">Accessory volume reduced</div>
           </div>
         </Surface>
       </div>
@@ -271,8 +273,8 @@ function TravelScreen() {
               key={item}
               className={`rounded-[18px] border px-4 py-4 text-sm ${
                 index === 0
-                  ? 'border-marketing-accent bg-[#CAFF4C14] text-marketing-text-primary'
-                  : 'border-marketing-border bg-[#0D0E11] text-marketing-text-secondary'
+                  ? 'border-marketing-accent bg-marketing-accent-tint text-marketing-text-primary'
+                  : 'border-marketing-border bg-marketing-bg-tint text-marketing-text-secondary'
               }`}
             >
               {item}
@@ -339,7 +341,9 @@ function WorkoutOption({
   return (
     <div
       className={`rounded-[20px] border px-4 py-4 ${
-        selected ? 'border-[#CAFF4C33] bg-[#CAFF4C14]' : 'border-marketing-border bg-[#121316]'
+        selected
+          ? 'border-marketing-accent-outline bg-marketing-accent-tint'
+          : 'border-marketing-border bg-marketing-surface'
       }`}
     >
       <div className="flex items-center justify-between gap-3">
@@ -348,7 +352,7 @@ function WorkoutOption({
           <p className="mt-1 text-sm text-marketing-text-secondary">{meta}</p>
         </div>
         {selected && (
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-accent">
+          <span className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-accent">
             Selected
           </span>
         )}
@@ -364,7 +368,7 @@ function Bubble({ align, children }: { align: 'left' | 'right'; children: React.
         className={`max-w-[85%] rounded-[24px] px-4 py-3 text-sm leading-6 ${
           align === 'right'
             ? 'bg-marketing-accent text-marketing-accent-on'
-            : 'border border-marketing-border bg-[#121316] text-marketing-text-primary'
+            : 'border border-marketing-border bg-marketing-surface text-marketing-text-primary'
         }`}
       >
         {children}
@@ -375,8 +379,8 @@ function Bubble({ align, children }: { align: 'left' | 'right'; children: React.
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[18px] bg-[#0D0E11] p-3">
-      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-marketing-text-muted">
+    <div className="rounded-[18px] bg-marketing-bg-tint p-3">
+      <p className="font-mono text-mono-label-xs uppercase tracking-[0.18em] text-marketing-text-muted">
         {label}
       </p>
       <p className="mt-3 font-mono text-xl text-marketing-text-primary">{value}</p>
@@ -389,8 +393,8 @@ function Zone({ label, active = false }: { label: string; active?: boolean }) {
     <div
       className={`rounded-[18px] border px-3 py-4 ${
         active
-          ? 'border-[#CAFF4C33] bg-[#CAFF4C14] text-marketing-text-primary'
-          : 'border-marketing-border bg-[#0D0E11] text-marketing-text-secondary'
+          ? 'border-marketing-accent-outline bg-marketing-accent-tint text-marketing-text-primary'
+          : 'border-marketing-border bg-marketing-bg-tint text-marketing-text-secondary'
       }`}
     >
       {label}
